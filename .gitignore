@@ -1,0 +1,29 @@
+# Ren'Py compiled bytecode (regenerated on every launch)
+*.rpyc
+*.rpymc
+*.rpa
+
+# Ren'Py runtime caches and per-user saves
+game/cache/
+game/saves/
+game/__pycache__/
+
+# Ren'Py / dev logs
+log.txt
+errors.txt
+traceback.txt
+renpy-launch.log
+
+# Distribution build outputs
+dist/
+*.zip
+*.7z
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor junk
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,177 @@
+# MOGMAX
+# Chapter 1: Chopped
+
+# ─── Characters (used across the whole game) ─────────────────
+define narrator = Character(None, what_italic=True, what_color="#a0a0a0")
+define p = Character("[povname]", color="#88ff88")
+define c = Character("Clav", color="#9aa8ff")
+define m = Character("Maddie", color="#ffb3d1")
+define b = Character("Brayden", color="#7ab8ff")
+define h = Character("Mr. Harker", color="#c0c0c0")
+
+# ─── Game state (per save) ───────────────────────────────────
+default povname = "You"
+default aura = 50
+default mogged_count = 0
+default took_chad_pill = False
+
+# ─── Persistent state (across all saves / sessions) ──────────
+default persistent.chapter1_complete = False
+default persistent.chapter2_complete = False
+
+
+# Migrate older persistent-flag names from earlier dev iterations,
+# so progress isn't lost when the spec renamed them.
+init python:
+    if getattr(persistent, "completed_ch1", False) and not persistent.chapter1_complete:
+        persistent.chapter1_complete = True
+    if getattr(persistent, "completed_ch2", False) and not persistent.chapter2_complete:
+        persistent.chapter2_complete = True
+
+# ─── Background helper ────────────────────────────────────────
+# Scales any image to fill the screen (1280×720) and crops aspect
+# overflow so nothing is stretched. Source images can be any size.
+init python:
+    def bg_image(path):
+        return Transform(path, xysize=(config.screen_width, config.screen_height), fit="cover")
+
+# ─── Base backgrounds (chapter-specific bgs live in their files) ───
+image bg black = "#000000"
+image bg cafeteria = bg_image("images/bg_cafeteria.jpg")
+image bg cafeteria_clav = bg_image("images/bg_cafeteria.jpg")
+
+
+# ═════════════════════════════════════════════════════════════
+# SPLASHSCREEN — Studio title + game logo before the main menu.
+# Runs once per launch, then control returns to the main menu.
+# ═════════════════════════════════════════════════════════════
+
+label splashscreen:
+    scene black
+    pause 0.3
+    show text "{size=24}{color=#888888}a Tarzerk & Cebolla production{/color}{/size}" at truecenter with dissolve
+    pause 1.8
+    hide text with dissolve
+    pause 0.5
+    show text "{size=110}{color=#ffffff}MOGMAX{/color}{/size}" at truecenter with dissolve
+    pause 1.6
+    hide text with dissolve
+    pause 0.5
+    return
+
+
+# ═════════════════════════════════════════════════════════════
+# CHAPTER 1 — CHOPPED
+# ═════════════════════════════════════════════════════════════
+
+label start:
+    # Carry the menu theme into the intro (no-op if it's already playing).
+    play music "audio/main_menu_theme.mp3" if_changed fadein 0.5
+
+    scene bg black with fade
+    pause 0.4
+    show text "{size=44}Chapter 1 — Chopped{/size}" at truecenter with dissolve
+    pause 1.8
+    hide text with dissolve
+
+    # Name input — player types their own name. Blank input falls back to "You".
+    python:
+        _typed_name = renpy.input("What's your name?", default="", length=20).strip()
+        povname = _typed_name if _typed_name else "You"
+
+    scene bg cafeteria with fade
+    # Cross-fade menu theme into cafeteria ambient at lower volume so
+    # dialogue reads clearly.
+    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume 0.6
+    narrator "Your name is [povname]."
+    narrator "At least, that's what it says on the detention slip sitting on Mr. Harker's desk — again."
+    pause 0.3
+    narrator "It's a Tuesday. Or maybe Wednesday."
+    narrator "Honestly, you stopped keeping track somewhere around the third time you failed PE."
+    pause 0.3
+    narrator "You're sitting in the back of the cafeteria, alone, picking at a wet sandwich you found in your own backpack from last week."
+    narrator "The expiration date is not something you want to think about."
+    pause 0.5
+    narrator "Across the room, the popular kids are laughing."
+    narrator "You don't know what the joke is. You never do."
+    narrator "But somehow, you're pretty sure it's you."
+    pause 0.8
+
+    narrator "A tray slams on the table across from you."
+    narrator "You flinch hard enough to knock your juice box onto the floor."
+    pause 0.4
+
+    scene bg cafeteria_clav with fade
+    c "Relax."
+    narrator "The voice is calm. Too calm. You look up."
+    narrator "A guy sits across from you like he owns the cafeteria."
+    narrator "Sharp eyes, clean fit, the kind of posture that makes you suddenly aware of how bad yours is."
+    narrator "He looks at you the way a surgeon looks at a problem — like he already knows the solution."
+    pause 0.4
+    c "You're [povname], right?"
+    narrator "Not a question, really."
+    p "...Yeah?"
+    c "I'm Clav."
+    narrator "He leans forward."
+    c "And I've been watching you for a while."
+    p "That's... kind of creepy."
+    narrator "He smirks."
+    c "Maybe. But here's the thing, [povname] — I think you're wasting your life."
+    pause 0.4
+    narrator "He pulls out two pills. One red, one blue."
+    narrator "Slides them across the table."
+    c "So I'm giving you a choice."
+
+    pause 0.4
+
+    # Pill-bottle SFX fires the moment the choice is presented.
+    play sound "audio/pill_pickup.mp3"
+
+    menu:
+        "Two pills sit on the table. Clav watches, arms crossed."
+        "The red pill — Become a Chad.":
+            jump chad_pill_ending
+        "The blue pill — Remain an LTN.":
+            jump ltn_pill_ending
+
+
+label chad_pill_ending:
+    $ persistent.chapter1_complete = True
+    $ took_chad_pill = True
+    stop music fadeout 1.5
+    play sound "audio/swallow_sfx.mp3"
+    narrator "You reach out and take the red pill."
+    narrator "Clav nods slowly, like he already knew."
+    c "Good."
+    c "The work starts now."
+    pause 1.2
+    scene bg black with fade
+    pause 0.4
+    jump chapter2_start
+
+
+label ltn_pill_ending:
+    $ persistent.chapter1_complete = True
+    # Crossfade from cafeteria ambient into the sad-piano mirror theme,
+    # which then rides through the LTN monologue and into the credits.
+    play music "audio/mirror_theme.mp3" fadeout 1.5 fadein 2.5
+    play sound "audio/swallow_sfx.mp3"
+    narrator "You reach for the blue pill."
+    narrator "You swallow it before you can think about it."
+    pause 0.5
+    c "...blue."
+    c "Of course."
+    pause 0.4
+    c "Low Tier Normie. That's what LTN stands for — just so we're clear."
+    pause 0.3
+    c "You just signed up for a lifetime of wet sandwiches and back-row cafeteria seating."
+    c "That's fine. Someone has to."
+    pause 0.6
+    narrator "Clav sighs, stands up, and walks away without another word."
+    pause 0.4
+    narrator "The cafeteria carries on around you."
+    narrator "Nothing changes."
+    pause 1.5
+    scene bg black with fade
+    pause 0.6
+    jump roll_credits
