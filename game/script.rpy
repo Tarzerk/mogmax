@@ -110,6 +110,7 @@ label start:
     narrator "But somehow, you're pretty sure it's you."
     pause 0.8
 
+    play sound "audio/tray_slam.mp3"
     narrator "A tray slams on the table across from you."
     narrator "You flinch hard enough to knock your juice box onto the floor."
     pause 0.4
