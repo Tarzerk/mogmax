@@ -91,6 +91,18 @@ label start:
     pause 0.3
     narrator "You're sitting in the back of the cafeteria, alone, picking at a wet sandwich you found in your own backpack from last week."
     narrator "The expiration date is not something you want to think about."
+
+    # Telltale-style fake-out choice — both branches converge to the same next
+    # line. The notify uses the customized screen notify in screens.rpy.
+    menu:
+        "You should probably actually eat it."
+        "Take a bite of the crust.":
+            narrator "It tastes like cardboard, but at least it crunches."
+        "Take a bite of the soggy middle.":
+            narrator "Cold moisture spreads across your tongue. You try very hard not to think about what it is."
+
+    $ renpy.notify("The sandwich will remember that.")
+
     pause 0.5
     narrator "Across the room, the popular kids are laughing."
     narrator "You don't know what the joke is. You never do."
