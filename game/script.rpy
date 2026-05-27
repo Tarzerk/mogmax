@@ -5,6 +5,7 @@
 define narrator = Character(None, what_italic=True, what_color="#a0a0a0")
 define p = Character("[povname]", color="#88ff88")
 define c = Character("Clav", color="#9aa8ff")
+define stranger = Character("???", color="#9aa8ff")
 define m = Character("Maddie", color="#ffb3d1")
 define b = Character("Brayden", color="#7ab8ff")
 define h = Character("Mr. Harker", color="#c0c0c0")
@@ -109,18 +110,19 @@ label start:
     narrator "But somehow, you're pretty sure it's you."
     pause 0.8
 
+    play sound "audio/tray_slam.mp3"
     narrator "A tray slams on the table across from you."
     narrator "You flinch hard enough to knock your juice box onto the floor."
     pause 0.4
 
     scene bg cafeteria_clav with fade
-    c "Relax."
+    stranger "Relax."
     narrator "The voice is calm. Too calm. You look up."
     narrator "A guy sits across from you like he owns the cafeteria."
     narrator "Sharp eyes, clean fit, the kind of posture that makes you suddenly aware of how bad yours is."
     narrator "He looks at you the way a surgeon looks at a problem — like he already knows the solution."
     pause 0.4
-    c "You're [povname], right?"
+    stranger "You're [povname], right?"
     narrator "Not a question, really."
     p "...Yeah?"
     c "I'm Clav."
