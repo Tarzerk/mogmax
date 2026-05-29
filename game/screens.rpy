@@ -571,44 +571,27 @@ screen about():
 
             hbox:
                 spacing 15
-                text _("Updated Character Art") style "about_small"
-                text _("Deji")
-
-            hbox:
-                spacing 15
-                text _("Original Character Art") style "about_small"
-                text _("Derik")
+                text _("Development & Writing") style "about_small"
+                text _("Tarzerk & Cebolla")
 
             null height 15
 
             hbox:
                 spacing 15
-                text _("Updated Background Art") style "about_small"
-                text _("Mugenjohncel")
+                text _("Engine") style "about_small"
+                text _("Ren'Py by Tom \"PyTom\" Rothamel")
 
             hbox:
                 spacing 15
-                text _("Original Background Art") style "about_small"
-                text _("DaFool")
+                text _("GUI Scaffolding") style "about_small"
+                text _("the_question sample (Ren'Py SDK)")
 
             null height 15
 
             hbox:
                 spacing 15
-                text _("Music By") style "about_small"
-                text _("Alessio")
-
-            null height 15
-
-            hbox:
-                spacing 15
-                text _("Update Written By") style "about_small"
-                text _("Lore")
-
-            hbox:
-                spacing 15
-                text _("Originally Written By ") style "about_small"
-                text _("mikey (ATP Projects)")
+                text _("Bonus Credits") style "about_small"
+                text _("the Bee Movie (Dreamworks, 2007)")
 
 
             text _("\nMade with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only]")

@@ -36,7 +36,7 @@ Chapter 2 is a bootcamp + flashcard study + timed vocab quiz where your score de
 Or, from the command line:
 
 ```bash
-"path/to/renpy-sdk/renpy.exe" "path/to/Mogging"
+"path/to/renpy-sdk/renpy.exe" "path/to/mogmax"
 ```
 
 ### Dev shortcuts
@@ -52,7 +52,7 @@ While running in dev mode (default for unbuilt projects):
 ## Project layout
 
 ```
-Mogging/
+mogmax/
 ├── README.md             ← you are here
 ├── BACKGROUNDS.md        ← spec for swapping background art
 ├── SCRIPT.md             ← human-readable transcript of all dialogue
@@ -66,7 +66,7 @@ Mogging/
     ├── options.rpy       ← project config
     ├── gui.rpy           ← GUI constants (from the_question template)
     ├── bee_movie.txt     ← bonus credits filler
-    ├── audio/            ← 11 mp3 files (see below)
+    ├── audio/            ← 12 mp3 files (see below)
     ├── images/           ← 10 jpg backgrounds (see BACKGROUNDS.md)
     └── gui/              ← UI textures from Ren'Py template
 ```
@@ -77,6 +77,7 @@ Mogging/
 |---|---|
 | `main_menu_theme.mp3` | main menu loop, carries into Ch1 intro |
 | `cafeteria_ambient.mp3` | Ch1 cafeteria background loop |
+| `tray_slam.mp3` | one-shot — Clav's tray slams on the table (Ch1) |
 | `pill_pickup.mp3` | one-shot — pill choice menu appears |
 | `swallow_sfx.mp3` | one-shot — fires when you pick a pill |
 | `library_ambient.mp3` | Ch2 bootcamp + flashcards background loop |
