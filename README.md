@@ -25,17 +25,25 @@ There are two ways in: download a prebuilt copy (easiest, no Ren'Py install) or 
 
 ### Get a build
 
-1. Go to the [**Actions tab**](https://github.com/Tarzerk/mogmax/actions/workflows/build.yml) on this repo.
-2. Click the most recent successful run of **"Build distributables"**.
-3. Scroll to the **Artifacts** section at the bottom and download the one matching your platform:
+**Easiest (no GitHub account needed)** — grab a tagged release from the [**Releases page**](https://github.com/Tarzerk/mogmax/releases). Pick the latest version, then download the file matching your platform:
+
+| Platform | Asset |
+|---|---|
+| Windows | `MOGMAX-<version>-pc.zip` |
+| macOS | `MOGMAX-<version>-mac.dmg` (or `MOGMAX-<version>-mac.zip` as fallback) |
+| iOS / Android | `MOGMAX-<version>-pc.zip` (yes — same file as Windows; see below) |
+
+Release downloads are public — anyone with the link can grab them, no sign-in required. This is the right link to send to friends.
+
+**Latest dev build (requires GitHub login)** — every push to a `v*` tag, plus any manual run, produces fresh builds attached to the [Actions run page](https://github.com/Tarzerk/mogmax/actions/workflows/build.yml). Click into a run → scroll to **Artifacts** → download:
 
 | Platform | Artifact |
 |---|---|
 | Windows | `MOGMAX-windows-and-pocket` |
 | macOS | `MOGMAX-mac-dmg` (or `MOGMAX-mac-zip` as fallback) |
-| iOS / Android | `MOGMAX-windows-and-pocket` (yes — same file as Windows; see below) |
+| iOS / Android | `MOGMAX-windows-and-pocket` |
 
-GitHub gives you each artifact as a `.zip`. Unzip it first, then follow the platform steps below.
+GitHub gives you each artifact as a `.zip` wrapper. Unzip it first, then follow the platform steps below.
 
 ### Windows
 

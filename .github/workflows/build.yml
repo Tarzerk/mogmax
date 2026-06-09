@@ -20,7 +20,10 @@ jobs:
     name: PC + Mac (single macOS runner)
     runs-on: macos-latest
     permissions:
-      contents: read
+      # `write` is required only for the tag-triggered Release step at the
+      # end. On manual runs the step is skipped and no writes happen, so
+      # this remains the minimum scope.
+      contents: write
 
     steps:
       - name: Checkout
@@ -119,3 +122,26 @@ jobs:
           path: ${{ steps.dists.outputs.dist_dir }}/MOGMAX-*-mac.zip
           if-no-files-found: error
           retention-days: 90
+
+      # Tag-only step: publish a public GitHub Release with the three files
+      # attached as assets. The Release page has direct download links that
+      # don't require the visitor to be signed into GitHub — which is the
+      # whole point of the v* tag workflow.
+      #
+      # Trigger this by pushing a tag like v0.6 or v0.5.1:
+      #   git tag v0.6 && git push origin v0.6
+      - name: Publish GitHub Release (tag pushes only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          dist_dir="${{ steps.dists.outputs.dist_dir }}"
+          tag="${GITHUB_REF#refs/tags/}"
+          gh release create "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "MOGMAX $tag" \
+            --generate-notes \
+            "$dist_dir"/MOGMAX-*-pc.zip \
+            "$dist_dir"/MOGMAX-*-mac.dmg \
+            "$dist_dir"/MOGMAX-*-mac.zip
