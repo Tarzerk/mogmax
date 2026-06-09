@@ -1,0 +1,121 @@
+name: Build distributables
+
+# Manual run from the Actions tab, plus auto-run on version tags (vX.Y / vX.Y.Z).
+# Tag-triggered runs still upload as workflow artifacts — no Release is created
+# automatically; that can be added later if/when the project starts cutting
+# real Releases on GitHub.
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  # Bump this to upgrade Ren'Py; the SDK cache key incorporates it, so a new
+  # version forces a fresh download.
+  RENPY_VERSION: 8.5.3
+
+jobs:
+  build:
+    name: PC + Mac (single macOS runner)
+    runs-on: macos-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The SDK tarball is ~146 MB. Cache the extracted dir so subsequent
+      # runs skip the download entirely.
+      - name: Cache Ren'Py SDK
+        id: cache-renpy
+        uses: actions/cache@v4
+        with:
+          path: ~/renpy-sdk
+          key: renpy-sdk-${{ env.RENPY_VERSION }}-v1
+
+      - name: Download and extract Ren'Py SDK
+        if: steps.cache-renpy.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p ~/renpy-sdk
+          curl -fSL \
+            "https://www.renpy.org/dl/${RENPY_VERSION}/renpy-${RENPY_VERSION}-sdk.tar.bz2" \
+            -o /tmp/renpy-sdk.tar.bz2
+          tar -xjf /tmp/renpy-sdk.tar.bz2 -C ~/renpy-sdk --strip-components=1
+          rm /tmp/renpy-sdk.tar.bz2
+
+      # Lint catches indentation errors, missing labels, broken jumps —
+      # cheaper to fail here than after a 5-minute build.
+      - name: Lint project
+        run: ~/renpy-sdk/renpy.sh "$GITHUB_WORKSPACE" lint
+
+      # Produces two zips under ../MOGMAX-<version>-dists/ (Ren'Py default):
+      #   - MOGMAX-<version>-pc.zip  (Windows + Linux binaries + game/ + renpy/)
+      #   - MOGMAX-<version>-mac.zip (MOGMAX.app)
+      - name: Build PC + Mac packages
+        run: |
+          ~/renpy-sdk/renpy.sh ~/renpy-sdk/launcher distribute "$GITHUB_WORKSPACE" \
+            --package pc --package mac
+
+      - name: Locate dist directory
+        id: dists
+        run: |
+          set -euo pipefail
+          dist_dir=$(find "$(dirname "$GITHUB_WORKSPACE")" -maxdepth 1 -type d -name 'MOGMAX-*-dists' | head -n1)
+          if [ -z "$dist_dir" ]; then
+            echo "::error::dist directory not found under $(dirname "$GITHUB_WORKSPACE")"
+            find "$(dirname "$GITHUB_WORKSPACE")" -maxdepth 2 -type d
+            exit 1
+          fi
+          echo "dist_dir=$dist_dir" >> "$GITHUB_OUTPUT"
+          ls -lh "$dist_dir"
+
+      # Wrap MOGMAX.app into a proper .dmg via hdiutil. Ren'Py's own app-dmg
+      # format hasn't reliably triggered for us on local runs, so we do it
+      # explicitly — same one-liner that worked locally.
+      - name: Wrap Mac .app into .dmg
+        run: |
+          set -euo pipefail
+          dist_dir="${{ steps.dists.outputs.dist_dir }}"
+          mac_zip=$(ls "$dist_dir"/MOGMAX-*-mac.zip | head -n1)
+          dmg_path="${mac_zip%.zip}.dmg"
+          stage=$(mktemp -d)
+          unzip -q "$mac_zip" -d "$stage"
+          hdiutil create \
+            -volname "MOGMAX" \
+            -srcfolder "$stage" \
+            -ov -format UDZO \
+            "$dmg_path"
+          ls -lh "$dmg_path"
+
+      # Upload as three named artifacts so the Actions UI lets you grab each
+      # one with a single click instead of one huge bundle.
+      #
+      # The PC zip doubles as the Ren'Py Pocket package (it contains both
+      # game/ and renpy/ at the zip root, which is what Pocket loads). Same
+      # file, two uses — no separate mobile build needed.
+      - name: Upload Windows + Pocket (PC zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MOGMAX-windows-and-pocket
+          path: ${{ steps.dists.outputs.dist_dir }}/MOGMAX-*-pc.zip
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload Mac (.dmg)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MOGMAX-mac-dmg
+          path: ${{ steps.dists.outputs.dist_dir }}/MOGMAX-*-mac.dmg
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload Mac (.zip, fallback if .dmg gives anyone trouble)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MOGMAX-mac-zip
+          path: ${{ steps.dists.outputs.dist_dir }}/MOGMAX-*-mac.zip
+          if-no-files-found: error
+          retention-days: 90
