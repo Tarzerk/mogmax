@@ -21,12 +21,59 @@ Chapter 2 is a bootcamp + flashcard study + timed vocab quiz where your score de
 
 ## Playing it
 
-### Requirements
+There are two ways in: download a prebuilt copy (easiest, no Ren'Py install) or run from source. Prebuilt copies are produced by the GitHub Actions pipeline.
 
-- Windows / macOS / Linux
-- [Ren'Py SDK 8.5+](https://www.renpy.org/latest.html)
+### Get a build
 
-### Run from source
+1. Go to the [**Actions tab**](https://github.com/Tarzerk/mogmax/actions/workflows/build.yml) on this repo.
+2. Click the most recent successful run of **"Build distributables"**.
+3. Scroll to the **Artifacts** section at the bottom and download the one matching your platform:
+
+| Platform | Artifact |
+|---|---|
+| Windows | `MOGMAX-windows-and-pocket` |
+| macOS | `MOGMAX-mac-dmg` (or `MOGMAX-mac-zip` as fallback) |
+| iOS / Android | `MOGMAX-windows-and-pocket` (yes — same file as Windows; see below) |
+
+GitHub gives you each artifact as a `.zip`. Unzip it first, then follow the platform steps below.
+
+### Windows
+
+1. Unzip `MOGMAX-windows-and-pocket.zip`.
+2. Inside the inner `MOGMAX-<version>-pc/` folder, double-click **`MOGMAX.exe`**.
+
+That's it — no install step. To uninstall, just delete the folder.
+
+> First-launch SmartScreen warning is normal (the .exe isn't code-signed). Click **More info → Run anyway**.
+
+### macOS
+
+1. Double-click `MOGMAX-mac-dmg.zip` to unzip it, then double-click `MOGMAX-<version>-mac.dmg` to mount.
+2. Drag **`MOGMAX.app`** into your `Applications` folder.
+3. **First launch only:** right-click `MOGMAX.app` → **Open** → confirm. (Plain double-click will be blocked by Gatekeeper because the app isn't notarized.)
+
+If Gatekeeper still refuses, run this once in Terminal:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/MOGMAX.app
+```
+
+### iOS / iPadOS / Android (via Ren'Py Pocket)
+
+[Ren'Py Pocket](https://renpyandroid.com/) is a mobile app that runs Ren'Py games from a zip. The same `MOGMAX-windows-and-pocket.zip` works as the mobile package — it contains the `game/` and `renpy/` folders Pocket expects.
+
+1. Install **Ren'Py Pocket** ([iOS App Store](https://apps.apple.com/us/app/renpy-pocket/id6748696950) / Android equivalent).
+2. Download `MOGMAX-windows-and-pocket.zip` from the Actions tab onto your phone, *or* keep it on your computer and use Pocket's **Wi-Fi Transfer**:
+   - In Pocket, tap **Wi-Fi Transfer** to start a local server.
+   - Open the address it shows in your computer's browser.
+   - Drag the zip into the browser page — it uploads and installs.
+3. Tap **MOGMAX** in Pocket's library to launch.
+
+> If iOS rejects the import, unzip in the Files app, long-press the folder, **Compress**, then import that new zip. (iOS occasionally chokes on zips produced on other OSes.)
+
+### Run from source (developers)
+
+Requires the [Ren'Py SDK 8.5+](https://www.renpy.org/latest.html).
 
 1. Clone this repo.
 2. Open the Ren'Py launcher.
