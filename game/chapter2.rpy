@@ -193,15 +193,18 @@ label chapter2_start:
 
     if chapter2_attempt == 1:
         narrator "After school. The library is empty except for the back booth."
+        show clav thinking at clav_body
         narrator "Clav is already there, reading. He doesn't look up when you sit down."
     else:
         narrator "Back to the booth. Clav is already there. He doesn't look up."
+        show clav stern at clav_body
         narrator "He slides the notebook across the table without a word."
         c "From the top."
 
     pause 0.5
 
     if chapter2_attempt == 1:
+        show clav stern at clav_body
         c "Sit."
         p "Hey. So I —"
         c "Sit."
@@ -210,11 +213,15 @@ label chapter2_start:
         c "Ninety minutes. Ten words."
         c "You will know every one of them or we sit here until you do."
         c "Sit up."
+        show clav thinking at clav_body
         c "Tomorrow morning. Harker. Snap vocab quiz."
         c "Sixty or higher and the room finally looks at you."
+        show clav smirk at clav_body
         c "Less than that and you are a ghost again."
+        show clav stern at clav_body
         c "Notebook's in front of you. Get to work."
     else:
+        show clav stern at clav_body
         c "Same ten. Lock in."
 
     # Reset flashcard state and pick a fresh Clav quip for this attempt.
@@ -227,10 +234,13 @@ label chapter2_start:
 
 label study_done:
     pause 0.5
+    show clav smirk at clav_body
     c "Enough."
     narrator "Clav clicks the stopwatch a final time and stands."
     c "Sleep. Don't cope-scroll tonight."
+    show clav stern at clav_body
     c "If I see you on TikTok after midnight I am not coming to the library tomorrow."
+    hide clav
     narrator "He leaves. You sit alone in the booth with The List."
     pause 1.0
     scene bg black with fade
@@ -251,9 +261,11 @@ label class_quiz:
     scene bg classroom with fade
     play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5 volume 0.5
     narrator "Mr. Harker's first-period English."
+    show harker pointing at harker_body
     h "Notebooks closed. Pop quiz."
     narrator "The popular kids groan. Brayden slumps theatrically in the back row."
     narrator "You sit up straight."
+    show harker stopwatch at harker_body
     h "[povname]. We will start with you."
 
     $ brain_score = 0
@@ -329,6 +341,7 @@ label quiz_timeout:
     pause 0.8
     narrator "He looks up."
     pause 0.4
+    show harker tired at harker_body
     h "[povname]."
     if final_score >= 60:
         pause 0.7
@@ -336,10 +349,12 @@ label quiz_timeout:
         pause 0.4
         narrator "Longer than he needs to."
         pause 0.6
+        show harker glasses at harker_body
         h "Your score is {b}[final_score]{/b}."
         pause 1.4
         jump pass_class_scene
     else:
+        show harker facepalm at harker_body
         h "Your score is {b}[final_score]{/b}."
         pause 1.2
         jump fail_class_scene
@@ -348,6 +363,7 @@ label quiz_timeout:
 label quiz_finished:
     $ final_score = int((brain_score / float(len(VOCAB))) * 100)
     pause 0.6
+    show harker pointing at harker_body
     h "Pencils down."
     stop music fadeout 2.0
     pause 0.4
@@ -355,6 +371,7 @@ label quiz_finished:
     pause 0.8
     narrator "He looks up."
     pause 0.4
+    show harker tired at harker_body
     h "[povname]."
 
     # Pass-only pause beat — let the mog land.
@@ -364,10 +381,12 @@ label quiz_finished:
         pause 0.4
         narrator "Longer than he needs to."
         pause 0.6
+        show harker glasses at harker_body
         h "Your score is {b}[final_score]{/b}."
         pause 1.4
         jump pass_class_scene
     else:
+        show harker facepalm at harker_body
         h "Your score is {b}[final_score]{/b}."
         pause 1.2
         jump fail_class_scene
@@ -379,9 +398,12 @@ label quiz_finished:
 
 label pass_class_scene:
     scene bg classroom_silent with fade
+    show harker glasses at harker_body
     narrator "Mr. Harker slowly removes his glasses."
+    show harker smirk at harker_body
     narrator "He stares."
     h "...See me after class."
+    hide harker
     narrator "Not in trouble. {i}Impressed.{/i}"
     pause 0.6
     play sound "audio/bell_school.mp3"
@@ -392,8 +414,10 @@ label pass_class_scene:
     narrator "Maddie catches your eye. Her gaze lingers half a second too long before she looks away."
     narrator "In the back row, Brayden stops chewing his gum."
     pause 0.5
+    show clav smirk at clav_body
     p "(...did I just mog the class?)"
     pause 1.4
+    hide clav
 
     # ── THE MOG MOMENT ──
     # Timed to mogging_sfx.mp3 — the hit lands at 5.75s into the file.
@@ -524,13 +548,16 @@ label mirror_scene:
 
 label fail_class_scene:
     scene bg classroom with fade
+    show harker tired at harker_body
     narrator "Mr. Harker doesn't snap at you."
     narrator "He just looks at the paper."
     narrator "He sighs through his nose."
+    show harker glasses at harker_body
     narrator "Takes off his glasses."
     narrator "Pinches the bridge of his nose."
     narrator "He says nothing."
     narrator "Somehow that's worse than yelling."
+    hide harker
     pause 1.0
     b "Bro."
     b "You really thought \"skibidi\" was a definition?"
@@ -565,8 +592,10 @@ label fail_class_scene:
         clav_msg = clav_texts[(chapter2_attempt - 1) % len(clav_texts)]
 
     narrator "Your phone buzzes."
+    show clav facepalm at clav_body
     narrator "{color=#9aa8ff}CLAV 🥶{/color}"
     narrator "{i}\"[clav_msg]\"{/i}"
+    hide clav
     pause 1.5
 
     # Fail screen — player chooses to restart or quit to main menu

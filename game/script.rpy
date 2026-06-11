@@ -10,6 +10,23 @@ define m = Character("Maddie", color="#ffb3d1")
 define b = Character("Brayden", color="#7ab8ff")
 define h = Character("Mr. Harker", color="#c0c0c0")
 
+# ─── Character sprite transforms ─────────────────────────────
+transform harker_body:
+    zoom 0.50
+    xalign 0.7
+    yalign 1.0
+
+
+transform clav_chest:
+    zoom 2.0
+    xalign 0.5
+    yalign 0.45
+
+transform clav_body:
+    zoom 0.78
+    xalign 0.7
+    yalign 1.0
+
 # ─── Game state (per save) ───────────────────────────────────
 default povname = "You"
 default aura = 50
@@ -116,6 +133,7 @@ label start:
     pause 0.4
 
     scene bg cafeteria_clav with fade
+    show clav neutral at clav_chest
     stranger "Relax."
     narrator "The voice is calm. Too calm. You look up."
     narrator "A guy sits across from you like he owns the cafeteria."
@@ -126,7 +144,9 @@ label start:
     narrator "Not a question, really."
     p "...Yeah?"
     c "I'm Clav."
+    show clav smirk at clav_body
     narrator "He leans forward."
+    show clav lean at clav_body
     c "And I've been watching you for a while."
     p "That's... kind of creepy."
     narrator "He smirks."
@@ -134,12 +154,14 @@ label start:
     pause 0.4
     narrator "He pulls out two pills. One red, one blue."
     narrator "Slides them across the table."
+    show clav lean at clav_body
     c "So I'm giving you a choice."
 
     pause 0.4
 
     # Pill-bottle SFX fires the moment the choice is presented.
     play sound "audio/pill_pickup.mp3"
+    show clav stern at clav_body
 
     menu:
         "Two pills sit on the table. Clav watches, arms crossed."
@@ -156,6 +178,7 @@ label chad_pill_ending:
     play sound "audio/swallow_sfx.mp3"
     narrator "You reach out and take the red pill."
     narrator "Clav nods slowly, like he already knew."
+    show clav smile at clav_body
     c "Good."
     c "The work starts now."
     pause 1.2
@@ -173,6 +196,7 @@ label ltn_pill_ending:
     narrator "You reach for the blue pill."
     narrator "You swallow it before you can think about it."
     pause 0.5
+    show clav stern at clav_body
     c "...blue."
     c "Of course."
     pause 0.4
@@ -181,6 +205,7 @@ label ltn_pill_ending:
     c "You just signed up for a lifetime of wet sandwiches and back-row cafeteria seating."
     c "That's fine. Someone has to."
     pause 0.6
+    hide clav
     narrator "Clav sighs, stands up, and walks away without another word."
     pause 0.4
     narrator "The cafeteria carries on around you."
