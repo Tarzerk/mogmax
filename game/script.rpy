@@ -98,9 +98,9 @@ label start:
         povname = _typed_name if _typed_name else "You"
 
     scene bg cafeteria with fade
-    # Cross-fade menu theme into cafeteria ambient at lower volume so
-    # dialogue reads clearly.
-    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume 0.6
+    # Cross-fade menu theme into cafeteria ambient, ducked as a background
+    # bed (~5 dB under the feature themes) so dialogue reads clearly.
+    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume 0.55
     narrator "Your name is [povname]."
     narrator "At least, that's what it says on the detention slip sitting on Mr. Harker's desk — again."
     pause 0.3

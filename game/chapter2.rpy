@@ -185,7 +185,9 @@ label chapter2_start:
     $ brain_score = 0
     scene bg library with fade
     # Quiet library ambience runs through the bootcamp + flashcard study.
-    play music "audio/library_ambient.mp3" fadein 2.0 volume 0.35
+    # File is normalized 2 dB lower than the themes, so play a touch hotter
+    # to land it at the same ~-25 LUFS bed level as the cafeteria.
+    play music "audio/library_ambient.mp3" fadein 2.0 volume 0.7
 
     show text "{size=54}CHAPTER 2 — BRAINMAXXING{/size}" at truecenter with dissolve
     pause 2.0
@@ -259,7 +261,7 @@ label study_done:
 
 label class_quiz:
     scene bg classroom with fade
-    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5 volume 0.5
+    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5
     narrator "Mr. Harker's first-period English."
     show harker pointing at harker_body
     h "Notebooks closed. Pop quiz."
@@ -487,7 +489,7 @@ label mirror_scene:
     # Gigachad theme starts at file pos 10, drop at file pos 30.
     # renpy.music.get_pos() returns the ABSOLUTE file position, so all
     # wait values below are file positions (not elapsed time).
-    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5 volume 0.7
+    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5
 
     # One dim overlay sits over the city for the whole sequence so the
     # text reads cleanly without needing outlines.

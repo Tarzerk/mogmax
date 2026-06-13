@@ -16,6 +16,9 @@ define config.quit_action = Quit(confirm=False)
 # Auto-play the menu theme while the main menu screen is visible.
 define config.main_menu_music = "audio/main_menu_theme.mp3"
 
-# Lower default music mixer so first-launch isn't deafening.
-# Users can raise this via the Preferences screen (Music slider).
-define config.default_music_volume = 0.22
+# Channel mixer defaults. All audio files are loudness-normalized
+# (music ~-18 LUFS, SFX peak -1.5 dBFS), so these set the overall mix:
+# music sits a touch under the SFX so dialogue/effects read clearly.
+# Users can adjust both via the Preferences screen sliders.
+define config.default_music_volume = 0.8
+define config.default_sfx_volume = 0.75
