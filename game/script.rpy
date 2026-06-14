@@ -83,8 +83,9 @@ label splashscreen:
 # ═════════════════════════════════════════════════════════════
 
 label start:
-    # Carry the menu theme into the intro (no-op if it's already playing).
-    play music "audio/main_menu_theme.mp3" if_changed fadein 0.5
+    # Stop the menu theme as Chapter 1 begins — silence through the title
+    # card and name prompt, until the cafeteria ambient fades in below.
+    stop music fadeout 1.0
 
     scene bg black with fade
     pause 0.4
@@ -98,9 +99,9 @@ label start:
         povname = _typed_name if _typed_name else "You"
 
     scene bg cafeteria with fade
-    # Cross-fade menu theme into cafeteria ambient at lower volume so
-    # dialogue reads clearly.
-    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume 0.6
+    # Cross-fade menu theme into cafeteria ambient, ducked as a background
+    # bed (~5 dB under the feature themes) so dialogue reads clearly.
+    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume 0.55
     narrator "Your name is [povname]."
     narrator "At least, that's what it says on the detention slip sitting on Mr. Harker's desk — again."
     pause 0.3
