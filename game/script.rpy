@@ -83,8 +83,9 @@ label splashscreen:
 # ═════════════════════════════════════════════════════════════
 
 label start:
-    # Carry the menu theme into the intro (no-op if it's already playing).
-    play music "audio/main_menu_theme.mp3" if_changed fadein 0.5
+    # Stop the menu theme as Chapter 1 begins — silence through the title
+    # card and name prompt, until the cafeteria ambient fades in below.
+    stop music fadeout 1.0
 
     scene bg black with fade
     pause 0.4
