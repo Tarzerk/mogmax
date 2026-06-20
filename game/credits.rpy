@@ -24,8 +24,8 @@ init python:
     # were reached from. Unknown / 0 (e.g. opened from the main menu or the dev
     # skip menu) shows no chapter line at all.
     _CREDITS_CHAPTER_TITLES = {
-        1: "Chopped",
-        2: "Brainmaxxing",
+        1: "Chapter 1 — Chopped",
+        2: "Chapter 2 — Brainmaxxing",
     }
 
     def build_credits_body(from_chapter=0):
