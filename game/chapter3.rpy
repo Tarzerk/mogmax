@@ -224,7 +224,11 @@ label ch3_eugene:
 
 # ── SCENE 9 — THE RETURN ──
 label ch3_return:
+    # Reuse the daytime desert road, tinted dark-navy for night (same road =
+    # continuity, and guaranteed people-free). The night_tint clears on the
+    # scene change to black at the end.
     scene bg ch3_road with fade
+    show expression Solid("#0a1430cc") as night_tint
     $ play_music_safe("audio/desert_ambient.mp3", fadein=1.0)
     narrator "Exterior. Night. Back in the car. Desert highway reversed."
     p "So what was the point of all that?"
