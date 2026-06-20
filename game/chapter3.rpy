@@ -28,6 +28,10 @@ image bg scan_granted   = "#0a2a0a"
 # ═════════════════════════════════════════════════════════════
 
 label chapter3_start:
+    # Fade out whatever was carried in from Chapter 2 (the gigachad/mirror
+    # theme). Ch3's own beds load via play_music_safe, so without this the
+    # Ch2 theme would bleed straight through the opening.
+    stop music fadeout 2.0
     scene bg black with fade
     pause 0.4
     show text "{size=54}Chapter 3 — The Mogbender{/size}" at truecenter with dissolve
@@ -241,6 +245,7 @@ label ch3_return:
     narrator "{i}He can sense it. The hierarchy is shifting.{/i}"
     pause 1.0
 
+    stop music fadeout 2.0
     scene bg black with fade
     pause 0.4
 

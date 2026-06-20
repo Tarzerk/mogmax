@@ -263,7 +263,7 @@ label study_done:
 
 label class_quiz:
     scene bg classroom with fade
-    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5
+    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5 volume 0.7
     narrator "Mr. Harker's first-period English."
     show harker pointing at harker_body
     h "Notebooks closed. Pop quiz."
@@ -410,7 +410,7 @@ label pass_class_scene:
     hide harker
     narrator "Not in trouble. {i}Impressed.{/i}"
     pause 0.6
-    play sound "audio/bell_school.mp3"
+    play sound "audio/bell_school.mp3" volume 0.6
     narrator "The bell rings."
     narrator "As you gather your books, every head in the room turns."
     narrator "{i}No one speaks.{/i}"
@@ -432,7 +432,7 @@ label pass_class_scene:
     # so the YOU and JUST dissolves shave 1.0s of total time. Pauses are
     # tuned with that overhead in mind.
     scene bg black
-    play sound "audio/mogging_sfx.mp3"
+    play sound "audio/mogging_sfx.mp3" volume 0.4
     pause 1.0
     show text "{size=110}{color=#88ff88}{b}YOU{/b}{/color}" at truecenter with dissolve
     pause 1.5
@@ -477,7 +477,7 @@ label pass_class_scene:
 
 label mirror_scene:
     scene bg bedroom_dawn with fade
-    play music "audio/mirror_theme.mp3" fadein 2.5
+    play music "audio/mirror_theme.mp3" fadein 2.5 volume 0.8
     narrator "Your bedroom. Morning light through the blinds."
     narrator "You walk to the mirror and stare."
     pause 1.0
@@ -504,7 +504,7 @@ label mirror_scene:
     # Gigachad theme starts at file pos 10, drop at file pos 30.
     # renpy.music.get_pos() returns the ABSOLUTE file position, so all
     # wait values below are file positions (not elapsed time).
-    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5
+    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5 volume 0.6
 
     # One dim overlay sits over the city for the whole sequence so the
     # text reads cleanly without needing outlines.
