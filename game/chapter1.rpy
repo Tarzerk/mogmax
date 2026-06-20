@@ -13,6 +13,7 @@ image bg cafeteria_clav = bg_image("images/bg_cafeteria.jpg")
 # (chapter2.rpy) and credits_screen (credits.rpy).
 screen case_file_screen():
     modal True
+
     add Solid("#000000")
 
     frame:
@@ -64,11 +65,9 @@ screen case_file_screen():
                 color "#1a1a1a"
                 xalign 0.5
 
-    button:
-        xfill True
-        yfill True
-        background None
-        action Return()
+    # Dismiss on a left-click anywhere ("mousedown_1" is a direct key binding,
+    # so it doesn't depend on a focusable button's hit area) or Enter / Space.
+    key "mousedown_1" action Return()
     key "K_RETURN" action Return()
     key "K_SPACE" action Return()
 
