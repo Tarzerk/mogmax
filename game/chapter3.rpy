@@ -14,8 +14,8 @@ image bg ch3_bedroom    = bg_or_placeholder("images/bg_ch3_bedroom.jpg", "bedroo
 image bg ch3_road       = bg_or_placeholder("images/bg_ch3_road.jpg", "desert road")
 image bg ch3_gate       = bg_or_placeholder("images/bg_ch3_gate.jpg", "restricted gate")
 image bg ch3_sign       = bg_or_placeholder("images/bg_ch3_sign.jpg", "area 51 warning sign")
-image bg ch3_checkpoint = bg_or_placeholder("images/bg_ch3_checkpoint.jpg", "base checkpoint")
 image bg ch3_corridor   = bg_or_placeholder("images/bg_ch3_corridor.jpg", "base corridor")
+image bg ch3_vault      = bg_or_placeholder("images/bg_ch3_vault.jpg", "vault door")
 image bg ch3_lab        = bg_or_placeholder("images/bg_ch3_lab.jpg", "research lab")
 image bg ch3_whiteboard = bg_or_placeholder("images/bg_ch3_whiteboard.jpg", "whiteboards")
 image bg ch3_filewall   = bg_or_placeholder("images/bg_ch3_filewall.jpg", "gigachad file wall")
@@ -88,7 +88,7 @@ label chapter3_start:
 
 # ── SCENE 4 — INSIDE THE BASE ──
 label ch3_base:
-    scene bg ch3_checkpoint with fade
+    scene bg ch3_corridor with fade
     narrator "Layer after layer of security. Retinal scans. Badge checks. Armed guards."
     narrator "And yet — nobody stops you. Nobody even looks twice."
     narrator "It's like you were expected."
@@ -97,7 +97,7 @@ label ch3_base:
     show clav smirk at clav_body
     c "You have a lot to learn, normie."
     hide clav
-    scene bg ch3_corridor with fade
+    scene bg ch3_vault with fade
     narrator "You reach a massive vault door. Clav steps forward. A scanner activates. Blue light sweeps slowly across his jaw."
     $ play_sfx("audio/scan.mp3")
     pause 0.6
