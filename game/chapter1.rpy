@@ -143,4 +143,5 @@ label ltn_pill_ending:
     pause 1.5
     scene bg black with fade
     pause 0.6
+    $ credits_from_chapter = 1
     jump roll_credits

@@ -541,6 +541,7 @@ label mirror_scene:
     pause 0.4
 
     $ persistent.chapter2_complete = True
+    $ credits_from_chapter = 2
     jump roll_credits
 
 

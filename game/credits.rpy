@@ -20,13 +20,23 @@ init python:
 
     _BEE_TEXT = _load_bee_movie_text()
 
-    _CREDITS_BODY = (
+    # Chapter titles for the credits listing, keyed by the chapter the credits
+    # were reached from. Unknown / 0 (e.g. opened from the main menu or the dev
+    # skip menu) shows no chapter line at all.
+    _CREDITS_CHAPTER_TITLES = {
+        1: "Chopped",
+        2: "Brainmaxxing",
+    }
+
+    def build_credits_body(from_chapter=0):
+        title = _CREDITS_CHAPTER_TITLES.get(from_chapter)
+        chapter_line = ("{size=36}" + title + "{/size}\n\n\n\n\n") if title else ""
+
+        return (
         "\n\n\n\n\n\n"
         "{size=90}MOGMAX{/size}\n"
         "\n\n"
-        "{size=36}Chapter 1 — Chopped{/size}\n"
-        "{size=36}Chapter 2 — Brainmaxxing{/size}\n"
-        "\n\n\n\n\n"
+        + chapter_line +
         "{size=44}Developed by{/size}\n"
         "\n"
         "{size=72}{color=#9aa8ff}Tarzerk{/color}{/size}\n"
@@ -59,13 +69,18 @@ init python:
         "{size=30}{color=#9aa8ff}Stay sigma.{/color}{/size}\n"
         "\n\n\n\n\n\n"
 
-        # ── Bonus material ──
-        "{size=32}— bonus material —{/size}\n"
-        "{size=22}the Bee Movie (Dreamworks, 2007){/size}\n"
+        # ── Bee movie script ──
+        "{size=28}ok idk what else to put here so bee movie script goes here{/size}\n"
         "\n\n\n"
         + _BEE_TEXT +
         "\n\n\n\n\n"
-    )
+        )
+
+
+# Which chapter the credits were reached from (0 = none / opened from the
+# main menu), and the body text built from it before the screen shows.
+default credits_from_chapter = 0
+default credits_body = ""
 
 
 # Transform that scrolls the credits text from below the screen
@@ -93,7 +108,7 @@ screen credits_screen():
         action Return()
 
     # Scrolling text body
-    text _CREDITS_BODY at _credits_scroll:
+    text credits_body at _credits_scroll:
         size 24
         color "#ffffff"
         text_align 0.5
@@ -123,5 +138,8 @@ screen credits_screen():
 # Label so in-game flows can `jump roll_credits` and end up at main menu
 # when the screen returns.
 label roll_credits:
+    $ credits_body = build_credits_body(credits_from_chapter)
     call screen credits_screen
+    # Reset so a later menu-triggered roll doesn't inherit a stale chapter.
+    $ credits_from_chapter = 0
     return
