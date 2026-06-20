@@ -13,6 +13,7 @@
 image bg ch3_bedroom    = bg_or_placeholder("images/bg_ch3_bedroom.jpg", "bedroom (alarm)")
 image bg ch3_road       = bg_or_placeholder("images/bg_ch3_road.jpg", "desert road")
 image bg ch3_gate       = bg_or_placeholder("images/bg_ch3_gate.jpg", "restricted gate")
+image bg ch3_sign       = bg_or_placeholder("images/bg_ch3_sign.jpg", "area 51 warning sign")
 image bg ch3_checkpoint = bg_or_placeholder("images/bg_ch3_checkpoint.jpg", "base checkpoint")
 image bg ch3_corridor   = bg_or_placeholder("images/bg_ch3_corridor.jpg", "base corridor")
 image bg ch3_lab        = bg_or_placeholder("images/bg_ch3_lab.jpg", "research lab")
@@ -69,11 +70,13 @@ label chapter3_start:
     pause 0.5
 
     # ── SCENE 3 — THE SIGN ──
-    scene bg ch3_gate with fade
-    narrator "The car stops. The camera pans to a chain-link fence."
+    scene bg ch3_sign with fade
+    narrator "The car stops. The camera pans to a sign staked in the dirt."
     narrator "{b}⚠ RESTRICTED AREA — USE OF DEADLY FORCE AUTHORIZED ⚠{/b}"
     p "I think we should not be going here."
     narrator "Clav smirks. Says nothing."
+    scene bg ch3_gate with fade
+    narrator "The car rolls up to the gate. A chain-link fence. A STOP sign. Two soldiers."
     sol "Turn around. Now."
     p "Clav. We CANNOT be here."
     narrator "A shadow falls over the soldiers. A Captain steps forward."
