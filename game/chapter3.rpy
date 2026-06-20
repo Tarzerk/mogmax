@@ -135,7 +135,8 @@ label ch3_base:
     p "Who is that?"
     hide gigachad with dissolve
     show clav stern at clav_body
-    c "...The ceiling."
+    c "Not a who. A limit."
+    c "That's the ceiling. Top of the scale."
     c "Nobody reaches it. Some people get close."
     c "I got close."
     hide clav
