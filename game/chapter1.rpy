@@ -212,6 +212,9 @@ label ltn_pill_ending:
     pause 1.0
 
     # ── CASE FILE CODA ──
+    # Cut away from the cafeteria — kill its ambient bed so the research-office
+    # coda (case file + Gigachad's desk) plays in clean silence.
+    stop music fadeout 2.0
     scene bg black with fade
     pause 0.6
     $ play_sfx("audio/printer.mp3")
