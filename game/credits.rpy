@@ -45,28 +45,6 @@ init python:
         "{size=72}{color=#ffb3d1}Cebolla{/color}{/size}\n"
         "\n\n\n\n\n\n"
 
-        # ── Cast ──
-        "{size=44}Cast{/size}\n"
-        "\n\n"
-        "{size=30}{color=#9aa8ff}Clav{/color}{/size}\n"
-        "{size=20}{color=#888888}the Giga Mentor{/color}{/size}\n"
-        "\n"
-        "{size=30}{color=#7ab8ff}Brayden{/color}{/size}\n"
-        "{size=20}{color=#888888}the Annoying Guy{/color}{/size}\n"
-        "\n"
-        "{size=30}{color=#c0c0c0}Mr. Harker{/color}{/size}\n"
-        "{size=20}{color=#888888}the Vocab Enforcer{/color}{/size}\n"
-        "\n"
-        "{size=30}{color=#b5d4a0}Eugene{/color}{/size}\n"
-        "{size=20}{color=#888888}the Janitor{/color}{/size}\n"
-        "\n"
-        "{size=30}{color=#88ff88}You{/color}{/size}\n"
-        "{size=20}{color=#888888}Future Brainmogger{/color}{/size}\n"
-        "\n"
-        "{size=30}{color=#9aa8ff}???{/color}{/size}\n"
-        "{size=20}{color=#888888}the Ceiling{/color}{/size}\n"
-        "\n\n\n\n\n\n"
-
         # ── Thank you (moved BEFORE the bee movie script) ──
         "{size=44}Thank you for playing.{/size}\n"
         "\n"
