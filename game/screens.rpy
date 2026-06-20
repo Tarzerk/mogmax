@@ -1675,6 +1675,26 @@ screen dev_skip_menu():
                 xalign 0.5
                 text_size 22
 
+            textbutton "Chapter 3 start (The Mogbender)":
+                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter3_start")]
+                xalign 0.5
+                text_size 22
+
+            textbutton "Ch3 — base reveal":
+                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("ch3_base")]
+                xalign 0.5
+                text_size 22
+
+            textbutton "Ch3 — training montage":
+                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("ch3_training")]
+                xalign 0.5
+                text_size 22
+
+            textbutton "Ch3 — Eugene":
+                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("ch3_eugene")]
+                xalign 0.5
+                text_size 22
+
             textbutton "Credits roll":
                 action [Hide("dev_skip_menu"), Jump("roll_credits")]
                 xalign 0.5
@@ -1689,6 +1709,31 @@ screen dev_skip_menu():
                 text_color "#888888"
 
     key "K_ESCAPE" action Hide("dev_skip_menu")
+
+
+# ─── Chapter 3 travel bar ────────────────────────────────────
+# Brief "en route" interstitial during the desert drive. Auto-returns after
+# the bar fills. Minigame/UI is a stub — just a filling bar on a dark field.
+screen ch3_travel_bar():
+    modal True
+    add Solid("#101018")
+
+    vbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 22
+
+        text "EN ROUTE — CLASSIFIED DESTINATION":
+            size 30
+            color "#9aa8ff"
+            xalign 0.5
+
+        bar:
+            value AnimatedValue(0.0, 100.0, 3.0)
+            xsize 600
+            xalign 0.5
+
+    timer 3.2 action Return()
 
 
 ################################################################################

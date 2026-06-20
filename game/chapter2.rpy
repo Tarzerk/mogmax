@@ -1,5 +1,5 @@
 # MOGMAX — Chapter 2: Brainmaxxing
-# Characters (c, h, p, b, m, narrator) are defined in script.rpy
+# Characters (c, h, p, b, narrator) are defined in script.rpy
 
 default brain_score = 0
 default chapter2_attempt = 1
@@ -242,6 +242,8 @@ label study_done:
     c "Sleep. Don't cope-scroll tonight."
     show clav stern at clav_body
     c "If I see you on TikTok after midnight I am not coming to the library tomorrow."
+    show clav stern at clav_body
+    c "We're done here for now. Don't make that mean nothing."
     hide clav
     narrator "He leaves. You sit alone in the booth with The List."
     pause 1.0
@@ -413,8 +415,11 @@ label pass_class_scene:
     narrator "As you gather your books, every head in the room turns."
     narrator "{i}No one speaks.{/i}"
     narrator "Eyebrows raise."
-    narrator "Maddie catches your eye. Her gaze lingers half a second too long before she looks away."
-    narrator "In the back row, Brayden stops chewing his gum."
+    show brayden neutral at clav_body
+    narrator "In the back row, Brayden stops chewing. He stares at your score on Mr. Harker's sheet. He doesn't say anything."
+    narrator "{i}That's new.{/i}"
+    hide brayden
+    $ brayden_threatened = True
     pause 0.5
     show clav smirk at clav_body
     p "(...did I just mog the class?)"
@@ -450,6 +455,16 @@ label pass_class_scene:
     hide text with dissolve
     pause 0.6
 
+    # Clav is waiting in the hallway. He doesn't say well done.
+    scene bg hallway with fade
+    show clav smirk at clav_body
+    c "One quiz."
+    show clav stern at clav_body
+    c "Don't confuse a step for the summit."
+    hide clav with dissolve
+    pause 0.8
+
+    scene bg black with fade
     show text "THE NEXT MORNING" at truecenter with dissolve
     pause 2.0
     hide text with dissolve
@@ -541,8 +556,8 @@ label mirror_scene:
     pause 0.4
 
     $ persistent.chapter2_complete = True
-    $ credits_from_chapter = 2
-    jump roll_credits
+    # Chapter 2 no longer ends the game — it hands off into Chapter 3.
+    jump chapter3_start
 
 
 # ═════════════════════════════════════════════════════════════
@@ -562,17 +577,12 @@ label fail_class_scene:
     narrator "Somehow that's worse than yelling."
     hide harker
     pause 1.0
-    b "Bro."
-    b "You really thought \"skibidi\" was a definition?"
-    b "That's negative aura, dawg."
+    show brayden smirk at clav_body
+    b "Bro. You really thought \"skibidi\" was a definition? That's negative aura, dawg."
+    hide brayden
     narrator "The class loses it. Phones come out. Someone is filming."
     pause 0.8
-    narrator "From two rows over, casual, like it doesn't matter:"
-    narrator "{i}\"Same [povname] as ninth grade. Crazy how some people just don't grow.\"{/i}"
-    pause 0.8
-    narrator "Maddie doesn't laugh."
-    narrator "She doesn't mock."
-    narrator "She looks at her desk. And doesn't look up."
+    narrator "Nobody around you laughs either. They just look away."
     narrator "{i}Pity is louder than mockery.{/i}"
     pause 1.0
     scene bg hallway with fade

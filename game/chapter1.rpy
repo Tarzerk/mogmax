@@ -1,10 +1,76 @@
 # MOGMAX — Chapter 1: Chopped
-# Characters (narrator, p, c, stranger, m, b, h) and shared sprite
+# Characters (narrator, p, c, stranger, b, h) and shared sprite
 # transforms / game state are defined in script.rpy.
 
 # ─── Chapter backgrounds ─────────────────────────────────────
 image bg cafeteria = bg_image("images/bg_cafeteria.jpg")
 image bg cafeteria_clav = bg_image("images/bg_cafeteria.jpg")
+
+
+# ─── Case-file screen (blue-pill ending coda) ────────────────
+# Styled like a printed dossier sliding out of a printer. Click / Enter /
+# Space dismisses. Follows the modal full-screen idiom used by fail_screen
+# (chapter2.rpy) and credits_screen (credits.rpy).
+screen case_file_screen():
+    modal True
+    add Solid("#000000")
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 820
+        background Solid("#e8e4d8")
+        padding (54, 44)
+
+        vbox:
+            spacing 12
+
+            text "GIGAMAXXING RESEARCH DIVISION":
+                size 30
+                color "#1a1a1a"
+                bold True
+                xalign 0.5
+            text "— CASE FILE —":
+                size 22
+                color "#444444"
+                xalign 0.5
+
+            null height 10
+            add Solid("#1a1a1a", xysize=(712, 2))
+            null height 10
+
+            text "SUBJECT: [povname]":
+                size 24
+                color "#1a1a1a"
+            text "POTENTIAL ASSESSED: Present":
+                size 24
+                color "#1a1a1a"
+            text "PILL SELECTED: Blue":
+                size 24
+                color "#1a1a1a"
+            text "SANDWICH: Wet. Subject was aware. Proceeded anyway.":
+                size 24
+                color "#1a1a1a"
+            text "RECOMMENDATION: Do not follow up.":
+                size 24
+                color "#1a1a1a"
+
+            null height 14
+            add Solid("#1a1a1a", xysize=(712, 2))
+            null height 10
+
+            text "CASE STATUS:  {color=#aa1111}{b}CLOSED{/b}{/color}":
+                size 34
+                color "#1a1a1a"
+                xalign 0.5
+
+    button:
+        xfill True
+        yfill True
+        background None
+        action Return()
+    key "K_RETURN" action Return()
+    key "K_SPACE" action Return()
 
 
 # ═════════════════════════════════════════════════════════════
@@ -53,7 +119,17 @@ label start:
 
     pause 0.5
     narrator "Across the room, the popular kids are laughing."
-    narrator "You don't know what the joke is. You never do."
+    pause 0.3
+
+    show brayden neutral at clav_body with dissolve
+    b "Eat up, LTN."
+    narrator "Brayden doesn't even slow down. A single fry drops onto your tray as he passes — a coin tossed to a beggar."
+    hide brayden with dissolve
+    narrator "LTN. Low Tier Normie. Bottom of the barrel. Zero aura. The kind of person a room forgets while you're still in it."
+    narrator "That's you. That's been you."
+    pause 0.3
+
+    narrator "You don't know what the joke is. You never do. You don't have to."
     narrator "But somehow, you're pretty sure it's you."
     pause 0.8
 
@@ -111,6 +187,7 @@ label chad_pill_ending:
     show clav smile at clav_body
     c "Good."
     c "The work starts now."
+    c "And I mean that more literally than you think."
     pause 1.2
     scene bg black with fade
     pause 0.4
@@ -119,9 +196,8 @@ label chad_pill_ending:
 
 label ltn_pill_ending:
     $ persistent.chapter1_complete = True
-    # Crossfade from cafeteria ambient into the sad-piano mirror theme,
-    # which then rides through the LTN monologue and into the credits.
-    play music "audio/mirror_theme.mp3" fadeout 1.5 fadein 2.5
+    # No music here — the blue ending plays cold and quiet, then hands off
+    # to the silent case-file coda.
     play sound "audio/swallow_sfx.mp3"
     narrator "You reach for the blue pill."
     narrator "You swallow it before you can think about it."
@@ -130,17 +206,35 @@ label ltn_pill_ending:
     c "...blue."
     c "Of course."
     pause 0.4
-    c "Low Tier Normie. That's what LTN stands for — just so we're clear."
-    pause 0.3
-    c "You just signed up for a lifetime of wet sandwiches and back-row cafeteria seating."
-    c "That's fine. Someone has to."
-    pause 0.6
-    hide clav
-    narrator "Clav sighs, stands up, and walks away without another word."
+    c "Enjoy the sandwich."
     pause 0.4
-    narrator "The cafeteria carries on around you."
-    narrator "Nothing changes."
+    hide clav with dissolve
+    narrator "Clav stands and walks away. No speech. No goodbye. Just footsteps fading into the cafeteria noise."
+    pause 1.0
+
+    # ── CASE FILE CODA ──
+    scene bg black with fade
+    pause 0.6
+    $ play_sfx("audio/printer.mp3")
+    pause 0.8
+    call screen case_file_screen
+    pause 0.3
+
+    scene bg black
+    stranger "So. How was he?"
+    pause 0.4
+    c "...Blue pill."
+    pause 0.5
+    stranger "Hm."
+    pause 0.6
+
+    scene bg city_view with fade
+    show gigachad desk at clav_body with dissolve
+    narrator "A figure sits at a massive desk by the window. He sets the report down on a stack of identical files. He does not turn around."
+    pause 0.6
+    stranger "How shameful."
     pause 1.5
+
     scene bg black with fade
     pause 0.6
     $ credits_from_chapter = 1
