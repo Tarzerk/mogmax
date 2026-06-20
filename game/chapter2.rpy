@@ -189,7 +189,7 @@ label chapter2_start:
     # to land it at the same ~-25 LUFS bed level as the cafeteria.
     play music "audio/library_ambient.mp3" fadein 2.0 volume 0.7
 
-    show text "{size=54}BRAINMAXXING{/size}" at truecenter with dissolve
+    show text "{size=54}Chapter 2 — Brainmaxxing{/size}" at truecenter with dissolve
     pause 2.0
     hide text with dissolve
 

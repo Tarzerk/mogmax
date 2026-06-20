@@ -18,7 +18,7 @@ label start:
 
     scene bg black with fade
     pause 0.4
-    show text "{size=54}CHOPPED{/size}" at truecenter with dissolve
+    show text "{size=54}Chapter 1 — Chopped{/size}" at truecenter with dissolve
     pause 1.8
     hide text with dissolve
 
