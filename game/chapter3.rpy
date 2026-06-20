@@ -41,12 +41,14 @@ label chapter3_start:
 
     # ── SCENE 1 — THE PICKUP ──
     scene bg ch3_bedroom with fade
-    $ play_sfx("audio/alarm.mp3")
-    narrator "Black. An alarm screaming somewhere near your head."
+    # Bright stock bedroom -> tint dark for the pre-dawn feel (same trick as
+    # the desert night return).
+    show expression Solid("#0a1430cc") as night_tint
+    narrator "Black. Dead asleep. The kind of sleep that doesn't ask questions."
     pause 0.4
     play sound "audio/honk.mp3" volume 0.5
     narrator "{b}HONK HONK.{/b}"
-    narrator "You wake up suddenly."
+    narrator "A car horn blares outside your window. You jolt awake."
     show clav stern at clav_body
     c "Get up. We're leaving."
     p "...where exactly?"
@@ -89,9 +91,9 @@ label chapter3_start:
 # ── SCENE 4 — INSIDE THE BASE ──
 label ch3_base:
     scene bg ch3_corridor with fade
-    # Crossfade the desert ambient into low tension for the base infiltration
-    # (reusing quiz_tension — the base stretch was otherwise silent).
-    play music "audio/quiz_tension.mp3" fadeout 2.0 fadein 2.0 volume 0.6
+    # Stop the desert ambient on entering the base. This stretch stays silent
+    # until a tailored base track is added.
+    stop music fadeout 2.0
     narrator "Layer after layer of security. Retinal scans. Badge checks. Armed guards."
     narrator "And yet — nobody stops you. Nobody even looks twice."
     narrator "It's like you were expected."
@@ -102,7 +104,7 @@ label ch3_base:
     hide clav
     scene bg ch3_vault with fade
     narrator "You reach a massive vault door. Clav steps forward. A scanner activates. Blue light sweeps slowly across his jaw."
-    $ play_sfx("audio/scan.mp3")
+    play sound "audio/scan.wav" volume 0.85
     pause 0.6
     scene bg scan_granted with dissolve
     show text "{size=44}{color=#88ff88}🔵 JAWLINE SCAN CONFIRMED{/color}" at truecenter with dissolve
