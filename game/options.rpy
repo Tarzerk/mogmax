@@ -1,5 +1,13 @@
 define config.name = _("MOGMAX")
 define config.version = "0.5"
+
+# Per-user save location. REQUIRED for saves + persistent (progress, chapter
+# unlocks, Preferences/volume) to survive across launches in a packaged build —
+# without it they fall back into the game tree, which isn't a stable writable
+# location inside a distributed .app/.exe. That fallback is the cause of
+# "starts fresh every launch / Continue grayed." Do NOT change this string
+# after release, or existing players lose access to their saves.
+define config.save_directory = "MOGMAX"
 define gui.show_name = True
 define gui.about = _("MOGMAX — a satirical visual novel about the Mogging Epidemic of 2026.\n\nDeveloped by Tarzerk and Cebolla.")
 define build.name = "MOGMAX"
