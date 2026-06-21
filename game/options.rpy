@@ -25,3 +25,11 @@ define config.has_voice = False
 # accidentally quiet.
 define config.default_music_volume = 1.0
 define config.default_sfx_volume = 1.0
+
+
+# The dev-only Audio Check panel is gated behind config.developer (so it's
+# invisible in any built/released game). Belt-and-suspenders: also keep the
+# file out of distribution builds entirely.
+init python:
+    build.classify('game/audio_check.rpy', None)
+    build.classify('game/audio_check.rpyc', None)
