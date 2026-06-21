@@ -190,6 +190,7 @@ label chad_pill_ending:
     pause 1.2
     scene bg black with fade
     pause 0.4
+    call chapter_break("Chapter 1 complete")
     jump chapter2_start
 
 

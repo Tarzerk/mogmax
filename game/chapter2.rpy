@@ -554,6 +554,7 @@ label mirror_scene:
 
     $ persistent.chapter2_complete = True
     # Chapter 2 no longer ends the game — it hands off into Chapter 3.
+    call chapter_break("Chapter 2 complete")
     jump chapter3_start
 
 
