@@ -143,3 +143,25 @@ label splashscreen:
     hide text with dissolve
     pause 0.5
     return
+
+
+# ═════════════════════════════════════════════════════════════
+# BETWEEN-CHAPTER SAVE PROMPT
+# Called at each chapter boundary so players can drop a clean checkpoint on
+# top of the normal autosave. One-click: force_autosave writes to the auto
+# page, which the main-menu Continue picks up — so "quit now, resume here"
+# always works. Invoked via `call chapter_break("Chapter N complete")`.
+# ═════════════════════════════════════════════════════════════
+
+label chapter_break(done="Chapter complete"):
+    menu:
+        "[done]. Save your game?"
+
+        "Save game":
+            $ renpy.force_autosave(take_screenshot=True)
+            "Progress saved — you can quit safely, and Continue will resume here."
+
+        "Keep playing":
+            pass
+
+    return

@@ -293,11 +293,19 @@ screen navigation():
         if main_menu:
 
             ## MOGMAX main-menu buttons (in order).
-            if renpy.list_saved_games(fast=True):
-                textbutton _("New Game") action Confirm(_("Overwrite current progress?"), yes=Start())
-                textbutton _("Continue") action FileLoad(None, confirm=False, newest=True, slot=False)
+            # Newest save across auto / quick / manual slots. Drives the
+            # one-click Continue (resume newest) and whether New Game confirms.
+            $ _newest_slot = renpy.newest_slot(r'auto|quick|\d')
+
+            if _newest_slot:
+                textbutton _("Continue") action FileLoad(_newest_slot, slot=True, confirm=False)
+                textbutton _("New Game") action Confirm(_("Start a new game? Your existing saves stay available under Load."), yes=Start())
             else:
                 textbutton _("New Game") action Start()
+
+            # Load a specific save/branch from the title — matters for a
+            # multi-ending game (revisit a choice point without starting over).
+            textbutton _("Load") action ShowMenu("load")
 
             if persistent.chapter1_complete:
                 textbutton _("Chapter Select") action ShowMenu("chapter_select")
@@ -432,12 +440,17 @@ style main_menu_version:
 ## this screen is intended to be used with one or more children, which are
 ## transcluded (placed) inside it.
 
-screen game_menu(title, scroll=None):
+screen game_menu(title, scroll=None, bg=None):
 
     style_prefix "game_menu"
 
     if main_menu:
         add gui.main_menu_background
+    elif bg is not None:
+        # Custom per-screen background (e.g. the Save/Load gigachad), scaled to
+        # fill the screen and darkened so the slot grid stays legible.
+        add Transform(bg, xysize=(config.screen_width, config.screen_height), fit="cover")
+        add Solid("#000000aa")
     else:
         add gui.game_menu_background
 
@@ -644,7 +657,7 @@ screen file_slots(title):
 
     default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
 
-    use game_menu(title):
+    use game_menu(title, bg="gui/gigachad.jpg"):
 
         fixed:
 
@@ -1602,6 +1615,31 @@ screen chapter_select():
                     color "#555555"
                     xalign 0.5
                 text "(Complete Chapter 1 to unlock)":
+                    size 16
+                    color "#444444"
+                    xalign 0.5
+                    italic True
+
+        # Chapter 3 — locked until Ch2 complete
+        if persistent.chapter2_complete:
+            textbutton "Chapter 3 — The Mogbender":
+                action Confirm(
+                    "Start Chapter 3?\nThis will overwrite your current game progress.",
+                    yes=Start("chapter3_start")
+                )
+                xalign 0.5
+                text_size 32
+                text_color "#cccccc"
+                text_hover_color "#ffffff"
+        else:
+            vbox:
+                xalign 0.5
+                spacing 2
+                text "🔒  Chapter 3 — The Mogbender":
+                    size 32
+                    color "#555555"
+                    xalign 0.5
+                text "(Complete Chapter 2 to unlock)":
                     size 16
                     color "#444444"
                     xalign 0.5

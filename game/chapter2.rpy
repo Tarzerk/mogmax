@@ -621,12 +621,14 @@ label mirror_scene:
 
     $ persistent.chapter2_complete = True
 
-    # ══ Credits roll over the song's "tears" tail (1:35–end), then straight
-    # into Chapter 3. roll_credits is callable and returns here; the song keeps
-    # playing under it, and Ch3's own `stop music` clears it on entry. ══
+    # ══ Credits roll over the song's "tears" tail (1:35–end). roll_credits is
+    # callable and returns here; the song keeps playing under it. After the
+    # player dismisses the credits, offer a save point, then into Chapter 3
+    # (whose own `stop music` clears the track on entry). ══
     $ credits_from_chapter = 2
     call roll_credits
 
+    call chapter_break("Chapter 2 complete")
     jump chapter3_start
 
 
