@@ -333,43 +333,47 @@ After all 7 questions:
 
 ---
 
-### Scene 4 — Mirror & City (Resolution)
+### Scene 4 — Mirror Monologue (Resolution)
 
-*Background: bedroom, dawn light.*
+*A timed, music-driven cutscene — no clicks. Letterbox bars + a slow Ken Burns drift on every background; captions are subtitles (bottom) except the final line. Scored by `mirror_scene.mp3` from 0:42, which pre-rolls quietly under the "THE NEXT MORNING" card and swells in. Beats are synced to the song: sad inventory → flashbacks → shatter on the 1:13 drop → the lift → peak at ~1:35.*
 
-> **NARRATOR:** *Your bedroom. Morning light through the blinds.*
+*Background: bedroom mirror, dawn.* Internal monologue (Tanaka-inspired):
+
+> *I'm nothing special. Average face. Average build. Average everything.*
 >
-> **NARRATOR:** *You walk to the mirror and stare.*
-
-*Flashback cuts (rapid):*
-
-> **NARRATOR:** *— A hallway shove in ninth grade. "Move, NPC."*
+> *As a kid, I was sure I'd grow into someone. Middle school. Freshman year. Still sure. ...Some nights, I'm still sure.*
 >
-> **NARRATOR:** *— A laugh across the cafeteria. "Look at this LTN."*
->
-> **NARRATOR:** *— A sticky note on your locker. CHOPPED.*
+> *And there's no room I walk into where I'm the best at anything.*
 
-*Back to mirror.*
+*Flashback quote cards (rapid, the low point):*
 
-> **NARRATOR:** *Back to the mirror.*
+> "Move, NPC." — eighth grade
 >
-> **NARRATOR:** *Yesterday's silent praise sits against those memories.*
+> "Look at this LTN." — ninth grade
 >
-> **NARRATOR:** *For the first time, the face in the mirror doesn't feel like a verdict.*
+> "Chopped." — tenth grade
 
-*Window view of city skyline.*
+*The drop (1:13): the mirror **shatters** — hard cut to broken glass.*
 
-> **NARRATOR:** *You turn to the window.*
->
-> **NARRATOR:** *The city stretches out below — alive, indifferent, full of people who already mog without trying.*
->
+> *So. Average me. You got time to be looking down?*
+
+*Turn to hope (god-rays):*
+
 > **[name]:** I can change.
 >
-> **[name]:** I'm not staying an LTN.
+> **[name]:** I'm done being someone the room forgets.
+>
+> **[name]:** I'll do it until I can.
+>
+> **[name]:** No more looking down.
+
+*Heaven (god rays) holds a beat with no text, then the peak at ~1:35, center screen:*
+
+> **[name]:** I will mog the world.
 
 **End card:** `END OF CHAPTER 2 — BRAINMAXXED`
 
-→ Chapter 2 marked complete. Credits roll.
+→ Credits roll over the song's tail, then straight into Chapter 3.
 
 ---
 
