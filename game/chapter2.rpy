@@ -404,11 +404,9 @@ label pass_class_scene:
     scene bg classroom_silent with fade
     show harker glasses at harker_body
     narrator "Mr. Harker slowly removes his glasses."
-    show harker smirk at harker_body
-    narrator "He stares."
-    h "...See me after class."
+    narrator "He looks at your sheet. Then at you."
+    h "...Well. You finally passed."
     hide harker
-    narrator "Not in trouble. {i}Impressed.{/i}"
     pause 0.6
     play sound "audio/bell_school.mp3" volume 0.6
     narrator "The bell rings."
@@ -421,10 +419,8 @@ label pass_class_scene:
     hide brayden
     $ brayden_threatened = True
     pause 0.5
-    show clav smirk at clav_body
     p "(...did I just mog the class?)"
     pause 1.4
-    hide clav
 
     # ── THE MOG MOMENT ──
     # Timed to mogging_sfx.mp3 — the hit lands at 5.75s into the file.
