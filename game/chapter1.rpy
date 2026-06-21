@@ -95,7 +95,7 @@ label start:
     scene bg cafeteria with fade
     # Cross-fade menu theme into cafeteria ambient, ducked as a background
     # bed (~5 dB under the feature themes) so dialogue reads clearly.
-    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume 0.55
+    play music "audio/cafeteria_ambient.mp3" fadeout 1.0 fadein 1.5 volume VOL_BED
     narrator "Your name is [povname]."
     narrator "At least, that's what it says on the detention slip sitting on Mr. Harker's desk — again."
     pause 0.3
@@ -132,7 +132,7 @@ label start:
     narrator "But somehow, you're pretty sure it's you."
     pause 0.8
 
-    play sound "audio/tray_slam.mp3"
+    play sound "audio/tray_slam.mp3" volume VOL_SFX
     narrator "A tray slams on the table across from you."
     narrator "You flinch hard enough to knock your juice box onto the floor."
     pause 0.4
@@ -165,7 +165,7 @@ label start:
     pause 0.4
 
     # Pill-bottle SFX fires the moment the choice is presented.
-    play sound "audio/pill_pickup.mp3"
+    play sound "audio/pill_pickup.mp3" volume VOL_SFX
     show clav stern at clav_body
 
     menu:
@@ -180,7 +180,7 @@ label chad_pill_ending:
     $ persistent.chapter1_complete = True
     $ took_chad_pill = True
     stop music fadeout 1.5
-    play sound "audio/swallow_sfx.mp3"
+    play sound "audio/swallow_sfx.mp3" volume VOL_SFX
     narrator "You reach out and take the red pill."
     narrator "Clav nods slowly, like he already knew."
     show clav smile at clav_body
@@ -197,7 +197,7 @@ label ltn_pill_ending:
     $ persistent.chapter1_complete = True
     # No music here — the blue ending plays cold and quiet, then hands off
     # to the silent case-file coda.
-    play sound "audio/swallow_sfx.mp3"
+    play sound "audio/swallow_sfx.mp3" volume VOL_SFX
     narrator "You reach for the blue pill."
     narrator "You swallow it before you can think about it."
     pause 0.5

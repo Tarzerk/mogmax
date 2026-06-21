@@ -47,6 +47,14 @@ default persistent.chapter1_complete = False
 default persistent.chapter2_complete = False
 default persistent.chapter3_complete = False
 
+# ─── Audio mix levels (single source of truth) ───────────────
+# Every audio file is loudness-normalized to ~-16 LUFS, so these are pure
+# mix decisions, not per-file compensation. Tune the whole game here.
+define VOL_BED   = 0.5    # ambient beds under dialogue (cafeteria, library, desert, base)
+define VOL_MUSIC = 0.75   # feature music (themes, tension, montage, mirror)
+define VOL_SFX   = 0.85   # one-shot sound effects
+define VOL_HIT   = 1.0    # big stinger (the BRAINMOGGED hit)
+
 
 # Migrate older persistent-flag names from earlier dev iterations,
 # so progress isn't lost when the spec renamed them.
