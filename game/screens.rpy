@@ -440,12 +440,17 @@ style main_menu_version:
 ## this screen is intended to be used with one or more children, which are
 ## transcluded (placed) inside it.
 
-screen game_menu(title, scroll=None):
+screen game_menu(title, scroll=None, bg=None):
 
     style_prefix "game_menu"
 
     if main_menu:
         add gui.main_menu_background
+    elif bg is not None:
+        # Custom per-screen background (e.g. the Save/Load gigachad), scaled to
+        # fill the screen and darkened so the slot grid stays legible.
+        add Transform(bg, xysize=(config.screen_width, config.screen_height), fit="cover")
+        add Solid("#000000aa")
     else:
         add gui.game_menu_background
 
@@ -652,7 +657,7 @@ screen file_slots(title):
 
     default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
 
-    use game_menu(title):
+    use game_menu(title, bg="gui/gigachad.jpg"):
 
         fixed:
 
