@@ -91,9 +91,10 @@ label chapter3_start:
 # ── SCENE 4 — INSIDE THE BASE ──
 label ch3_base:
     scene bg ch3_corridor with fade
-    # Stop the desert ambient on entering the base. This stretch stays silent
-    # until a tailored base track is added.
-    stop music fadeout 2.0
+    # Crossfade the desert ambient into the sci-fi base bed for the
+    # infiltration + reveal (Scenes 4-6). Hot master, so ducked hard to bed
+    # level; the montage track crossfades it back out in Scene 7.
+    play music "audio/base_ambient.mp3" fadeout 2.0 fadein 2.0 volume 0.25
     narrator "Layer after layer of security. Retinal scans. Badge checks. Armed guards."
     narrator "And yet — nobody stops you. Nobody even looks twice."
     narrator "It's like you were expected."
