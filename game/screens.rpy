@@ -305,6 +305,10 @@ screen navigation():
             textbutton _("Credits") action Function(renpy.call_in_new_context, "roll_credits")
             textbutton _("Preferences") action ShowMenu("preferences")
 
+            # Dev-only audio level tuning panel (hidden in release builds).
+            if config.developer:
+                textbutton "Audio Check" action Show("audio_check")
+
             if renpy.variant("pc"):
                 textbutton _("Quit") action Quit(confirm=False)
 

@@ -49,11 +49,15 @@ default persistent.chapter3_complete = False
 
 # ─── Audio mix levels (single source of truth) ───────────────
 # Every audio file is loudness-normalized to ~-16 LUFS, so these are pure
-# mix decisions, not per-file compensation. Tune the whole game here.
-define VOL_BED   = 0.5    # ambient beds under dialogue (cafeteria, library, desert, base)
-define VOL_MUSIC = 0.75   # feature music (themes, tension, montage, mirror)
-define VOL_SFX   = 0.85   # one-shot sound effects
-define VOL_HIT   = 1.0    # big stinger (the BRAINMOGGED hit)
+# mix decisions, not per-file compensation. Stored in persistent so the
+# Audio Check panel (main menu, dev) can tune them live and the values stick.
+# To change the shipped defaults, edit the numbers below.
+init python:
+    # Re-applied every launch so these baked baselines are the source of truth
+    # (the dev Audio Check panel still tunes live within a session).
+    for _vname, _vdefault in (("vol_bed", 0.85), ("vol_music", 1.0),
+                              ("vol_sfx", 0.85)):
+        setattr(persistent, _vname, _vdefault)
 
 
 # Migrate older persistent-flag names from earlier dev iterations,

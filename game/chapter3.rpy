@@ -46,7 +46,7 @@ label chapter3_start:
     show expression Solid("#0a1430cc") as night_tint
     narrator "Black. Dead asleep. The kind of sleep that doesn't ask questions."
     pause 0.4
-    play sound "audio/honk.mp3" volume VOL_SFX
+    play sound "audio/honk.mp3" volume persistent.vol_sfx
     narrator "{b}HONK HONK.{/b}"
     narrator "A car horn blares outside your window. You jolt awake."
     show clav stern at clav_body
@@ -59,7 +59,7 @@ label chapter3_start:
 
     # ── SCENE 2 — THE ROAD ──
     scene bg ch3_road with fade
-    play music "audio/desert_ambient.mp3" fadein 1.5 volume VOL_BED
+    play music "audio/desert_ambient.mp3" fadein 1.5 volume persistent.vol_bed
     narrator "Timelapse. Desert highway. Hours pass."
     call screen ch3_travel_bar
     p "Clav I literally have school tomorrow —"
@@ -94,7 +94,7 @@ label ch3_base:
     # Crossfade the desert ambient into the sci-fi base bed for the
     # infiltration + reveal (Scenes 4-6). Hot master, so ducked hard to bed
     # level; the montage track crossfades it back out in Scene 7.
-    play music "audio/base_ambient.mp3" fadeout 2.0 fadein 2.0 volume VOL_BED
+    play music "audio/base_ambient.mp3" fadeout 2.0 fadein 2.0 volume persistent.vol_bed
     narrator "Layer after layer of security. Retinal scans. Badge checks. Armed guards."
     narrator "And yet — nobody stops you. Nobody even looks twice."
     narrator "It's like you were expected."
@@ -105,7 +105,7 @@ label ch3_base:
     hide clav
     scene bg ch3_vault with fade
     narrator "You reach a massive vault door. Clav steps forward. A scanner activates. Blue light sweeps slowly across his jaw."
-    play sound "audio/scan.mp3" volume VOL_SFX
+    play sound "audio/scan.mp3" volume (persistent.vol_sfx * 0.85)
     pause 0.6
     scene bg scan_granted with dissolve
     show text "{size=44}{color=#88ff88}🔵 JAWLINE SCAN CONFIRMED{/color}" at truecenter with dissolve
@@ -159,7 +159,7 @@ label ch3_base:
 label ch3_training:
     scene bg ch3_gym with fade
     show gigachad wall at clav_body
-    play music "audio/training_montage.mp3" fadeout 1.5 fadein 1.0 volume VOL_MUSIC
+    play music "audio/training_montage.mp3" fadeout 1.5 fadein 1.0 volume persistent.vol_music
     narrator "Clav leads you into the training wing. Different people run each station. None of them introduce themselves. They don't need to."
     narrator "In the back, barely visible — a massive figure leaning against the wall. Just existing."
     pause 0.5
@@ -238,7 +238,7 @@ label ch3_return:
     # scene change to black at the end.
     scene bg ch3_road with fade
     show expression Solid("#0a1430cc") as night_tint
-    play music "audio/desert_ambient.mp3" fadein 1.0 volume VOL_BED
+    play music "audio/desert_ambient.mp3" fadein 1.0 volume persistent.vol_bed
     narrator "Exterior. Night. Back in the car. Desert highway reversed."
     p "So what was the point of all that?"
     show clav stern at clav_body
@@ -249,7 +249,7 @@ label ch3_return:
     hide clav
     narrator "Silence. Desert. Stars."
     pause 0.6
-    play sound "audio/text_buzz.mp3" volume VOL_SFX
+    play sound "audio/text_buzz.mp3" volume persistent.vol_sfx
     narrator "Your phone buzzes."
     narrator "{color=#7ab8ff}BRAYDEN{/color}"
     narrator "{i}\"yo heard you been acting different lately\"{/i}"
