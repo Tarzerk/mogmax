@@ -405,6 +405,9 @@ label quiz_finished:
 # ═════════════════════════════════════════════════════════════
 
 label pass_class_scene:
+    # Silent scene (sfx only) — clear any inherited track so a jump/skip into
+    # it doesn't bleed a previous scene's music. (No-op in normal play.)
+    stop music fadeout 0.5
     scene bg classroom_silent with fade
     show harker glasses at harker_body
     narrator "Mr. Harker slowly removes his glasses."
@@ -637,6 +640,7 @@ label mirror_scene:
 # ═════════════════════════════════════════════════════════════
 
 label fail_class_scene:
+    stop music fadeout 0.5  # silent scene — clear inherited music (audio-hardening)
     scene bg classroom with fade
     show harker tired at harker_body
     narrator "Mr. Harker doesn't snap at you."

@@ -209,6 +209,7 @@ label ch3_training:
 
 # ── SCENE 8 — EUGENE (MEANINGFUL CHOICE) ──
 label ch3_eugene:
+    stop music fadeout 0.5  # silent scene — clear inherited music (audio-hardening)
     scene bg ch3_janitor with fade
     narrator "A mop squeaks across the floor in the corner. You turn."
     show eugene neutral at clav_body
