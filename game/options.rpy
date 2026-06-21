@@ -16,9 +16,20 @@ define config.quit_action = Quit(confirm=False)
 # Auto-play the menu theme while the main menu screen is visible.
 define config.main_menu_music = "audio/main_menu_theme.mp3"
 
-# Channel mixer defaults. All audio files are loudness-normalized
-# (music ~-18 LUFS, SFX peak -1.5 dBFS), so these set the overall mix:
-# music sits a touch under the SFX so dialogue/effects read clearly.
-# Users can adjust both via the Preferences screen sliders.
-define config.default_music_volume = 0.8
-define config.default_sfx_volume = 0.75
+# No voice acting — hide the Voice volume slider in Preferences.
+define config.has_voice = False
+
+# Channel mixer defaults (the Preferences sliders start here). All audio is
+# loudness-normalized to ~-16 LUFS, so the per-cue mix lives in the VOL_*
+# values in script.rpy — these sliders default to full so nothing starts
+# accidentally quiet.
+define config.default_music_volume = 1.0
+define config.default_sfx_volume = 1.0
+
+
+# The dev-only Audio Check panel is gated behind config.developer (so it's
+# invisible in any built/released game). Belt-and-suspenders: also keep the
+# file out of distribution builds entirely.
+init python:
+    build.classify('game/audio_check.rpy', None)
+    build.classify('game/audio_check.rpyc', None)

@@ -1,5 +1,5 @@
 # MOGMAX — Chapter 2: Brainmaxxing
-# Characters (c, h, p, b, m, narrator) are defined in script.rpy
+# Characters (c, h, p, b, narrator) are defined in script.rpy
 
 default brain_score = 0
 default chapter2_attempt = 1
@@ -183,15 +183,16 @@ init python:
 
 label chapter2_start:
     $ brain_score = 0
-    scene bg library with fade
-    # Quiet library ambience runs through the bootcamp + flashcard study.
-    # File is normalized 2 dB lower than the themes, so play a touch hotter
-    # to land it at the same ~-25 LUFS bed level as the cafeteria.
-    play music "audio/library_ambient.mp3" fadein 2.0 volume 0.7
-
+    # Title card on black for legibility, then fade into the library.
+    scene bg black with fade
+    pause 0.4
     show text "{size=54}Chapter 2 — Brainmaxxing{/size}" at truecenter with dissolve
     pause 2.0
     hide text with dissolve
+
+    scene bg library with fade
+    # Quiet library ambience runs through the bootcamp + flashcard study.
+    play music "audio/library_ambient.mp3" fadein 2.0 volume persistent.vol_bed
 
     if chapter2_attempt == 1:
         narrator "After school. The library is empty except for the back booth."
@@ -242,6 +243,8 @@ label study_done:
     c "Sleep. Don't cope-scroll tonight."
     show clav stern at clav_body
     c "If I see you on TikTok after midnight I am not coming to the library tomorrow."
+    show clav stern at clav_body
+    c "We're done here for now. Don't make that mean nothing."
     hide clav
     narrator "He leaves. You sit alone in the booth with The List."
     pause 1.0
@@ -261,7 +264,7 @@ label study_done:
 
 label class_quiz:
     scene bg classroom with fade
-    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5
+    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5 volume persistent.vol_music
     narrator "Mr. Harker's first-period English."
     show harker pointing at harker_body
     h "Notebooks closed. Pop quiz."
@@ -402,24 +405,23 @@ label pass_class_scene:
     scene bg classroom_silent with fade
     show harker glasses at harker_body
     narrator "Mr. Harker slowly removes his glasses."
-    show harker smirk at harker_body
-    narrator "He stares."
-    h "...See me after class."
+    narrator "He looks at your sheet. Then at you."
+    h "...Well. You finally passed."
     hide harker
-    narrator "Not in trouble. {i}Impressed.{/i}"
     pause 0.6
-    play sound "audio/bell_school.mp3"
+    play sound "audio/bell_school.mp3" volume persistent.vol_sfx
     narrator "The bell rings."
     narrator "As you gather your books, every head in the room turns."
     narrator "{i}No one speaks.{/i}"
     narrator "Eyebrows raise."
-    narrator "Maddie catches your eye. Her gaze lingers half a second too long before she looks away."
-    narrator "In the back row, Brayden stops chewing his gum."
+    show brayden neutral at clav_body
+    narrator "In the back row, Brayden stops chewing. He stares at your score on Mr. Harker's sheet. He doesn't say anything."
+    narrator "{i}That's new.{/i}"
+    hide brayden
+    $ brayden_threatened = True
     pause 0.5
-    show clav smirk at clav_body
     p "(...did I just mog the class?)"
     pause 1.4
-    hide clav
 
     # ── THE MOG MOMENT ──
     # Timed to mogging_sfx.mp3 — the hit lands at 5.75s into the file.
@@ -427,7 +429,7 @@ label pass_class_scene:
     # so the YOU and JUST dissolves shave 1.0s of total time. Pauses are
     # tuned with that overhead in mind.
     scene bg black
-    play sound "audio/mogging_sfx.mp3"
+    play sound "audio/mogging_sfx.mp3" volume persistent.vol_sfx
     pause 1.0
     show text "{size=110}{color=#88ff88}{b}YOU{/b}{/color}" at truecenter with dissolve
     pause 1.5
@@ -450,6 +452,16 @@ label pass_class_scene:
     hide text with dissolve
     pause 0.6
 
+    # Clav is waiting in the hallway. He doesn't say well done.
+    scene bg hallway with fade
+    show clav smirk at clav_body
+    c "One quiz."
+    show clav stern at clav_body
+    c "Don't confuse a step for the summit."
+    hide clav with dissolve
+    pause 0.8
+
+    scene bg black with fade
     show text "THE NEXT MORNING" at truecenter with dissolve
     pause 2.0
     hide text with dissolve
@@ -462,7 +474,7 @@ label pass_class_scene:
 
 label mirror_scene:
     scene bg bedroom_dawn with fade
-    play music "audio/mirror_theme.mp3" fadein 2.5
+    play music "audio/mirror_theme.mp3" fadein 2.5 volume persistent.vol_music
     narrator "Your bedroom. Morning light through the blinds."
     narrator "You walk to the mirror and stare."
     pause 1.0
@@ -489,7 +501,7 @@ label mirror_scene:
     # Gigachad theme starts at file pos 10, drop at file pos 30.
     # renpy.music.get_pos() returns the ABSOLUTE file position, so all
     # wait values below are file positions (not elapsed time).
-    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5
+    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5 volume persistent.vol_music
 
     # One dim overlay sits over the city for the whole sequence so the
     # text reads cleanly without needing outlines.
@@ -541,8 +553,8 @@ label mirror_scene:
     pause 0.4
 
     $ persistent.chapter2_complete = True
-    $ credits_from_chapter = 2
-    jump roll_credits
+    # Chapter 2 no longer ends the game — it hands off into Chapter 3.
+    jump chapter3_start
 
 
 # ═════════════════════════════════════════════════════════════
@@ -562,17 +574,12 @@ label fail_class_scene:
     narrator "Somehow that's worse than yelling."
     hide harker
     pause 1.0
-    b "Bro."
-    b "You really thought \"skibidi\" was a definition?"
-    b "That's negative aura, dawg."
+    show brayden smirk at clav_body
+    b "Bro. You really thought \"skibidi\" was a definition? That's negative aura, dawg."
+    hide brayden
     narrator "The class loses it. Phones come out. Someone is filming."
     pause 0.8
-    narrator "From two rows over, casual, like it doesn't matter:"
-    narrator "{i}\"Same [povname] as ninth grade. Crazy how some people just don't grow.\"{/i}"
-    pause 0.8
-    narrator "Maddie doesn't laugh."
-    narrator "She doesn't mock."
-    narrator "She looks at her desk. And doesn't look up."
+    narrator "Nobody around you laughs either. They just look away."
     narrator "{i}Pity is louder than mockery.{/i}"
     pause 1.0
     scene bg hallway with fade
