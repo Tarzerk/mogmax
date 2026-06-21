@@ -17,6 +17,9 @@ image bg classroom = bg_image("images/bg_classroom.jpg")
 image bg classroom_silent = bg_image("images/bg_classroom_silent.jpg")
 image bg bedroom_dawn = bg_image("images/bg_bedroom_dawn.jpg")
 image bg city_view = bg_image("images/bg_city_view.jpg")
+image bg shattered_mirror = bg_image("images/bg_shattered_mirror.jpg")
+image bg hope = bg_image("images/bg_hope.jpg")
+image bg god_rays = bg_image("images/bg_god_rays.jpg")
 image bg flashback = "#0a0a0a"
 image bg hallway = bg_image("images/bg_hallway.jpg")
 
@@ -463,6 +466,10 @@ label pass_class_scene:
 
     scene bg black with fade
     show text "THE NEXT MORNING" at truecenter with dissolve
+    # Start the mirror theme quietly here, under the title card — it swells to
+    # full once the bedroom appears (in mirror_scene). <from 42> + noloop match
+    # the scene's own playback so there's no restart on the handoff.
+    play music "<from 42>audio/mirror_scene.mp3" noloop fadein 2.5 volume 0.2
     pause 2.0
     hide text with dissolve
     jump mirror_scene
@@ -472,88 +479,155 @@ label pass_class_scene:
 # SCENE 4 — MIRROR & CITY (RESOLUTION)
 # ═════════════════════════════════════════════════════════════
 
+# ─── Cinematic helpers for the mirror monologue ──────────────
+# Slow "Ken Burns" drifts so every background is alive (never dead-static),
+# plus a letterbox (top/bottom black bars) to flag the cutscene.
+transform kb_zoom:
+    subpixel True
+    zoom 1.05
+    linear 32.0 zoom 1.18
+
+transform kb_pan_right:
+    subpixel True
+    zoom 1.14 xoffset -45
+    linear 32.0 xoffset 45
+
+transform kb_pan_left:
+    subpixel True
+    zoom 1.14 xoffset 45
+    linear 32.0 xoffset -45
+
+transform letterbar_top:
+    yalign 0.0
+    yoffset -90
+    ease 0.7 yoffset 0
+
+transform letterbar_bottom:
+    yalign 1.0
+    yoffset 90
+    ease 0.7 yoffset 0
+
+screen letterbox():
+    zorder 80
+    add Solid("#000000", xysize=(config.screen_width, 90)) at letterbar_top
+    add Solid("#000000", xysize=(config.screen_width, 90)) at letterbar_bottom
+
+
 label mirror_scene:
-    scene bg bedroom_dawn with fade
-    play music "audio/mirror_theme.mp3" fadein 2.5 volume persistent.vol_music
-    narrator "Your bedroom. Morning light through the blinds."
-    narrator "You walk to the mirror and stare."
-    pause 1.0
+    # Cinematic: letterbox bars in + a slow Ken Burns drift on every background.
+    # Text appears crisp (no fade); the images carry the motion.
+    show screen letterbox
+    show bg bedroom_dawn at kb_zoom with fade
+    # The mirror theme is already playing quietly from the NEXT MORNING card;
+    # swell it to full now that the bedroom is on screen. If the scene is
+    # entered directly (e.g. a dev jump), start the track here instead so it
+    # isn't silent. (All _wait_until_music_pos values are absolute seconds into
+    # mirror_scene.mp3; <from 42> skipped the slow intro, drop @1:13, peak @~1:35.)
+    if "mirror_scene.mp3" in (renpy.music.get_playing(channel="music") or ""):
+        # Pre-rolled from the NEXT MORNING card — swell it to full.
+        $ renpy.music.set_volume(persistent.vol_music, delay=2.0, channel="music")
+    else:
+        # Entered directly, or a stale track is still playing — replace it.
+        play music "<from 42>audio/mirror_scene.mp3" noloop fadein 1.0 volume persistent.vol_music
 
-    # Flashback cuts use the three bully bg images (graceful fallback to
-    # solid black if the JPGs aren't present yet).
-    scene bg bully1 with fade
-    narrator "{i}— Eighth grade. Cornered between the stacks. \"Move, NPC.\"{/i}"
-    pause 0.8
-    scene bg bully2 with fade
-    narrator "{i}— Ninth grade. The library never stopped laughing. \"Look at this LTN.\"{/i}"
-    pause 0.8
-    scene bg bully3 with fade
-    narrator "{i}— Tenth grade. They knocked you to the floor. CHOPPED.{/i}"
-    pause 1.0
+    # One dim overlay over the whole sequence so captions read cleanly.
+    show expression Solid("#000000aa") as dim_overlay
 
-    scene bg bedroom_dawn with fade
-    narrator "Back to the mirror."
-    narrator "Yesterday's silent praise sits against those memories."
-    narrator "For the first time, the face in the mirror doesn't feel like a verdict."
-    pause 1.0
+    # ══ SAD (~0:44–1:03) — the honest inventory. Full lines, no fade on text. ══
+    $ _wait_until_music_pos(44.0)
+    show expression Text("I'm nothing special.", size=46, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
 
-    scene bg city_view with fade
-    # Gigachad theme starts at file pos 10, drop at file pos 30.
-    # renpy.music.get_pos() returns the ABSOLUTE file position, so all
-    # wait values below are file positions (not elapsed time).
-    play music "<from 10>audio/gigachad_theme.mp3" fadein 0.5 volume persistent.vol_music
+    $ _wait_until_music_pos(48.0)
+    show expression Text("Average face. Average build. Average everything.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
 
-    # One dim overlay sits over the city for the whole sequence so the
-    # text reads cleanly without needing outlines.
-    show expression Solid("#000000aa") as dim_overlay with Dissolve(0.8)
+    $ _wait_until_music_pos(52.0)
+    show expression Text("As a kid, I was sure I'd grow into someone.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
 
-    # ── Narrator captions (auto-paced, no click required) ──
-    $ _wait_until_music_pos(11.0)
-    show expression Text("You turn to the window.", size=30, color="#dddddd", italic=True, xmaximum=1000, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.82) with dissolve
+    $ _wait_until_music_pos(56.0)
+    show expression Text("Middle school. Freshman year. Still sure.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
 
-    $ _wait_until_music_pos(14.0)
+    $ _wait_until_music_pos(60.0)
+    show expression Text("...Some nights, I'm still sure.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+
+    $ _wait_until_music_pos(63.0)
+    show expression Text("And there's no room I walk into where I'm the best at anything.", size=40, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+
+    # ══ Flashbacks (~1:07–1:12) — the images speak; just the quotes. ══
+    $ _wait_until_music_pos(66.0)
     hide nartext
-    show expression Text("The city stretches out below — full of people who mog without trying.", size=28, color="#dddddd", italic=True, xmaximum=1100, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.82) with dissolve
+    show bg bully1 at kb_pan_left with Dissolve(0.3)
+    show expression Text("\"Move, NPC.\"\n{size=26}— eighth grade{/size}", size=46, color="#e8e8e8", text_align=0.5, xmaximum=1150) as fbtext at Transform(xalign=0.5, yalign=0.82)
 
-    $ _wait_until_music_pos(19.0)
-    hide nartext with dissolve
+    $ _wait_until_music_pos(68.0)
+    show bg bully2 at kb_pan_right with Dissolve(0.3)
+    show expression Text("\"Look at this LTN.\"\n{size=26}— ninth grade{/size}", size=44, color="#e8e8e8", text_align=0.5, xmaximum=1150) as fbtext at Transform(xalign=0.5, yalign=0.82)
 
-    # ── Player-line cards center stage ──
-    $ _wait_until_music_pos(20.0)
-    show expression Text("I can change.", size=80, color="#ffffff", bold=True) as chadcard at truecenter with dissolve
+    $ _wait_until_music_pos(70.0)
+    show bg bully3 at kb_zoom with Dissolve(0.3)
+    show expression Text("\"Chopped.\"\n{size=26}— tenth grade{/size}", size=52, color="#ffffff", text_align=0.5, xmaximum=1150) as fbtext at Transform(xalign=0.5, yalign=0.82)
 
-    $ _wait_until_music_pos(23.0)
+    # ══ DROP @1:13 — the verdict shatters (hard cut, on the beat). ══
+    $ _wait_until_music_pos(73.0)
+    hide fbtext
+    show bg shattered_mirror at kb_zoom
+    $ _wait_until_music_pos(73.6)
+    show expression Text("So. Average me.", size=48, color="#ffffff", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+
+    $ _wait_until_music_pos(77.0)
+    show expression Text("You got time to be looking down?", size=46, color="#ffffff", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+
+    # ══ The lift — turn to hope (1:13–1:35) ══
+    $ _wait_until_music_pos(81.0)
+    hide nartext
+    show bg hope at kb_pan_right with Dissolve(0.6)
+    show expression Text("I can change.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+
+    $ _wait_until_music_pos(85.0)
+    show expression Text("I'm done being someone the room forgets.", size=52, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+
+    $ _wait_until_music_pos(89.0)
+    show expression Text("I'll do it until I can.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+
+    $ _wait_until_music_pos(92.0)
+    show expression Text("No more looking down.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+
+    # ══ PEAK — heaven shows and the line fades out, a beat of heaven-only, then
+    # the real drop @~1:35. ("I will mog the world" fires +1.7s to hit the beat;
+    # a blank, text-free moment in between is intentional.) ══
+    $ _wait_until_music_pos(95.0)
+    show bg god_rays at kb_zoom with Dissolve(0.8)
     hide chadcard with dissolve
 
-    $ _wait_until_music_pos(24.0)
-    show expression Text("I'm not staying an LTN.", size=80, color="#ffffff", bold=True) as chadcard at truecenter with dissolve
+    $ _wait_until_music_pos(96.7)
+    show expression Text("I will mog the world.", size=96, color="#88ff88", bold=True) as chadcard at truecenter with Dissolve(0.4)
 
-    $ _wait_until_music_pos(27.0)
-    hide chadcard with dissolve
-
-    # 3 seconds of dim build-up before the drop at file pos 30.
-    $ _wait_until_music_pos(30.0)
-    show expression Text("I will mog the world.", size=92, color="#88ff88", bold=True) as chadcard at truecenter with vpunch
-
-    $ _wait_until_music_pos(34.0)
-    hide chadcard with dissolve
-    hide dim_overlay with Dissolve(0.7)
+    $ _wait_until_music_pos(101.0)
+    hide chadcard
+    hide dim_overlay
+    hide screen letterbox
 
     scene bg black with fade
-    pause 0.4
+    pause 0.6
 
     # Stacked end card — small caps "END OF CHAPTER 2" above, big green
     # "BRAINMAXXED" below. Same family as the BRAINMOGGED reveal card.
     show expression Text("END OF CHAPTER 2", size=42, color="#aaaaaa", bold=True) as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
     pause 0.5
     show expression Text("BRAINMAXXED", size=130, color="#88ff88", bold=True) as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
-    pause 2.8
+    pause 3.0
     hide endline_top with dissolve
     hide endline_bot with dissolve
     pause 0.4
 
     $ persistent.chapter2_complete = True
-    # Chapter 2 no longer ends the game — it hands off into Chapter 3.
+
+    # ══ Credits roll over the song's "tears" tail (1:35–end). roll_credits is
+    # callable and returns here; the song keeps playing under it. After the
+    # player dismisses the credits, offer a save point, then into Chapter 3
+    # (whose own `stop music` clears the track on entry). ══
+    $ credits_from_chapter = 2
+    call roll_credits
+
     call chapter_break("Chapter 2 complete")
     jump chapter3_start
 
