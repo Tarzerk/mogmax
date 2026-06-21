@@ -87,4 +87,5 @@ The arc rhymes with Bully, with one twist: **Clav ≈ Jimmy-who-became-Gary.** H
 - **Ch3 Eugene redesign (mog/lift)** — drafted, *not yet in code.* Full scene + matrix above; Ren'Py draft retired (rewrite from this when implementing). Needs `default mogged_eugene = False`.
 - **Ch1–3 LTN monologue punch-ups** — lean on the parenthetical internal voice (the Ch2 fail "(Invisible.)(Still invisible.)..." is the sharpest device in the game). A handful of 1-line inserts; no story change.
 - **Ch1→Ch2 library transition** — plant Clav's appointment at the end of Ch1, establish on arrival in Ch2.
+- **Ch3 "moggers" walk-and-talk** — Clav's speech over gold-lit silhouette displays into the training wing (relocates the cut Ch2 "people who mog without trying" beat). Drafted in `CH4-5_DRAFT.md`.
 - **Open threads:** make "mog" tempting (not an evil button); lock the Clav mirror line; confirm MOGKAGE placement (currently held to Ending B); give Ending B the Casio courtroom's specificity; confirm Eugene is planted clearly in Ch4 + Ch5 Act 1.
