@@ -59,6 +59,10 @@ init python:
                               ("vol_sfx", 0.85)):
         setattr(persistent, _vname, _vdefault)
 
+    # Secondary looping channel for room-tone / ambience so it can run
+    # alongside the music channel independently.
+    renpy.music.register_channel("ambient", mixer="music", loop=True)
+
 
 # Migrate older persistent-flag names from earlier dev iterations,
 # so progress isn't lost when the spec renamed them.

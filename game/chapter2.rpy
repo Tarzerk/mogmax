@@ -18,7 +18,9 @@ image bg classroom_silent = bg_image("images/backgrounds/bg_classroom_silent.jpg
 image bg bedroom_dawn = bg_image("images/backgrounds/bg_bedroom_dawn.jpg")
 image bg city_view = bg_image("images/backgrounds/bg_city_view.jpg")
 image bg shattered_mirror = bg_image("images/backgrounds/bg_shattered_mirror.jpg")
-image bg hope = bg_image("images/backgrounds/bg_hope.jpg")
+# Portrait image — scaled to screen width (1280px), height overflows for vertical pan.
+# zoom = 1280/2023 (original width). Overflow = 1708 - 720 = 988px → pan range.
+image bg hope = Transform("images/backgrounds/bg_hope.jpg", zoom=0.6327)
 image bg god_rays = bg_image("images/backgrounds/bg_god_rays.jpg")
 image bg flashback = "#0a0a0a"
 image bg hallway = bg_image("images/backgrounds/bg_hallway.jpg")
@@ -194,8 +196,8 @@ label chapter2_start:
     hide text with dissolve
 
     scene bg library with fade
-    # Quiet library ambience runs through the bootcamp + flashcard study.
-    play music "audio/library_ambient.mp3" fadein 2.0 volume persistent.vol_bed
+    play music "audio/library_music.mp3" fadein 2.0 volume persistent.vol_music
+    play ambient "audio/library_ambient.mp3" fadein 2.0 volume persistent.vol_bed
 
     if chapter2_attempt == 1:
         narrator "After school. The library is empty except for the back booth."
@@ -251,6 +253,8 @@ label study_done:
     hide clav
     narrator "He leaves. You sit alone in the booth with The List."
     pause 1.0
+    stop music fadeout 1.5
+    stop ambient fadeout 1.5
     scene bg black with fade
     pause 0.6
     show text "THE NEXT MORNING" at truecenter with dissolve
@@ -500,6 +504,14 @@ transform kb_pan_left:
     zoom 1.14 xoffset 45
     linear 32.0 xoffset -45
 
+# Portrait pan — start at the wrist/arm area (row ~700 of 1708), pan up to
+# the light at the top. Ren'Py centers the tall image (default top = -494px),
+# so yoffset = 494 - target_row. Timed to 14s (music pos 81→95).
+transform kb_pan_up:
+    subpixel True
+    yoffset 400
+    linear 14.0 yoffset 900
+
 transform letterbar_top:
     yalign 0.0
     yoffset -90
@@ -582,7 +594,7 @@ label mirror_scene:
     # ══ The lift — turn to hope (1:13–1:35) ══
     $ _wait_until_music_pos(81.0)
     hide nartext
-    show bg hope at kb_pan_right with Dissolve(0.6)
+    show bg hope at kb_pan_up with Dissolve(0.6)
     show expression Text("I can change.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
 
     $ _wait_until_music_pos(85.0)
