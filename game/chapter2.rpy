@@ -12,16 +12,16 @@ default quiz_start_time = 0.0
 default quiz_duration = 105.0
 default buzzer_played = False
 
-image bg library = bg_image("images/bg_library.jpg")
-image bg classroom = bg_image("images/bg_classroom.jpg")
-image bg classroom_silent = bg_image("images/bg_classroom_silent.jpg")
-image bg bedroom_dawn = bg_image("images/bg_bedroom_dawn.jpg")
-image bg city_view = bg_image("images/bg_city_view.jpg")
-image bg shattered_mirror = bg_image("images/bg_shattered_mirror.jpg")
-image bg hope = bg_image("images/bg_hope.jpg")
-image bg god_rays = bg_image("images/bg_god_rays.jpg")
+image bg library = bg_image("images/backgrounds/bg_library.jpg")
+image bg classroom = bg_image("images/backgrounds/bg_classroom.jpg")
+image bg classroom_silent = bg_image("images/backgrounds/bg_classroom_silent.jpg")
+image bg bedroom_dawn = bg_image("images/backgrounds/bg_bedroom_dawn.jpg")
+image bg city_view = bg_image("images/backgrounds/bg_city_view.jpg")
+image bg shattered_mirror = bg_image("images/backgrounds/bg_shattered_mirror.jpg")
+image bg hope = bg_image("images/backgrounds/bg_hope.jpg")
+image bg god_rays = bg_image("images/backgrounds/bg_god_rays.jpg")
 image bg flashback = "#0a0a0a"
-image bg hallway = bg_image("images/bg_hallway.jpg")
+image bg hallway = bg_image("images/backgrounds/bg_hallway.jpg")
 
 
 # Bullying images for the mirror-scene flashback.
@@ -29,7 +29,7 @@ image bg hallway = bg_image("images/bg_hallway.jpg")
 # never crashes while assets are being added.
 init python:
     def bully_bg(num):
-        path = "images/bg_bully_{}.jpg".format(num)
+        path = "images/backgrounds/bg_bully_{}.jpg".format(num)
         if renpy.loader.loadable(path):
             return bg_image(path)
         return Solid("#0a0a0a")
@@ -420,7 +420,7 @@ label pass_class_scene:
     narrator "As you gather your books, every head in the room turns."
     narrator "{i}No one speaks.{/i}"
     narrator "Eyebrows raise."
-    show brayden neutral at clav_body
+    show brayden shocked at clav_body
     narrator "In the back row, Brayden stops chewing. He stares at your score on Mr. Harker's sheet. He doesn't say anything."
     narrator "{i}That's new.{/i}"
     hide brayden

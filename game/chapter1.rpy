@@ -3,8 +3,8 @@
 # transforms / game state are defined in script.rpy.
 
 # ─── Chapter backgrounds ─────────────────────────────────────
-image bg cafeteria = bg_image("images/bg_cafeteria.jpg")
-image bg cafeteria_clav = bg_image("images/bg_cafeteria.jpg")
+image bg cafeteria = bg_image("images/backgrounds/bg_cafeteria.jpg")
+image bg cafeteria_clav = bg_image("images/backgrounds/bg_cafeteria.jpg")
 
 
 # ─── Case-file screen (blue-pill ending coda) ────────────────
@@ -120,7 +120,7 @@ label start:
     narrator "Across the room, the popular kids are laughing."
     pause 0.3
 
-    show brayden neutral at clav_body with dissolve
+    show brayden mad at clav_body with dissolve
     b "Eat up, LTN."
     narrator "Brayden doesn't even slow down. A single fry drops onto your tray as he passes — a coin tossed to a beggar."
     hide brayden with dissolve
@@ -232,7 +232,7 @@ label ltn_pill_ending:
     pause 0.6
 
     scene bg city_view with fade
-    show gigachad desk at clav_body with dissolve
+    show gigachad wall at clav_body with dissolve
     narrator "A figure sits at a massive desk by the window. He sets the report down on a stack of identical files. He does not turn around."
     pause 0.6
     stranger "How shameful."
