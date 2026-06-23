@@ -59,6 +59,10 @@ init python:
                               ("vol_sfx", 0.85)):
         setattr(persistent, _vname, _vdefault)
 
+    # Secondary looping channel for room-tone / ambience so it can run
+    # alongside the music channel independently.
+    renpy.music.register_channel("ambient", mixer="music", loop=True)
+
 
 # Migrate older persistent-flag names from earlier dev iterations,
 # so progress isn't lost when the spec renamed them.
@@ -116,14 +120,20 @@ init python:
 # ─── Base background (chapter-specific bgs live in their files) ───
 image bg black = "#000000"
 
-# ─── Placeholder sprites for characters whose art isn't in yet ───
-# (Clav and Harker have real PNGs and auto-load from images/.)
-image brayden neutral = sprite_or_placeholder("images/brayden neutral.png", "Brayden\nneutral")
-image brayden smirk   = sprite_or_placeholder("images/brayden smirk.png",   "Brayden\nsmirk")
-image eugene neutral  = sprite_or_placeholder("images/eugene neutral.png",  "Eugene\nneutral")
+# ─── Character sprites ───────────────────────────────────────
+# Art lives under images/characters/<name>/. Clav and Harker have full sets
+# and auto-load from there. Brayden has real art for neutral/mad/shocked and
+# Gigachad for desk/wall; Brayden smirk and Eugene are still placeholders
+# until their art lands — sprite_or_placeholder loads the real PNG when
+# present, stand-in otherwise.
+image brayden neutral = sprite_or_placeholder("images/characters/brayden/brayden neutral.png", "Brayden\nneutral")
+image brayden mad     = sprite_or_placeholder("images/characters/brayden/brayden mad.png",     "Brayden\nmad")
+image brayden shocked = sprite_or_placeholder("images/characters/brayden/brayden shocked.png", "Brayden\nshocked")
+image brayden smirk   = sprite_or_placeholder("images/characters/brayden/brayden smirk.png",   "Brayden\nsmirk")
+image eugene neutral  = sprite_or_placeholder("images/characters/eugene/eugene neutral.png",   "Eugene\nneutral")
 # Gigachad silhouettes — always back-facing / never turns around.
-image gigachad desk = sprite_or_placeholder("images/gigachad desk.png", "GIGACHAD\n(back-facing, desk)", w=520, h=680, tint="#0d0d14")
-image gigachad wall = sprite_or_placeholder("images/gigachad wall.png", "GIGACHAD\n(standing, wall)", w=460, h=680, tint="#0d0d14")
+image gigachad desk = sprite_or_placeholder("images/characters/gigachad/gigachad desk.png", "GIGACHAD\n(back-facing, desk)", w=520, h=680, tint="#0d0d14")
+image gigachad wall = sprite_or_placeholder("images/characters/gigachad/gigachad wall.png", "GIGACHAD\n(standing, wall)", w=460, h=680, tint="#0d0d14")
 
 
 # ═════════════════════════════════════════════════════════════

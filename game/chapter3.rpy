@@ -10,17 +10,17 @@
 # are final.
 
 # ─── Chapter backgrounds (placeholder-guarded) ───────────────
-image bg ch3_bedroom    = bg_or_placeholder("images/bg_ch3_bedroom.jpg", "bedroom (alarm)")
-image bg ch3_road       = bg_or_placeholder("images/bg_ch3_road.jpg", "desert road")
-image bg ch3_gate       = bg_or_placeholder("images/bg_ch3_gate.jpg", "restricted gate")
-image bg ch3_sign       = bg_or_placeholder("images/bg_ch3_sign.jpg", "area 51 warning sign")
-image bg ch3_corridor   = bg_or_placeholder("images/bg_ch3_corridor.jpg", "base corridor")
-image bg ch3_vault      = bg_or_placeholder("images/bg_ch3_vault.jpg", "vault door")
-image bg ch3_lab        = bg_or_placeholder("images/bg_ch3_lab.jpg", "research lab")
-image bg ch3_whiteboard = bg_or_placeholder("images/bg_ch3_whiteboard.jpg", "whiteboards")
-image bg ch3_filewall   = bg_or_placeholder("images/bg_ch3_filewall.jpg", "gigachad file wall")
-image bg ch3_gym        = bg_or_placeholder("images/bg_ch3_gym.jpg", "training gym")
-image bg ch3_janitor    = bg_or_placeholder("images/bg_ch3_janitor.jpg", "janitor closet")
+image bg ch3_bedroom    = bg_or_placeholder("images/backgrounds/bg_ch3_bedroom.jpg", "bedroom (alarm)")
+image bg ch3_road       = bg_or_placeholder("images/backgrounds/bg_ch3_road.jpg", "desert road")
+image bg ch3_gate       = bg_or_placeholder("images/backgrounds/bg_ch3_gate.jpg", "restricted gate")
+image bg ch3_sign       = bg_or_placeholder("images/backgrounds/bg_ch3_sign.jpg", "area 51 warning sign")
+image bg ch3_corridor   = bg_or_placeholder("images/backgrounds/bg_ch3_corridor.jpg", "base corridor")
+image bg ch3_vault      = bg_or_placeholder("images/backgrounds/bg_ch3_vault.jpg", "vault door")
+image bg ch3_lab        = bg_or_placeholder("images/backgrounds/bg_ch3_lab.jpg", "research lab")
+image bg ch3_whiteboard = bg_or_placeholder("images/backgrounds/bg_ch3_whiteboard.jpg", "whiteboards")
+image bg ch3_filewall   = bg_or_placeholder("images/backgrounds/bg_ch3_filewall.jpg", "gigachad file wall")
+image bg ch3_gym        = bg_or_placeholder("images/backgrounds/bg_ch3_gym.jpg", "training gym")
+image bg ch3_janitor    = bg_or_placeholder("images/backgrounds/bg_ch3_janitor.jpg", "janitor closet")
 image bg scan_granted   = "#0a2a0a"
 
 
