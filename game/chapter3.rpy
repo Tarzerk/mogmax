@@ -79,11 +79,15 @@ label chapter3_start:
     narrator "Clav smirks. Says nothing."
     scene bg ch3_gate with fade
     narrator "The car rolls up to the gate. A chain-link fence. A STOP sign. Two soldiers."
+    show soldier at soldier_left with dissolve
     sol "Turn around. Now."
     p "Clav. We CANNOT be here."
     narrator "A shadow falls over the soldiers. A Captain steps forward."
+    show captain at captain_enter
     cap "OPEN IT UP."
     sol "...Yes sir."
+    hide captain with dissolve
+    hide soldier with dissolve
     narrator "The gate grinds open."
     pause 0.5
 
