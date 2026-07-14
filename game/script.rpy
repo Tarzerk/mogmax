@@ -33,6 +33,24 @@ transform clav_body:
     xalign 0.7
     yalign 1.0
 
+# Gate guards (ch3) — art is a wide, full-height sprite on a large mostly
+# transparent canvas, so each needs its own zoom/anchor rather than clav_body's.
+# The character sits at the canvas centre, so xoffset (not xalign) is what
+# actually separates the two figures on screen. Soldier holds the left; the
+# captain slides in from the right on "steps forward".
+transform soldier_left:
+    zoom 0.46
+    yalign 1.0
+    xalign 0.5
+    xoffset -300
+
+transform captain_enter:
+    zoom 0.46
+    yalign 1.0
+    xalign 0.5
+    xoffset 780
+    ease 0.6 xoffset 300
+
 # ─── Game state (per save) ───────────────────────────────────
 default povname = "You"
 default aura = 50
@@ -122,10 +140,10 @@ image bg black = "#000000"
 
 # ─── Character sprites ───────────────────────────────────────
 # Art lives under images/characters/<name>/. Clav and Harker have full sets
-# and auto-load from there. Brayden has real art for neutral/mad/shocked and
-# Gigachad for desk/wall; Brayden smirk and Eugene are still placeholders
-# until their art lands — sprite_or_placeholder loads the real PNG when
-# present, stand-in otherwise.
+# and auto-load from there. Brayden has real art for neutral/mad/shocked/smirk
+# and Gigachad for desk/wall; Eugene is still a placeholder until its art
+# lands — sprite_or_placeholder loads the real PNG when present, stand-in
+# otherwise.
 image brayden neutral = sprite_or_placeholder("images/characters/brayden/brayden neutral.png", "Brayden\nneutral")
 image brayden mad     = sprite_or_placeholder("images/characters/brayden/brayden mad.png",     "Brayden\nmad")
 image brayden shocked = sprite_or_placeholder("images/characters/brayden/brayden shocked.png", "Brayden\nshocked")
@@ -134,6 +152,10 @@ image eugene neutral  = sprite_or_placeholder("images/characters/eugene/eugene n
 # Gigachad silhouettes — always back-facing / never turns around.
 image gigachad desk = sprite_or_placeholder("images/characters/gigachad/gigachad desk.png", "GIGACHAD\n(back-facing, desk)", w=520, h=680, tint="#0d0d14")
 image gigachad wall = sprite_or_placeholder("images/characters/gigachad/gigachad wall.png", "GIGACHAD\n(standing, wall)", w=460, h=680, tint="#0d0d14")
+
+# Chapter 3 gate guards — shown one at a time in the base-entrance scene.
+image soldier = sprite_or_placeholder("images/characters/soldier/soldier.png", "Soldier", w=420, h=620, tint="#20281a")
+image captain = sprite_or_placeholder("images/characters/captain/captain.png", "Captain", w=420, h=620, tint="#20281a")
 
 
 # ═════════════════════════════════════════════════════════════
