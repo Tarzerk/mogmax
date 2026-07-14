@@ -187,10 +187,20 @@ label chad_pill_ending:
     c "Good."
     c "The work starts now."
     c "And I mean that more literally than you think."
-    pause 1.2
+    pause 0.8
+    show clav stern at clav_body
+    c "Library. After last bell."
+    p "...why the library?"
+    c "Tomorrow Harker springs a quiz nobody sees coming. You're going to pass it."
+    p "How would you even know that—"
+    c "Bring nothing but your brain."
+    hide clav with dissolve
+    narrator "He never answers the question. He just lets it hang there — like he already knows you'll show up anyway."
+    pause 1.0
     scene bg black with fade
     pause 0.4
-    call chapter_break("Chapter 1 complete")
+    # Merged chapter: Chopped flows straight into Brainmaxxing — no mid-chapter
+    # save prompt here (the real chapter break is after the mirror monologue).
     jump chapter2_start
 
 

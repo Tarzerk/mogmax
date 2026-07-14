@@ -188,21 +188,20 @@ init python:
 
 label chapter2_start:
     $ brain_score = 0
-    # Title card on black for legibility, then fade into the library.
+    # Continuation of the merged chapter (Chopped → Brainmaxxing): no full
+    # chapter card. A small act divider over the library instead, shown only on
+    # the first arrival (retries skip straight to the booth).
     scene bg black with fade
     pause 0.4
-    show text "{size=54}Chapter 2 — Brainmaxxing{/size}" at truecenter with dissolve
-    pause 2.0
-    hide text with dissolve
 
     scene bg library with fade
     play music "audio/library_music.mp3" fadein 2.0 volume persistent.vol_music
     play ambient "audio/library_ambient.mp3" fadein 2.0 volume persistent.vol_bed
 
     if chapter2_attempt == 1:
-        narrator "After school. The library is empty except for the back booth."
+        narrator "After last bell. The library's the kind of quiet where even the vending machine feels judged."
         show clav thinking at clav_body
-        narrator "Clav is already there, reading. He doesn't look up when you sit down."
+        narrator "The back booth. Clav's already there, reading — he doesn't look up when you sit down."
     else:
         narrator "Back to the booth. Clav is already there. He doesn't look up."
         show clav stern at clav_body
