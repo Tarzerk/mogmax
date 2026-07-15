@@ -1753,29 +1753,33 @@ screen dev_skip_menu():
     key "K_ESCAPE" action Hide("dev_skip_menu")
 
 
-# ─── Chapter 3 travel bar ────────────────────────────────────
-# Brief "en route" interstitial during the desert drive. Auto-returns after
-# the bar fills. Minigame/UI is a stub — just a filling bar on a dark field.
+# ─── Chapter 3 restricted-area warning ───────────────────────
+# Quick cinematic warning card immediately before the restricted sign reveal.
 screen ch3_travel_bar():
     modal True
-    add Solid("#101018")
+    add Solid("#050507")
 
     vbox:
         xalign 0.5
         yalign 0.5
-        spacing 22
+        spacing 12
 
-        text "EN ROUTE — CLASSIFIED DESTINATION":
-            size 30
-            color "#9aa8ff"
+        text "SIGNAL LOST":
+            size 24
+            color "#777777"
+            xalign 0.5
+        text "RESTRICTED AREA AHEAD":
+            size 44
+            color "#d8d8d8"
+            bold True
+            xalign 0.5
+            outlines [(2, "#000000", 0, 0)]
+        text "TURN BACK IMMEDIATELY":
+            size 20
+            color "#8a2222"
             xalign 0.5
 
-        bar:
-            value AnimatedValue(0.0, 100.0, 3.0)
-            xsize 600
-            xalign 0.5
-
-    timer 3.2 action Return()
+    timer 1.8 action Return()
 
 
 ################################################################################

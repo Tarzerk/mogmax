@@ -218,16 +218,13 @@ You sit on the school steps. Beside you: **Eugene** (if lifted), and a humbled *
 ## Parked — Ch3 addition: Clav's "moggers" walk-and-talk (un-built)
 *Relocates the cut Ch2 "city full of people who mog without trying" beat into Ch3. Slots into the walk toward `ch3_training`. Real athletes/icons appear only as anonymous **gold-lit silhouettes** — homage, never named or photographed (game isn't monetized, but stylized just looks better).*
 
-**Where:** a facility corridor lined with gold-lit "specimen" silhouette displays that warm up as you pass; Clav talks you through it as you walk into the training wing.
+**Where:** a facility corridor lined with gold-lit "specimen" silhouettes, shown as one collective display wall rather than one-by-one celebrity reveals; Clav talks you through it as you walk into the training wing. Gigachad stays separate from this hall — he is the ceiling, not one more specimen.
 
 > **Clav:** [povname]. Before you touch a single station — understand the board you're on.
 > **Clav:** This world is full of moggers. People who mog without even trying.
-> *(a silhouette glows gold — a skater frozen mid-spin, a perfect line)*
-> **Clav:** You've seen them. The faces that sell things without saying a word.
-> *(another — a frame built like a cathedral, hanging at the rim)*
-> **Clav:** The bodies that win before the game even starts.
-> *(another — a small figure, somehow the center of the whole pitch)*
-> **Clav:** These are the pictures. What everyone quietly measures themselves against. And loses to.
+> *(the whole wall warms at once — a skater frozen mid-spin, a giant above the rim, a small figure bending the whole pitch, a marble-built hero under a cape-shaped shadow)*
+> **Clav:** Different bodies. Different worlds. Same impossible feeling.
+> **Clav:** These are the pictures everyone quietly measures themselves against. And loses to.
 > **Clav:** I'm not going to lie to you. You won't get there.
 > **Clav:** That's the genetic lottery — and you didn't win it. Neither did I.
 > **Clav:** But that was never the deal.
@@ -236,4 +233,4 @@ You sit on the school steps. Beside you: **Eugene** (if lifted), and a humbled *
 > *(the corridor opens into the training wing)*
 > **Clav:** So. Let's get you moving.
 
-**Notes:** "Neither did I" seeds Clav's backstory (ties to "I got close" / the Ch5 turn). The closer callbacks the Ch1 LTN definition ("a room that forgets you"). Optional bonus: a final silhouette of **THE JUDGE** (plain figure, $25 Casio) to seed the Ch5 courtroom. Still to wordsmith; relocation of the cut Ch2 line is the locked part.
+**Notes:** "Neither did I" seeds Clav's backstory (ties to "I got close" / the Ch5 turn). The closer callbacks the Ch1 LTN definition ("a room that forgets you"). Do **not** seed the judge / Casio ending here — keep that reveal secret until the finale. Still to wordsmith; relocation of the cut Ch2 line is the locked part.

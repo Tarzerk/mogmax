@@ -59,6 +59,9 @@ default took_chad_pill = False
 # Set during the story; read by later chapters for branching.
 default brayden_threatened = False
 default helped_eugene = False
+# The Eugene choice is now mog-vs-lift (Mogbender). Both outcomes are recorded
+# so the finale can read them (2×2 with the final choice).
+default mogged_eugene = False
 
 # ─── Persistent state (across all saves / sessions) ──────────
 default persistent.chapter1_complete = False
