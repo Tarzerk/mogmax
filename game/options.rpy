@@ -33,6 +33,16 @@ define config.has_voice = False
 # accidentally quiet.
 define config.default_music_volume = 1.0
 define config.default_sfx_volume = 1.0
+define config.sample_sound = "audio/ui_click.ogg"
+
+# KOMIC supplies separate neutral and pressed cursor artwork. Buttons request
+# the "button" cursor through their shared style.
+define config.mouse = {
+    "default": [("gui/komic/cursor/default.png", 0, 0)],
+    "pressed_default": [("gui/komic/cursor/pressed.png", 0, 0)],
+    "button": [("gui/komic/cursor/pressed.png", 0, 0)],
+    "pressed_button": [("gui/komic/cursor/pressed.png", 0, 0)],
+}
 
 
 # The dev-only Audio Check panel is gated behind config.developer (so it's

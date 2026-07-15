@@ -4,15 +4,50 @@
 # Per-chapter content lives in chapter1.rpy, chapter2.rpy, etc.
 
 # ─── Characters (used across the whole game) ─────────────────
-define narrator = Character(None, what_italic=True, what_color="#a0a0a0")
-define p = Character("[povname]", color="#88ff88")
-define c = Character("Clav", color="#9aa8ff")
-define stranger = Character("???", color="#9aa8ff")
-define b = Character("Brayden", color="#7ab8ff")
-define h = Character("Mr. Harker", color="#c0c0c0")
-define eu = Character("Eugene", color="#b5d4a0")
-define sol = Character("Soldier", color="#9c8e6a")
-define cap = Character("Captain", color="#c9a14a")
+image komic_ctc = Animation(
+    "gui/komic/ctc/ctc_1.png", 1.50,
+    "gui/komic/ctc/ctc_2.png", 0.02,
+    "gui/komic/ctc/ctc_3.png", 0.02,
+    "gui/komic/ctc/ctc_4.png", 0.02,
+    "gui/komic/ctc/ctc_5.png", 0.20,
+    "gui/komic/ctc/ctc_4.png", 0.02,
+    "gui/komic/ctc/ctc_3.png", 0.02,
+    "gui/komic/ctc/ctc_2.png", 0.02,
+    xpos=0.5, ypos=650, xanchor=0.5, yanchor=0.5,
+)
+
+init python:
+    renpy.music.register_channel("typewriter", mixer="sfx", loop=True)
+    renpy.music.register_channel("dialogue_click", mixer="sfx", loop=False)
+
+    def komic_dialogue_sfx(event, **kwargs):
+        if event == "show":
+            renpy.music.play(
+                "audio/typewriter-soft-click.mp3",
+                channel="typewriter",
+                loop=True,
+                relative_volume=0.20,
+            )
+        elif event == "slow_done":
+            renpy.music.stop(channel="typewriter")
+        elif event == "end":
+            renpy.music.stop(channel="typewriter")
+            renpy.music.play(
+                "audio/typewriter-soft-click.mp3",
+                channel="dialogue_click",
+                loop=False,
+                relative_volume=0.55,
+            )
+
+define narrator = Character(None, what_italic=True, what_color="#e2dde0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define p = Character("[povname]", color="#88ff88", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define c = Character("Clav", color="#9aa8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define stranger = Character("???", color="#9aa8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define b = Character("Brayden", color="#7ab8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define h = Character("Mr. Harker", color="#c0c0c0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define eu = Character("Eugene", color="#b5d4a0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define sol = Character("Soldier", color="#9c8e6a", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define cap = Character("Captain", color="#c9a14a", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
 # Gigachad never speaks under his own name — his lines come from offscreen
 # as the existing "???" stranger Character above.
 

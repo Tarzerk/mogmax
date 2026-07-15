@@ -486,8 +486,7 @@ label pass_class_scene:
 # ═════════════════════════════════════════════════════════════
 
 # ─── Cinematic helpers for the mirror monologue ──────────────
-# Slow "Ken Burns" drifts so every background is alive (never dead-static),
-# plus a letterbox (top/bottom black bars) to flag the cutscene.
+# Slow "Ken Burns" drifts keep every background alive behind KOMIC's bars.
 transform kb_zoom:
     subpixel True
     zoom 1.05
@@ -511,26 +510,9 @@ transform kb_pan_up:
     yoffset 400
     linear 14.0 yoffset 900
 
-transform letterbar_top:
-    yalign 0.0
-    yoffset -90
-    ease 0.7 yoffset 0
-
-transform letterbar_bottom:
-    yalign 1.0
-    yoffset 90
-    ease 0.7 yoffset 0
-
-screen letterbox():
-    zorder 80
-    add Solid("#000000", xysize=(config.screen_width, 90)) at letterbar_top
-    add Solid("#000000", xysize=(config.screen_width, 90)) at letterbar_bottom
-
-
 label mirror_scene:
-    # Cinematic: letterbox bars in + a slow Ken Burns drift on every background.
-    # Text appears crisp (no fade); the images carry the motion.
-    show screen letterbox
+    # KOMIC's steady cinematic bars hold the automatically timed monologue.
+    $ set_cinematic_dialogue(True)
     show bg bedroom_dawn at kb_zoom with fade
     # The mirror theme is already playing quietly from the NEXT MORNING card;
     # swell it to full now that the bedroom is on screen. If the scene is
@@ -549,76 +531,77 @@ label mirror_scene:
 
     # ══ SAD (~0:44–1:03) — the honest inventory. Full lines, no fade on text. ══
     $ _wait_until_music_pos(44.0)
-    show expression Text("I'm nothing special.", size=46, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}I'm nothing special.{/i}")
 
     $ _wait_until_music_pos(48.0)
-    show expression Text("Average face. Average build. Average everything.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}Average face. Average build. Average everything.{/i}")
 
     $ _wait_until_music_pos(52.0)
-    show expression Text("As a kid, I was sure I'd grow into someone.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}As a kid, I was sure I'd grow into someone.{/i}")
 
     $ _wait_until_music_pos(56.0)
-    show expression Text("Middle school. Freshman year. Still sure.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}Middle school. Freshman year. Still sure.{/i}")
 
     $ _wait_until_music_pos(60.0)
-    show expression Text("...Some nights, I'm still sure.", size=42, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}...Some nights, I'm still sure.{/i}")
 
     $ _wait_until_music_pos(63.0)
-    show expression Text("And there's no room I walk into where I'm the best at anything.", size=40, color="#dcdcdc", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}And there's no room I walk into where I'm the best at anything.{/i}")
 
     # ══ Flashbacks (~1:07–1:12) — the images speak; just the quotes. ══
     $ _wait_until_music_pos(66.0)
-    hide nartext
+    hide screen cinematic_caption
     show bg bully1 at kb_pan_left with Dissolve(0.3)
-    show expression Text("\"Move, NPC.\"\n{size=26}— eighth grade{/size}", size=46, color="#e8e8e8", text_align=0.5, xmaximum=1150) as fbtext at Transform(xalign=0.5, yalign=0.82)
+    show screen cinematic_caption("{size=34}\"Move, NPC.\"{/size}\n{size=20}— eighth grade{/size}")
 
     $ _wait_until_music_pos(68.0)
     show bg bully2 at kb_pan_right with Dissolve(0.3)
-    show expression Text("\"Look at this LTN.\"\n{size=26}— ninth grade{/size}", size=44, color="#e8e8e8", text_align=0.5, xmaximum=1150) as fbtext at Transform(xalign=0.5, yalign=0.82)
+    show screen cinematic_caption("{size=34}\"Look at this LTN.\"{/size}\n{size=20}— ninth grade{/size}")
 
     $ _wait_until_music_pos(70.0)
     show bg bully3 at kb_zoom with Dissolve(0.3)
-    show expression Text("\"Chopped.\"\n{size=26}— tenth grade{/size}", size=52, color="#ffffff", text_align=0.5, xmaximum=1150) as fbtext at Transform(xalign=0.5, yalign=0.82)
+    show screen cinematic_caption("{size=38}\"Chopped.\"{/size}\n{size=20}— tenth grade{/size}")
 
     # ══ DROP @1:13 — the verdict shatters (hard cut, on the beat). ══
     $ _wait_until_music_pos(73.0)
-    hide fbtext
+    hide screen cinematic_caption
     show bg shattered_mirror at kb_zoom
     $ _wait_until_music_pos(73.6)
-    show expression Text("So. Average me.", size=48, color="#ffffff", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}{size=34}So. Average me.{/size}{/i}")
 
     $ _wait_until_music_pos(77.0)
-    show expression Text("You got time to be looking down?", size=46, color="#ffffff", italic=True, xmaximum=1150, text_align=0.5) as nartext at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{i}{size=34}You got time to be looking down?{/size}{/i}")
 
     # ══ The lift — turn to hope (1:13–1:35) ══
     $ _wait_until_music_pos(81.0)
-    hide nartext
+    hide screen cinematic_caption
     show bg hope at kb_pan_up with Dissolve(0.6)
-    show expression Text("I can change.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{b}{size=38}I can change.{/size}{/b}")
 
     $ _wait_until_music_pos(85.0)
-    show expression Text("I'm done being someone the room forgets.", size=52, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{b}{size=34}I'm done being someone the room forgets.{/size}{/b}")
 
     $ _wait_until_music_pos(89.0)
-    show expression Text("I'll do it until I can.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{b}{size=38}I'll do it until I can.{/size}{/b}")
 
     $ _wait_until_music_pos(92.0)
-    show expression Text("No more looking down.", size=56, color="#ffffff", bold=True, xmaximum=1150, text_align=0.5) as chadcard at Transform(xalign=0.5, yalign=0.80)
+    show screen cinematic_caption("{b}{size=38}No more looking down.{/size}{/b}")
 
     # ══ PEAK — heaven shows and the line fades out, a beat of heaven-only, then
     # the real drop @~1:35. ("I will mog the world" fires +1.7s to hit the beat;
     # a blank, text-free moment in between is intentional.) ══
     $ _wait_until_music_pos(95.0)
     show bg god_rays at kb_zoom with Dissolve(0.8)
-    hide chadcard with dissolve
+    hide screen cinematic_caption
+    with dissolve
 
     $ _wait_until_music_pos(96.7)
-    show expression Text("I will mog the world.", size=96, color="#88ff88", bold=True) as chadcard at truecenter with Dissolve(0.4)
+    show screen cinematic_caption("{b}{size=48}{color=#79c98b}I will mog the world.{/color}{/size}{/b}")
 
     $ _wait_until_music_pos(101.0)
-    hide chadcard
+    hide screen cinematic_caption
+    $ set_cinematic_dialogue(False)
     hide dim_overlay
-    hide screen letterbox
 
     scene bg black with fade
     pause 0.6

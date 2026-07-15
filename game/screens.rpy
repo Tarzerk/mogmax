@@ -27,6 +27,12 @@ style gui_text:
 
 style button:
     properties gui.button_properties("button")
+    background Frame("gui/komic/button/choice_idle_background.png", Borders(28, 10, 28, 10))
+    hover_background Frame("gui/komic/button/choice_hover_background.png", Borders(28, 10, 28, 10))
+    selected_background Frame("gui/komic/button/choice_hover_background.png", Borders(28, 10, 28, 10))
+    hover_sound "audio/ui_hover.ogg"
+    activate_sound "audio/ui_click.ogg"
+    mouse "button"
 
 style button_text is gui_text:
     properties gui.text_properties("button")
@@ -57,13 +63,13 @@ style scrollbar:
 
 style vscrollbar:
     xsize gui.scrollbar_size
-    base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    base_bar Frame("gui/komic/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    thumb Frame("gui/komic/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
 
 style slider:
     ysize gui.slider_size
-    base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb "gui/slider/horizontal_[prefix_]thumb.png"
+    base_bar Frame("gui/komic/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
+    thumb "gui/komic/slider/horizontal_[prefix_]thumb.png"
 
 style vslider:
     xsize gui.slider_size
@@ -73,7 +79,7 @@ style vslider:
 
 style frame:
     padding gui.frame_borders.padding
-    background Frame("gui/frame.png", gui.frame_borders, tile=gui.frame_tile)
+    background Frame("gui/komic/frame.png", gui.frame_borders, tile=gui.frame_tile)
 
 
 
@@ -99,6 +105,7 @@ screen say(who, what):
 
     window:
         id "window"
+        background ("gui/komic/textbox_transparent.png" if cinematic_dialogue else "gui/komic/textbox.png")
 
         if who is not None:
 
@@ -113,6 +120,40 @@ screen say(who, what):
     ## phone variant - there's no room.
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0
+
+
+default cinematic_dialogue = False
+
+screen cinematic_bars():
+    zorder -5
+
+    if cinematic_dialogue:
+        add Solid("#000000"):
+            xysize (1280, 120)
+            ypos 0
+
+        add Solid("#000000"):
+            xysize (1280, 253)
+            ypos 467
+
+
+screen cinematic_caption(what):
+    zorder 100
+
+    window:
+        style "window"
+        background None
+
+        text what:
+            style "say_dialogue"
+
+
+init python:
+    config.overlay_screens.append("cinematic_bars")
+
+    def set_cinematic_dialogue(enabled):
+        renpy.store.cinematic_dialogue = bool(enabled)
+        renpy.restart_interaction()
 
 
 style window is default
@@ -130,7 +171,7 @@ style window:
     yalign gui.textbox_yalign
     ysize gui.textbox_height
 
-    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    background None
 
 style namebox:
     xpos gui.name_xpos
@@ -139,8 +180,8 @@ style namebox:
     ypos gui.name_ypos
     ysize gui.namebox_height
 
-    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-    padding gui.namebox_borders.padding
+    background None
+    padding (0, 0, 0, 0)
 
 style say_label:
     properties gui.text_properties("name", accent=True)
@@ -221,6 +262,12 @@ style choice_vbox:
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
+    background Frame("gui/komic/button/choice_idle_background.png", gui.choice_button_borders)
+    hover_background Frame("gui/komic/button/choice_hover_background.png", gui.choice_button_borders)
+    selected_background Frame("gui/komic/button/choice_hover_background.png", gui.choice_button_borders)
+    hover_sound "audio/ui_hover.ogg"
+    activate_sound "audio/ui_click.ogg"
+    mouse "button"
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
@@ -239,19 +286,61 @@ screen quick_menu():
     if quick_menu:
 
         hbox:
-            style_prefix "quick"
+            xalign 1.0
+            yalign 0.0
+            spacing -4
 
-            xalign 0.5
-            yalign 1.0
+            imagebutton:
+                auto "gui/komic/quick/skip_%s.png"
+                action Skip()
+                alternate Skip(fast=True, confirm=True)
+                tooltip _("Skip")
+                hover_sound "audio/ui_hover.ogg"
+                activate_sound "audio/ui_click.ogg"
+                mouse "button"
 
-            textbutton _("Back") action Rollback()
-            textbutton _("History") action ShowMenu('history')
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Save") action ShowMenu('save')
-            textbutton _("Q.Save") action QuickSave()
-            textbutton _("Q.Load") action QuickLoad()
-            textbutton _("Prefs") action ShowMenu('preferences')
+            imagebutton:
+                auto "gui/komic/quick/save_%s.png"
+                action ShowMenu("save")
+                tooltip _("Save")
+                hover_sound "audio/ui_hover.ogg"
+                activate_sound "audio/ui_click.ogg"
+                mouse "button"
+
+            imagebutton:
+                auto "gui/komic/quick/load_%s.png"
+                action ShowMenu("load")
+                tooltip _("Load")
+                hover_sound "audio/ui_hover.ogg"
+                activate_sound "audio/ui_click.ogg"
+                mouse "button"
+
+            imagebutton:
+                auto "gui/komic/quick/history_%s.png"
+                action ShowMenu("history")
+                tooltip _("History")
+                hover_sound "audio/ui_hover.ogg"
+                activate_sound "audio/ui_click.ogg"
+                mouse "button"
+
+            imagebutton:
+                auto "gui/komic/quick/options_%s.png"
+                action ShowMenu("preferences")
+                tooltip _("Preferences")
+                hover_sound "audio/ui_hover.ogg"
+                activate_sound "audio/ui_click.ogg"
+                mouse "button"
+
+        $ quick_tooltip = GetTooltip()
+        if quick_tooltip:
+            text quick_tooltip:
+                xpos 1065
+                ypos 70
+                xsize 200
+                text_align 0.5
+                size 13
+                color "#ffffff"
+                outlines [(2, "#26302b", 0, 0)]
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
@@ -282,47 +371,48 @@ style quick_button_text:
 
 screen navigation():
 
-    vbox:
-        style_prefix "navigation"
+    if main_menu:
+        $ _newest_slot = renpy.newest_slot(r'auto|quick|\d')
 
-        xpos gui.navigation_xpos
-        yalign 0.5
+        hbox:
+            style_prefix "navigation"
+            xpos 35
+            ypos 390
+            spacing 10
 
-        spacing gui.navigation_spacing
+            vbox:
+                spacing gui.navigation_spacing
 
-        if main_menu:
+                if _newest_slot:
+                    textbutton _("Continue") action FileLoad(_newest_slot, slot=True, confirm=False)
+                    textbutton _("New Game") action Confirm(_("Start a new game? Your existing saves stay available under Load."), yes=Start())
+                else:
+                    textbutton _("New Game") action Start()
 
-            ## MOGMAX main-menu buttons (in order).
-            # Newest save across auto / quick / manual slots. Drives the
-            # one-click Continue (resume newest) and whether New Game confirms.
-            $ _newest_slot = renpy.newest_slot(r'auto|quick|\d')
+                textbutton _("Load") action ShowMenu("load")
 
-            if _newest_slot:
-                textbutton _("Continue") action FileLoad(_newest_slot, slot=True, confirm=False)
-                textbutton _("New Game") action Confirm(_("Start a new game? Your existing saves stay available under Load."), yes=Start())
-            else:
-                textbutton _("New Game") action Start()
+                if persistent.chapter1_complete:
+                    textbutton _("Chapter Select") action ShowMenu("chapter_select")
 
-            # Load a specific save/branch from the title — matters for a
-            # multi-ending game (revisit a choice point without starting over).
-            textbutton _("Load") action ShowMenu("load")
+            vbox:
+                spacing gui.navigation_spacing
 
-            if persistent.chapter1_complete:
-                textbutton _("Chapter Select") action ShowMenu("chapter_select")
+                textbutton _("Credits") action Function(renpy.call_in_new_context, "roll_credits")
+                textbutton _("Preferences") action ShowMenu("preferences")
 
-            textbutton _("Credits") action Function(renpy.call_in_new_context, "roll_credits")
-            textbutton _("Preferences") action ShowMenu("preferences")
+                if config.developer:
+                    textbutton "Audio Check" action Show("audio_check")
 
-            # Dev-only audio level tuning panel (hidden in release builds).
-            if config.developer:
-                textbutton "Audio Check" action Show("audio_check")
+                if renpy.variant("pc"):
+                    textbutton _("Quit") action Quit(confirm=False)
 
-            if renpy.variant("pc"):
-                textbutton _("Quit") action Quit(confirm=False)
+    else:
+        vbox:
+            style_prefix "navigation"
+            xpos gui.navigation_xpos
+            yalign 0.5
+            spacing gui.navigation_spacing
 
-        else:
-
-            ## In-game pause menu — keep Ren'Py defaults.
             textbutton _("History") action ShowMenu("history")
             textbutton _("Save") action ShowMenu("save")
             textbutton _("Load") action ShowMenu("load")
@@ -348,9 +438,24 @@ style navigation_button_text is gui_button_text
 style navigation_button:
     size_group "navigation"
     properties gui.button_properties("navigation_button")
+    xsize 250
+    ysize 50
+    background Frame("gui/komic/button/choice_idle_background.png", Borders(32, 12, 32, 12))
+    hover_background Frame("gui/komic/button/choice_hover_background.png", Borders(32, 12, 32, 12))
+    selected_background Frame("gui/komic/button/choice_hover_background.png", Borders(32, 12, 32, 12))
+    hover_sound "audio/ui_hover.ogg"
+    activate_sound "audio/ui_click.ogg"
+    mouse "button"
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+    color "#f1f4f2"
+    hover_color "#ffffff"
+    selected_color "#f2b84b"
+    insensitive_color "#7f8983"
+    xalign 0.5
+    text_align 0.5
+    size 20
 
 
 ## Main Menu screen ############################################################
@@ -398,7 +503,7 @@ screen main_menu():
         xalign 0.5
         yalign 0.985
         size 14
-        color "#aaaaaa"
+        color "#aeb8b2"
         outlines [(1, "#000000", 0, 0)]
 
 
@@ -409,10 +514,12 @@ style main_menu_title is main_menu_text
 style main_menu_version is main_menu_text
 
 style main_menu_frame:
-    xsize 280
-    yfill True
+    xpos 20
+    ypos 350
+    xsize 540
+    ysize 340
 
-    background "gui/overlay/main_menu.png"
+    background Frame("gui/komic/frame.png", Borders(22, 22, 22, 22))
 
 style main_menu_vbox:
     xalign 1.0
@@ -528,19 +635,21 @@ style game_menu_outer_frame:
     bottom_padding 30
     top_padding 120
 
-    background "gui/overlay/game_menu.png"
+    background Solid("#101412cc")
 
 style game_menu_navigation_frame:
-    xsize 280
+    xsize 300
     yfill True
 
 style game_menu_content_frame:
-    left_margin 40
+    left_margin 10
     right_margin 20
     top_margin 10
+    padding (28, 24, 28, 24)
+    background Frame("gui/komic/frame.png", Borders(22, 22, 22, 22))
 
 style game_menu_viewport:
-    xsize 920
+    xsize 865
 
 style game_menu_vscrollbar:
     unscrollable gui.unscrollable
@@ -554,8 +663,9 @@ style game_menu_label:
 
 style game_menu_label_text:
     size gui.title_text_size
-    color gui.accent_color
+    color "#ffffff"
     yalign 0.5
+    outlines [(2, "#26302b", 0, 0)]
 
 style return_button:
     xpos gui.navigation_xpos
@@ -601,7 +711,7 @@ screen about():
             hbox:
                 spacing 15
                 text _("GUI Scaffolding") style "about_small"
-                text _("the_question sample (Ren'Py SDK)")
+                text _("KOMIC by One Level Studio")
 
             null height 15
 
@@ -758,9 +868,17 @@ style page_button_text:
 
 style slot_button:
     properties gui.button_properties("slot_button")
+    background "gui/komic/button/slot_idle_background.png"
+    hover_background "gui/komic/button/slot_hover_background.png"
+    selected_background "gui/komic/button/slot_hover_background.png"
+    hover_sound "audio/ui_hover.ogg"
+    activate_sound "audio/ui_click.ogg"
+    mouse "button"
 
 style slot_button_text:
     properties gui.text_properties("slot_button")
+    color "#ffffff"
+    hover_color "#79c98b"
 
 
 ## Preferences screen ##########################################################
@@ -921,7 +1039,7 @@ style radio_vbox:
 
 style radio_button:
     properties gui.button_properties("radio_button")
-    foreground "gui/button/radio_[prefix_]foreground.png"
+    foreground "gui/komic/button/radio_[prefix_]foreground.png"
 
 style radio_button_text:
     properties gui.text_properties("radio_button")
@@ -931,7 +1049,7 @@ style check_vbox:
 
 style check_button:
     properties gui.button_properties("check_button")
-    foreground "gui/button/check_[prefix_]foreground.png"
+    foreground "gui/komic/button/check_[prefix_]foreground.png"
 
 style check_button_text:
     properties gui.text_properties("check_button")
@@ -1253,7 +1371,7 @@ style confirm_button is gui_medium_button
 style confirm_button_text is gui_medium_button_text
 
 style confirm_frame:
-    background Frame([ "gui/confirm_frame.png", "gui/frame.png"], gui.confirm_frame_borders, tile=gui.frame_tile)
+    background Frame("gui/komic/frame.png", gui.confirm_frame_borders, tile=gui.frame_tile)
     padding gui.confirm_frame_borders.padding
     xalign .5
     yalign .5
@@ -1313,7 +1431,7 @@ style skip_triangle is skip_text
 
 style skip_frame:
     ypos gui.skip_ypos
-    background Frame("gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
+    background Frame("gui/komic/frame.png", gui.skip_frame_borders, tile=gui.frame_tile)
     padding gui.skip_frame_borders.padding
 
 style skip_text:
@@ -1357,7 +1475,7 @@ style notify_text is gui_text
 style notify_frame:
     ypos gui.notify_ypos
 
-    background Frame("gui/notify.png", gui.notify_frame_borders, tile=gui.frame_tile)
+    background Frame("gui/komic/frame.png", gui.notify_frame_borders, tile=gui.frame_tile)
     padding gui.notify_frame_borders.padding
 
 style notify_text:
@@ -1498,21 +1616,41 @@ screen quick_menu():
 
     zorder 100
 
-    hbox:
-        style_prefix "quick"
+    if quick_menu:
+        hbox:
+            xalign 1.0
+            yalign 0.0
+            spacing 10
 
-        xalign 0.5
-        yalign 1.0
+            imagebutton:
+                idle Transform("gui/komic/quick/skip_idle.png", xysize=(72, 90))
+                hover Transform("gui/komic/quick/skip_hover.png", xysize=(72, 90))
+                action Skip()
+                alternate Skip(fast=True, confirm=True)
+                activate_sound "audio/ui_click.ogg"
 
-        textbutton _("Back") action Rollback()
-        textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-        textbutton _("Auto") action Preference("auto-forward", "toggle")
-        textbutton _("Menu") action ShowMenu()
+            imagebutton:
+                idle Transform("gui/komic/quick/continue_idle.png", xysize=(72, 90))
+                hover Transform("gui/komic/quick/continue_hover.png", xysize=(72, 90))
+                action Preference("auto-forward", "toggle")
+                activate_sound "audio/ui_click.ogg"
+
+            imagebutton:
+                idle Transform("gui/komic/quick/save_idle.png", xysize=(72, 90))
+                hover Transform("gui/komic/quick/save_hover.png", xysize=(72, 90))
+                action ShowMenu("save")
+                activate_sound "audio/ui_click.ogg"
+
+            imagebutton:
+                idle Transform("gui/komic/quick/options_idle.png", xysize=(72, 90))
+                hover Transform("gui/komic/quick/options_hover.png", xysize=(72, 90))
+                action ShowMenu("preferences")
+                activate_sound "audio/ui_click.ogg"
 
 
 style window:
     variant "small"
-    background "gui/phone/textbox.png"
+    background "gui/komic/textbox.png"
 
 style nvl_window:
     variant "small"
