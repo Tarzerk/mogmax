@@ -397,37 +397,30 @@ screen navigation():
     if main_menu:
         $ _newest_slot = renpy.newest_slot(r'auto|quick|\d')
 
-        hbox:
-            style_prefix "navigation"
-            xpos 35
-            ypos 390
-            spacing 10
+        vbox:
+            style_prefix "main_nav"
+            xpos 935
+            ypos 215
+            spacing 7
 
-            vbox:
-                spacing gui.navigation_spacing
+            if _newest_slot:
+                textbutton _("CONTINUE") action FileLoad(_newest_slot, slot=True, confirm=False)
+                textbutton _("NEW GAME") action Confirm(_("Start a new game? Your existing saves stay available under Load."), yes=Start())
+            else:
+                textbutton _("NEW GAME") action Start()
 
-                if _newest_slot:
-                    textbutton _("Continue") action FileLoad(_newest_slot, slot=True, confirm=False)
-                    textbutton _("New Game") action Confirm(_("Start a new game? Your existing saves stay available under Load."), yes=Start())
-                else:
-                    textbutton _("New Game") action Start()
+            textbutton _("LOAD GAME") action ShowMenu("load")
 
-                textbutton _("Load") action ShowMenu("load")
+            if persistent.chapter1_complete:
+                textbutton _("CHAPTER SELECT") action ShowMenu("chapter_select")
 
-                if persistent.chapter1_complete:
-                    textbutton _("Chapter Select") action ShowMenu("chapter_select")
+            null height 14
 
-            vbox:
-                spacing gui.navigation_spacing
+            textbutton _("PREFERENCES") action ShowMenu("preferences")
+            textbutton _("CREDITS") action Function(renpy.call_in_new_context, "roll_credits")
 
-                textbutton _("Credits") action Function(renpy.call_in_new_context, "roll_credits")
-                textbutton _("Preferences") action ShowMenu("preferences")
-
-                if config.developer:
-                    textbutton "Audio Check" action Show("audio_check")
-
-                if renpy.variant("pc"):
-                    textbutton _("Quit") action Quit(confirm=False)
+            if renpy.variant("pc"):
+                textbutton _("QUIT") action Quit(confirm=False)
 
     else:
         vbox:
@@ -481,6 +474,34 @@ style navigation_button_text:
     size 20
 
 
+style main_nav_button is default
+style main_nav_button_text is gui_text
+
+style main_nav_button:
+    xsize 305
+    ysize 44
+    padding (18, 0, 18, 0)
+    background Solid("#ffffff08")
+    hover_background Solid("#79c98b22")
+    selected_background Solid("#79c98b22")
+    insensitive_background Solid("#ffffff04")
+    hover_sound "audio/ui_hover.ogg"
+    activate_sound "audio/ui_click.ogg"
+    mouse "button"
+
+style main_nav_button_text:
+    font gui.interface_text_font
+    size 19
+    color "#dce5e0"
+    hover_color "#79c98b"
+    selected_color "#f2b84b"
+    insensitive_color "#69716d"
+    bold True
+    xalign 0.0
+    yalign 0.5
+    text_align 0.0
+
+
 ## Main Menu screen ############################################################
 ##
 ## Used to display the main menu when Ren'Py starts.
@@ -494,55 +515,59 @@ screen main_menu():
 
     style_prefix "main_menu"
 
-    add gui.main_menu_background
+    add Transform(gui.main_menu_background, size=(config.screen_width, config.screen_height))
 
-    ## This empty frame darkens the main menu.
-    frame:
-        pass
+    # A full-height command rail keeps the portrait unobstructed and gives the
+    # title and controls one stable alignment edge.
+    add Solid("#080c0ae8"):
+        xpos 890
+        xysize (390, 720)
+
+    add Solid("#79c98b"):
+        xpos 890
+        xysize (3, 720)
 
     ## Actual menu contents are in the navigation screen.
     use navigation
 
     if gui.show_name:
 
-        # Each text positioned individually at top-right so neither can
-        # collide with the other or with the footer.
         text "[config.name!t]":
             style "main_menu_title"
-            xalign 1.0
-            xoffset -40
-            yalign 0.04
-            yoffset 0
+            xpos 935
+            ypos 58
 
-        text _("based on a true story"):
+        text _("BASED ON A TRUE STORY"):
             style "main_menu_version"
-            xalign 1.0
-            xoffset -40
-            yalign 0.16
-            yoffset 0
+            xpos 938
+            ypos 132
 
-    ## Footer credit
-    text "Developed by Tarzerk & Cebolla   ·   v[config.version]":
-        xalign 0.5
-        yalign 0.985
-        size 14
+        add Solid("#79c98b"):
+            xpos 938
+            ypos 174
+            xysize (64, 3)
+
+    text "TARZERK + CEBOLLA":
+        xpos 938
+        ypos 658
+        size 13
         color "#aeb8b2"
-        outlines [(1, "#000000", 0, 0)]
+
+    text "v[config.version]":
+        xalign 1.0
+        xoffset -30
+        ypos 658
+        size 13
+        color "#69716d"
+
+    if config.developer:
+        key "K_F8" action Show("audio_check")
 
 
-style main_menu_frame is empty
 style main_menu_vbox is vbox
 style main_menu_text is gui_text
 style main_menu_title is main_menu_text
 style main_menu_version is main_menu_text
-
-style main_menu_frame:
-    xpos 20
-    ypos 350
-    xsize 540
-    ysize 340
-
-    background Frame("gui/komic/frame.png", Borders(22, 22, 22, 22))
 
 style main_menu_vbox:
     xalign 1.0
@@ -555,10 +580,16 @@ style main_menu_text:
     properties gui.text_properties("main_menu", accent=True)
 
 style main_menu_title:
-    properties gui.text_properties("title")
+    font gui.interface_text_font
+    size 58
+    color "#ffffff"
+    bold True
 
 style main_menu_version:
-    properties gui.text_properties("version")
+    font gui.interface_text_font
+    size 14
+    color "#aeb8b2"
+    bold True
 
 
 ## Game Menu screen ############################################################
@@ -575,7 +606,7 @@ screen game_menu(title, scroll=None, bg=None):
     style_prefix "game_menu"
 
     if main_menu:
-        add gui.main_menu_background
+        add Transform(gui.main_menu_background, size=(config.screen_width, config.screen_height))
     elif bg is not None:
         # Custom per-screen background (e.g. the Save/Load gigachad), scaled to
         # fill the screen and darkened so the slot grid stays legible.
