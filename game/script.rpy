@@ -204,11 +204,11 @@ image captain = sprite_or_placeholder("images/characters/captain/captain.png", "
 label splashscreen:
     scene black
     pause 0.3
-    show text "{size=24}{color=#888888}a Tarzerk & Cebolla production{/color}{/size}" at truecenter with dissolve
+    show expression Text("a Tarzerk & Cebolla production", style="story_card_subtitle") as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
     pause 0.5
-    show text "{size=110}{color=#ffffff}MOGMAX{/color}{/size}" at truecenter with dissolve
+    show expression Text("MOGMAX", style="story_card_logo") as text at truecenter with dissolve
     pause 1.6
     hide text with dissolve
     pause 0.5

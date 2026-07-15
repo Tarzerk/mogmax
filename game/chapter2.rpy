@@ -256,7 +256,7 @@ label study_done:
     stop ambient fadeout 1.5
     scene bg black with fade
     pause 0.6
-    show text "THE NEXT MORNING" at truecenter with dissolve
+    show expression Text("THE NEXT MORNING", style="story_card_text") as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
     jump class_quiz
@@ -461,22 +461,55 @@ label pass_class_scene:
     hide text with dissolve
     pause 0.6
 
-    # Clav is waiting in the hallway. He doesn't say well done.
+    # Clav is waiting in the hallway. The mirror theme begins here so its quiet
+    # opening has room to build without competing with the BRAINMOGGED sting.
+    $ set_cinematic_dialogue(True)
     scene bg hallway with fade
     show clav smirk at clav_body
-    c "One quiz."
-    show clav stern at clav_body
-    c "Don't confuse a step for the summit."
-    hide clav with dissolve
-    pause 0.8
+    play music "audio/mirror_scene.mp3" noloop fadein 1.5 volume persistent.vol_music
 
+    $ _wait_until_music_pos(2.0)
+    show screen cinematic_caption("One quiz.", "Clav")
+
+    $ _wait_until_music_pos(5.5)
+    show screen cinematic_caption("And now you're waiting for me to say you've changed.", "Clav")
+
+    $ _wait_until_music_pos(10.0)
+    show screen cinematic_caption("Was kind of hoping for a \"good job.\"", "[povname]")
+
+    $ _wait_until_music_pos(13.0)
+    show clav stern at clav_body
+    show screen cinematic_caption("You haven't changed.", "Clav")
+
+    $ _wait_until_music_pos(16.5)
+    show screen cinematic_caption("You proved you can.", "Clav")
+
+    $ _wait_until_music_pos(20.0)
+    show screen cinematic_caption("For once, you weren't trying to look smart.", "Clav")
+
+    $ _wait_until_music_pos(24.0)
+    show screen cinematic_caption("You were trying to get smarter.", "Clav")
+
+    $ _wait_until_music_pos(28.0)
+    show clav smirk at clav_body
+    show screen cinematic_caption("That's progress.", "Clav")
+
+    $ _wait_until_music_pos(31.0)
+    show screen cinematic_caption("Try not to make passing a personality.", "Clav")
+
+    $ _wait_until_music_pos(34.5)
+    show clav stern at clav_body
+    show screen cinematic_caption("Don't confuse a step for the summit.", "Clav")
+
+    $ _wait_until_music_pos(38.0)
+    hide screen cinematic_caption
+    hide clav with dissolve
+
+    $ _wait_until_music_pos(39.0)
     scene bg black with fade
-    show text "THE NEXT MORNING" at truecenter with dissolve
-    # Start the mirror theme quietly here, under the title card — it swells to
-    # full once the bedroom appears (in mirror_scene). <from 42> + noloop match
-    # the scene's own playback so there's no restart on the handoff.
-    play music "<from 42>audio/mirror_scene.mp3" noloop fadein 2.5 volume 0.2
-    pause 2.0
+    show expression Text("THE NEXT MORNING", style="story_card_text") as text at truecenter with dissolve
+
+    $ _wait_until_music_pos(42.0)
     hide text with dissolve
     jump mirror_scene
 
@@ -608,9 +641,9 @@ label mirror_scene:
 
     # Stacked end card — small caps "END OF CHAPTER 2" above, big green
     # "BRAINMAXXED" below. Same family as the BRAINMOGGED reveal card.
-    show expression Text("END OF CHAPTER 2", size=42, color="#aaaaaa", bold=True) as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
+    show expression Text("END OF CHAPTER 2", style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
     pause 0.5
-    show expression Text("BRAINMAXXED", size=130, color="#88ff88", bold=True) as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
+    show expression Text("BRAINMAXXED", style="story_card_text", size=130, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
     pause 3.0
     hide endline_top with dissolve
     hide endline_bot with dissolve

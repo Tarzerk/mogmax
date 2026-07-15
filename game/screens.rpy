@@ -137,15 +137,38 @@ screen cinematic_bars():
             ypos 467
 
 
-screen cinematic_caption(what):
+screen cinematic_caption(what, who=None):
     zorder 100
 
     window:
         style "window"
         background None
 
+        if who is not None:
+            window:
+                style "namebox"
+                text who:
+                    style "say_label"
+
         text what:
             style "say_dialogue"
+
+
+style story_card_text is default:
+    font gui.interface_text_font
+    size 36
+    color "#dce5e0"
+    bold True
+    text_align 0.5
+
+style story_card_subtitle is story_card_text:
+    size 24
+    color "#aeb8b2"
+    bold False
+
+style story_card_logo is story_card_text:
+    size 110
+    color "#ffffff"
 
 
 init python:
