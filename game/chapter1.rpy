@@ -83,7 +83,7 @@ label start:
 
     scene bg black with fade
     pause 0.4
-    show text "{size=54}Chapter 1 — Chopped{/size}" at truecenter with dissolve
+    show expression Text("CHAPTER 1 — CHOPPED", style="story_card_text", size=46) as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
 

@@ -33,7 +33,7 @@ label chapter3_start:
     stop music fadeout 2.0
     scene bg black with fade
     pause 0.4
-    show text "{size=54}Chapter 2 — The Mogbender{/size}" at truecenter with dissolve
+    show expression Text("CHAPTER 3 — THE MOGBENDER", style="story_card_text", size=46) as text at truecenter with dissolve
     pause 2.0
     hide text with dissolve
 
@@ -429,9 +429,9 @@ label ch3_return:
     pause 0.4
 
     # Stacked end card — same family as the merged Ch1 BRAINMAXXED card.
-    show expression Text("END OF CHAPTER 2", size=42, color="#aaaaaa", bold=True) as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
+    show expression Text("END OF CHAPTER 3", style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
     pause 0.5
-    show expression Text("THE MOGBENDER", size=120, color="#88ff88", bold=True) as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
+    show expression Text("THE MOGBENDER", style="story_card_text", size=120, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
     pause 2.8
     hide endline_top with dissolve
     hide endline_bot with dissolve
