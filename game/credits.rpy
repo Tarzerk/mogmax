@@ -23,13 +23,9 @@ init python:
     # Chapter titles for the credits listing, keyed by the chapter the credits
     # were reached from. Unknown / 0 (e.g. opened from the main menu or the dev
     # skip menu) shows no chapter line at all.
-    # NOTE: Ch1 (Chopped) and old Ch2 (Brainmaxxing) are now one merged chapter,
-    # so keys 1 & 2 both read as Chapter 1; the Mogbender is Chapter 2.
-    # (Full renumber of labels/flags/chapter-select is a later pass.)
     _CREDITS_CHAPTER_TITLES = {
         1: "Chapter 1 — Chopped",
-        2: "Chapter 1 — Brainmaxxing",
-        3: "Chapter 2 — The Mogbender",
+        2: "Chapter 2 — The Mogbender",
     }
 
     def build_credits_body(from_chapter=0):
