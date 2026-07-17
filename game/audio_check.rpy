@@ -64,6 +64,21 @@ screen audio_check():
             textbutton "buzzer" text_size 18 action Function(_ac_play, "audio/quiz_buzzer.mp3", "sound", persistent.vol_sfx)
             textbutton "mogging" text_size 18 action Function(_ac_play, "audio/mogging_sfx.mp3", "sound", persistent.vol_sfx)
 
+        hbox:
+            spacing 8
+            text "BATTLE CUES" size 18 color "#69e4ad" xminimum 180 yalign 0.5
+            textbutton "block scan" text_size 18 action Function(_ac_play, "audio/battle_block_scan.mp3", "sound", persistent.vol_sfx * 0.8)
+            textbutton "cringe" text_size 18 action Function(_ac_play, "audio/battle_cringe.mp3", "sound", persistent.vol_sfx * 0.9)
+            textbutton "aura beam" text_size 18 action Function(_ac_play, "audio/battle_aura_beam.mp3", "sound", persistent.vol_sfx * 0.85)
+            textbutton "super effective" text_size 18 action Function(_ac_play, "audio/battle_super_effective.mp3", "sound", persistent.vol_sfx * 0.9)
+            textbutton "recharge" text_size 18 action Function(_ac_play, "audio/battle_health_recharge.mp3", "sound", persistent.vol_sfx * 0.85)
+            textbutton "low health" text_size 18 action Function(_ac_play, "audio/battle_low_health.mp3", "sound", persistent.vol_sfx * 0.75)
+
+        hbox:
+            spacing 8
+            text "CHOICE CUE" size 18 color "#d9b4ff" xminimum 180 yalign 0.5
+            textbutton "critical loop" text_size 18 action Function(_ac_play, "audio/critical_choice_loop.mp3", "sound", persistent.vol_sfx * 0.65)
+
         null height 10
         hbox:
             spacing 24

@@ -1,727 +1,448 @@
-# MOGMAX — Chapter 2: Brainmaxxing
-# Characters (c, h, p, b, narrator) are defined in script.rpy
+# MOGMAX — Chapter 2: The Mogbender
+# Characters (c, b, p, eu, sol, cap, stranger, narrator) and the shared
+# brayden/gigachad/eugene image definitions live in script.rpy.
 
-default brain_score = 0
-default chapter2_attempt = 1
-default final_score = 0
-default ch2_studied = set()
-default ch2_clav_quip = ""
-
-# Quiz timer state — total 105s to answer all 10 questions, buzzer at <=10s
-default quiz_start_time = 0.0
-default quiz_duration = 105.0
-default buzzer_played = False
-
-image bg library = bg_image("images/backgrounds/bg_library.jpg")
-image bg classroom = bg_image("images/backgrounds/bg_classroom.jpg")
-image bg classroom_silent = bg_image("images/backgrounds/bg_classroom_silent.jpg")
-image bg bedroom_dawn = bg_image("images/backgrounds/bg_bedroom_dawn.jpg")
-image bg city_view = bg_image("images/backgrounds/bg_city_view.jpg")
-image bg shattered_mirror = bg_image("images/backgrounds/bg_shattered_mirror.jpg")
-# Portrait image — scaled to screen width (1280px), height overflows for vertical pan.
-# zoom = 1280/2023 (original width). Overflow = 1708 - 720 = 988px → pan range.
-image bg hope = Transform("images/backgrounds/bg_hope.jpg", zoom=0.6327)
-image bg god_rays = bg_image("images/backgrounds/bg_god_rays.jpg")
-image bg flashback = "#0a0a0a"
-image bg hallway = bg_image("images/backgrounds/bg_hallway.jpg")
-
-
-# Bullying images for the mirror-scene flashback.
-# Falls back to solid black if the file isn't present, so the scene
-# never crashes while assets are being added.
-init python:
-    def bully_bg(num):
-        path = "images/backgrounds/bg_bully_{}.jpg".format(num)
-        if renpy.loader.loadable(path):
-            return bg_image(path)
-        return Solid("#0a0a0a")
-
-image bg bully1 = bully_bg(1)
-image bg bully2 = bully_bg(2)
-image bg bully3 = bully_bg(3)
-
-
-# ─── Fail-state screen (Quit to main / Restart chapter) ──────
-screen fail_screen():
-    modal True
-    add Solid("#000000")
-
-    vbox:
-        xalign 0.5
-        yalign 0.5
-        spacing 22
-
-        text "CHAPTER 2 — FAILED":
-            size 70
-            color "#ff4444"
-            xalign 0.5
-
-        text "Score: [final_score] / 100":
-            size 34
-            color "#cccccc"
-            xalign 0.5
-
-        null height 50
-
-        textbutton "RESTART CHAPTER":
-            action Return("restart")
-            xalign 0.5
-            text_size 36
-            text_color "#88ff88"
-            text_hover_color "#ffffff"
-            text_idle_color "#88ff88"
-
-        textbutton "QUIT TO MAIN MENU":
-            action Return("quit")
-            xalign 0.5
-            text_size 36
-            text_color "#ff8888"
-            text_hover_color "#ffffff"
-            text_idle_color "#ff8888"
-
-
-init python:
-    import time as _qtime
-
-    def _wait_until_music_pos(target_seconds, channel="music", max_wait=90.0):
-        """Block until the given music channel's playback position reaches
-        target_seconds (or max_wait elapses, as a safety net)."""
-        deadline = _qtime.time() + max_wait
-        while _qtime.time() < deadline:
-            pos = renpy.music.get_pos(channel=channel) or 0
-            if pos >= target_seconds:
-                return
-            renpy.pause(0.25, hard=True)
-
-    def _quiz_tick():
-        """Fired ~4x/sec by the quiz_question screen. Plays the buzzer
-        SFX once when ≤10s remain, and force-ends the quiz at ≤0s."""
-        remaining = store.quiz_duration - (_qtime.time() - store.quiz_start_time)
-        if not store.buzzer_played and remaining <= 10:
-            renpy.play("audio/quiz_buzzer.mp3", channel="sound")
-            store.buzzer_played = True
-        if remaining <= 0:
-            renpy.end_interaction("timeout")
-
-
-init python:
-    # Ten vocab words for the Brainmaxxing quiz — a mix of easier SAT, mid SAT,
-    # and a couple of hard SAT/GRE holdouts so the list isn't uniformly brutal.
-    # Each entry: correct def + two plausible wrongs + one brainrot joke option +
-    # a Clav-voiced mogging-themed example sentence.
-    VOCAB = [
-        # Easier SAT
-        {"word": "gregarious", "correct": "sociable, fond of company",
-         "wrong_a": "scholarly, fond of books", "wrong_b": "easily irritated",
-         "joke": "rizz-coded",
-         "example": "Brayden is {b}gregarious{/b}. He has friends. You have... aspirations. — Clav"},
-
-        {"word": "tenacious", "correct": "persistent, holding firmly",
-         "wrong_a": "loud and aggressive", "wrong_b": "having teeth",
-         "joke": "L-resistant",
-         "example": "Your mewing routine is {b}tenacious{/b}. Your jaw, however, remains stubbornly average. — Clav"},
-
-        {"word": "candor", "correct": "honest, frank expression",
-         "wrong_a": "a kind of sweet pastry", "wrong_b": "fear of enclosed spaces",
-         "joke": "no-cap energy",
-         "example": "I appreciate your {b}candor{/b} when you admit you are chopped. It saves us both time. — Clav"},
-
-        {"word": "jovial", "correct": "cheerful and good-humored",
-         "wrong_a": "youthful and inexperienced", "wrong_b": "related to jewelry",
-         "joke": "drip-coded",
-         "example": "Mr. Harker is not {b}jovial{/b}. Do not attempt to make him laugh. You will lose. — Clav"},
-
-        # Mid SAT
-        {"word": "obsequious", "correct": "excessively eager to please",
-         "wrong_a": "loud and easily provoked", "wrong_b": "elderly or aged",
-         "joke": "skibidi-adjacent",
-         "example": "The waiter was so {b}obsequious{/b} to Brayden that he comped his croissant. You paid full price. — Clav"},
-
-        {"word": "ephemeral", "correct": "lasting only briefly",
-         "wrong_a": "eternal and unchanging", "wrong_b": "made of metal",
-         "joke": "fanum-tax energy",
-         "example": "Your high school aura is {b}ephemeral{/b}. Use it now. Or do not. It is already fading. — Clav"},
-
-        {"word": "supercilious", "correct": "arrogantly superior",
-         "wrong_a": "extremely silly", "wrong_b": "ceiling-related",
-         "joke": "Chad behavior",
-         "example": "Brayden's {b}supercilious{/b} smirk has been studied by anthropologists. Do not try to mirror it. — Clav"},
-
-        {"word": "mellifluous", "correct": "sweet and smooth-sounding",
-         "wrong_a": "yellow in color", "wrong_b": "sticky to the touch",
-         "joke": "bussin frfr",
-         "example": "His voice was {b}mellifluous{/b}. Yours sounds like a printer with a paper jam. — Clav"},
-
-        # Hard SAT / GRE (kept for flavor)
-        {"word": "magnanimous", "correct": "generous, especially in victory",
-         "wrong_a": "physically large", "wrong_b": "secretly cruel",
-         "joke": "sigma-coded",
-         "example": "I will not destroy you today. Consider it {b}magnanimous{/b}. Take notes. — Clav"},
-
-        {"word": "pulchritudinous", "correct": "physically beautiful",
-         "wrong_a": "extremely angry", "wrong_b": "containing pulp",
-         "joke": "gyatt",
-         "example": "Brayden's maxilla growth was so {b}pulchritudinous{/b} the yearbook added a new category. — Clav"},
-    ]
-
-    # Clav cut-in quips. One is picked at random when the study screen opens
-    # and shown as a subtitle under the header — keeps Clav's voice present
-    # in the flashcard phase even though the dialogue loop is gone.
-    CLAV_STUDY_QUIPS = [
-        "Don't cheat with the back of the notebook.",
-        "I can see you stalling.",
-        "Flip them all. I'll know if you skipped one.",
-        "Stop staring at the joke options. There's a reason they're called that.",
-        "Pulchritudinous is on the test. Memorize it.",
-        "You have ninety minutes. You've used eight.",
-        "If you can't read it, sound it out. Then weep.",
-        "Read every example. Yes, every one. I wrote them.",
-        "You blinked. I noticed.",
-    ]
+# ─── Chapter backgrounds ─────────────────────────────────────
+image bg ch2_bedroom    = bg_image("images/backgrounds/bg_ch2_bedroom.jpg")
+image bg ch2_road       = bg_image("images/backgrounds/bg_ch2_road.jpg")
+image bg ch2_gate       = bg_image("images/backgrounds/bg_ch2_gate.jpg")
+image bg ch2_sign       = bg_image("images/backgrounds/bg_ch2_sign.jpg")
+image bg ch2_corridor   = bg_image("images/backgrounds/bg_ch2_corridor.jpg")
+image bg ch2_vault      = bg_image("images/backgrounds/bg_ch2_vault.jpg")
+image bg ch2_lab        = bg_image("images/backgrounds/bg_ch2_lab.jpg")
+image bg ch2_whiteboard = bg_image("images/backgrounds/bg_ch2_whiteboard.jpg")
+image bg ch2_filewall   = bg_image("images/backgrounds/bg_ch2_filewall.jpg")
+image bg ch2_gym        = bg_image("images/backgrounds/bg_ch2_gym.jpg")
+image bg ch2_janitor    = bg_image("images/backgrounds/bg_ch2_janitor.jpg")
+image bg scan_granted   = "#0a2a0a"
 
 
 # ═════════════════════════════════════════════════════════════
-# SCENE 1 — CLAV'S BOOTCAMP (LIBRARY)
-# Attempt 1: full bootcamp.
-# Attempt 2+: shortened (skip per-word teach loop).
+# CHAPTER 2 — THE MOGBENDER
 # ═════════════════════════════════════════════════════════════
 
 label chapter2_start:
-    $ brain_score = 0
-    # Continuation of the merged chapter (Chopped → Brainmaxxing): no full
-    # chapter card. A small act divider over the library instead, shown only on
-    # the first arrival (retries skip straight to the booth).
+    # Fade out the mirror theme carried in from Chapter 1 so the new chapter's
+    # ambient bed can take over cleanly.
+    stop music fadeout 2.0
     scene bg black with fade
     pause 0.4
+    show expression Text("CHAPTER 2 — THE MOGBENDER", style="story_card_text", size=46) as text at truecenter with dissolve
+    pause 2.0
+    hide text with dissolve
 
-    scene bg library with fade
-    play music "audio/library_music.mp3" fadein 2.0 volume persistent.vol_music
-    play ambient "audio/library_ambient.mp3" fadein 2.0 volume persistent.vol_bed
-
-    if chapter2_attempt == 1:
-        narrator "After last bell. The library's the kind of quiet where even the vending machine feels judged."
-        show clav thinking at clav_body
-        narrator "The back booth. Clav's already there, reading — he doesn't look up when you sit down."
-    else:
-        narrator "Back to the booth. Clav is already there. He doesn't look up."
-        show clav stern at clav_body
-        narrator "He slides the notebook across the table without a word."
-        c "From the top."
-
-    pause 0.5
-
-    if chapter2_attempt == 1:
-        show clav stern at clav_body
-        c "Sit."
-        p "Hey. So I —"
-        c "Sit."
-        p "...sitting."
-        narrator "A stopwatch hits the table. Face up. He clicks it."
-        c "Ninety minutes. Ten words."
-        c "You will know every one of them or we sit here until you do."
-        c "Sit up."
-        show clav thinking at clav_body
-        c "Tomorrow morning. Harker. Snap vocab quiz."
-        c "Sixty or higher and the room finally looks at you."
-        show clav smirk at clav_body
-        c "Less than that and you are a ghost again."
-        show clav stern at clav_body
-        c "Notebook's in front of you. Get to work."
-    else:
-        show clav stern at clav_body
-        c "Same ten. Lock in."
-
-    # Reset flashcard state and pick a fresh Clav quip for this attempt.
-    # Player flips cards at their own pace and clicks TAKE THE QUIZ to advance.
-    $ ch2_studied = set()
-    $ ch2_clav_quip = renpy.random.choice(CLAV_STUDY_QUIPS)
-    call screen study_flashcards
-    jump study_done
-
-
-label study_done:
-    pause 0.5
-    show clav smirk at clav_body
-    c "Enough."
-    narrator "Clav clicks the stopwatch a final time and stands."
-    c "Sleep. Don't cope-scroll tonight."
-    show clav stern at clav_body
-    c "If I see you on TikTok after midnight I am not coming to the library tomorrow."
-    show clav stern at clav_body
-    c "We're done here for now. Don't make that mean nothing."
-    hide clav
-    narrator "He leaves. You sit alone in the booth with The List."
-    pause 1.0
-    stop music fadeout 1.5
-    stop ambient fadeout 1.5
-    scene bg black with fade
+    # ── SCENE 1 — THE PICKUP ──
+    scene bg ch2_bedroom with fade
+    # Bright stock bedroom -> tint dark for the pre-dawn feel (same trick as
+    # the desert night return).
+    show expression Solid("#0a1430cc") as night_tint
+    narrator "Black. Dead asleep. The kind of sleep that doesn't ask questions."
+    pause 0.4
+    play sound "audio/honk.mp3" volume persistent.vol_sfx
+    narrator "{b}HONK HONK.{/b}"
+    narrator "A car horn blares outside your window. You jolt awake."
+    c "Get up. We're leaving."
+    p "...where exactly?"
+    c "I said let's go."
+    narrator "No further explanation. The car is already running."
     pause 0.6
-    show expression Text("THE NEXT MORNING", style="story_card_text") as text at truecenter with dissolve
+
+    # ── SCENE 2 — THE ROAD ──
+    scene bg ch2_road with fade
+    play music "audio/desert_ambient.mp3" fadein 1.5 volume persistent.vol_bed
+    narrator "At first there are streetlights. Then fewer streetlights. Then the road becomes one long dark line under the headlights."
+
+    menu:
+        "Clav drives like this is normal."
+        "Ask where you're going.":
+            p "Where are we going?"
+            c "West."
+            p "That is not an answer."
+            c "It's a direction."
+        "Ask if this is legal.":
+            p "Is this legal?"
+            c "Most important things aren't."
+            p "That made me feel worse."
+            c "Good. You're listening."
+        "Sit in silence like a man.":
+            narrator "You sit in silence like a man."
+            pause 0.4
+            p "...Are we there yet?"
+            c "No."
+
+    narrator "Ten minutes becomes forty. Houses turn into gas stations. Gas stations turn into nothing."
+    p "Clav, I literally have school tomorrow."
+    c "You had school yesterday. Look what it did for you."
+    p "Honestly... valid."
+    pause 0.5
+    call screen ch2_travel_bar
+
+    # ── SCENE 3 — THE SIGN ──
+    scene bg ch2_sign with fade
+    play music "audio/base_ambient.mp3" fadeout 1.5 fadein 1.5 volume persistent.vol_bed
+    narrator "The car stops. The camera pans to a sign staked in the dirt."
+    narrator "{b}⚠ RESTRICTED AREA — USE OF DEADLY FORCE AUTHORIZED ⚠{/b}"
+    p "I think we should not be going here."
+    narrator "Clav smirks. Says nothing."
+    scene bg ch2_gate with fade
+    narrator "The car rolls up to the gate. A chain-link fence. A STOP sign. Two soldiers."
+    show soldier at soldier_left with dissolve
+    sol "Turn around. Now."
+    p "Clav. We CANNOT be here."
+    narrator "A shadow falls over the soldiers. A Captain steps forward."
+    show captain at captain_enter
+    cap "OPEN IT UP."
+    sol "...Yes sir."
+    hide captain with dissolve
+    hide soldier with dissolve
+    narrator "The gate grinds open."
+    pause 0.5
+
+
+# ── SCENE 4 — INSIDE THE BASE ──
+label chapter2_base:
+    scene bg ch2_corridor with fade
+    # Base bed starts at the restricted sign so the mood turns before entry.
+    # If a dev jump lands here directly, start it as a fallback.
+    if "base_ambient.mp3" not in (renpy.music.get_playing(channel="music") or ""):
+        play music "audio/base_ambient.mp3" fadeout 2.0 fadein 2.0 volume persistent.vol_bed
+    narrator "Layer after layer of security. Retinal scans. Badge checks. Armed guards."
+    narrator "And yet — nobody stops you. Nobody even looks twice."
+    narrator "It's like you were expected."
+    p "I can't believe I'm actually here."
+    p "...Are aliens real?"
+    show clav smirk at clav_body
+    c "You have a lot to learn, normie."
+    hide clav
+    scene bg ch2_vault with fade
+    narrator "You reach a massive vault door. Clav steps forward. A scanner activates. Blue light sweeps slowly across his jaw."
+    play sound "audio/scan.mp3" volume (persistent.vol_sfx * 0.85)
+    pause 0.6
+    scene bg scan_granted with dissolve
+    show text "{size=44}{color=#88ff88}🔵 JAWLINE SCAN CONFIRMED{/color}" at truecenter with dissolve
+    pause 1.4
+    hide text
+    show text "{size=70}{color=#88ff88}{b}ACCESS GRANTED{/b}{/color}" at truecenter with dissolve
+    pause 1.4
+    hide text
+    show text "{size=46}{color=#88ff88}👁  WELCOME TO GIGAMAXXING{/color}" at truecenter with dissolve
     pause 1.8
     hide text with dissolve
-    jump class_quiz
 
-
-# ═════════════════════════════════════════════════════════════
-# SCENE 2 — THE QUIZ (CLASSROOM)
-# Joke option appears on only 3 of 7 questions (randomized per attempt).
-# Score is hidden until reveal.
-# ═════════════════════════════════════════════════════════════
-
-label class_quiz:
-    scene bg classroom with fade
-    play music "audio/quiz_tension.mp3" fadeout 1.5 fadein 1.5 volume persistent.vol_music
-    narrator "Mr. Harker's first-period English."
-    show harker pointing at harker_body
-    h "Notebooks closed. Pop quiz."
-    narrator "The popular kids groan. Brayden slumps theatrically in the back row."
-    narrator "You sit up straight."
-    show harker stopwatch at harker_body
-    h "[povname]. We will start with you."
-
-    $ brain_score = 0
-    $ shuffled_vocab = list(VOCAB)
-    $ renpy.random.shuffle(shuffled_vocab)
-
-    # Pick 4 of the 10 question indices to receive the brainrot joke option.
-    # The other 6 get a plausible wrong distractor pulled from another word.
-    $ joke_question_indices = set(renpy.random.sample(range(len(shuffled_vocab)), 4))
-
-    # Start the 105-second countdown (matches the length of quiz_tension.mp3).
-    $ quiz_start_time = _qtime.time()
-    $ buzzer_played = False
-
-    $ quiz_idx = 0
-
-label quiz_loop:
-    if quiz_idx >= len(shuffled_vocab):
-        jump quiz_finished
-
-    $ q = shuffled_vocab[quiz_idx]
-    $ q_word = q["word"]
-    $ q_num = quiz_idx + 1
-
-    python:
-        if quiz_idx in joke_question_indices:
-            # Joke-option question
-            choices_list = [
-                (q["correct"], "correct"),
-                (q["wrong_a"], "wrong"),
-                (q["wrong_b"], "wrong"),
-                (q["joke"], "joke"),
-            ]
-        else:
-            # Four plausible options — third wrong pulled from another word
-            other_words = [v for v in VOCAB if v["word"] != q["word"]]
-            other = renpy.random.choice(other_words)
-            extra_wrong = renpy.random.choice([other["wrong_a"], other["wrong_b"]])
-            choices_list = [
-                (q["correct"], "correct"),
-                (q["wrong_a"], "wrong"),
-                (q["wrong_b"], "wrong"),
-                (extra_wrong, "wrong"),
-            ]
-        renpy.random.shuffle(choices_list)
-
-    $ result = renpy.call_screen("quiz_question", q_num=q_num, total=len(shuffled_vocab), word=q_word, options=choices_list)
-
-    # Time's up — bail straight to the score reveal regardless of progress.
-    if result == "timeout":
-        jump quiz_timeout
-
-    if result == "correct":
-        $ brain_score += 1
-        # Silence is the tell.
-    elif result == "joke":
-        narrator "{i}Brayden laughs out loud. Mr. Harker does not.{/i}"
-    else:
-        narrator "{i}Brayden coughs into his hand. Mr. Harker's pen does not move.{/i}"
-
-    $ quiz_idx += 1
-    jump quiz_loop
-
-
-# Force-end path when the timer runs out — current correct count is final.
-label quiz_timeout:
-    stop music fadeout 1.0
-    pause 0.4
-    narrator "{i}Time is up. Pencils down.{/i}"
-    pause 1.0
-    $ final_score = int((brain_score / float(len(VOCAB))) * 100)
-    narrator "Mr. Harker walks to his desk and totals what you managed to finish."
-    pause 0.8
-    narrator "He looks up."
-    pause 0.4
-    show harker tired at harker_body
-    h "[povname]."
-    if final_score >= 60:
-        pause 0.7
-        narrator "He pauses."
-        pause 0.4
-        narrator "Longer than he needs to."
-        pause 0.6
-        show harker glasses at harker_body
-        h "Your score is {b}[final_score]{/b}."
-        pause 1.4
-        jump pass_class_scene
-    else:
-        show harker facepalm at harker_body
-        h "Your score is {b}[final_score]{/b}."
-        pause 1.2
-        jump fail_class_scene
-
-
-label quiz_finished:
-    $ final_score = int((brain_score / float(len(VOCAB))) * 100)
+    # ── SCENE 5 — THE REVEAL ──
+    scene bg ch2_lab with fade
+    show clav thinking at clav_body
+    c "Most people think Area 51 is about aliens. Advanced weapons. Classified tech."
+    c "That's exactly what we want them to think."
+    c "The real research has been going on for 60 years."
+    p "...What research?"
+    c "Frame. Brain. Aura. The US government cracked gigamaxxing before the internet even existed."
+    hide clav
+    scene bg ch2_whiteboard with fade
+    narrator "The room opens up. Whiteboards covered in mewing diagrams. Posture charts. Vocabulary trees. A framed photo of a jaw — classified EYES ONLY."
+    show clav stern at clav_body
+    c "[povname]. With great power comes great responsibility."
+    c "Trust the process."
+    hide clav
     pause 0.6
-    show harker pointing at harker_body
-    h "Pencils down."
+
+    # ── SCENE 6 — THE GIGACHAD FILE ──
+    scene bg ch2_filewall with fade
+    narrator "A whole wall of personnel files. Every face blacked out. Clearances you'll never have."
+    show gigachad wall at gigachad_file with dissolve
+    narrator "Except one. No redaction. A silhouette so clean it stops reading like a person and starts reading like a decision the universe made on a good day."
+    narrator "{b}⬛ LEVEL: GIGACHAD — CLEARANCE BEYOND THIS FACILITY{/b}"
+    p "...okay. Who is that?"
+    hide gigachad with dissolve
+    show clav stern at clav_body
+    c "Wrong question. That's not a who. That's the ceiling."
+    c "Top of the scale. The number they don't let people be."
+    p "Has anyone ever actually—"
+    c "No."
+    pause 0.3
+    c "A handful get close. Ever. In the whole history of the program."
+    narrator "For half a second something moves behind his face. Not pride. Closer to a bruise."
+    c "...I got close."
+    hide clav
+    narrator "He says it flat, like a weather report, and walks off before you can pull the thread."
+    narrator "You look back at the silhouette. And somewhere deep in your skull — a desk. A window full of city. A file set down on a stack of files exactly like it."
+    narrator "You have no idea why it feels like you've already met him."
+    pause 0.8
+
+    # ── SCENE 6.5 — THE NATURAL MOGGERS ──
+    scene bg ch2_corridor with fade
+    narrator "The next corridor is darker. Warmer. Glass displays line both walls, each one lit from below in gold."
+    narrator "No names. No plaques. Just silhouettes."
+    narrator "All of them at once: a small figure in a soccer kit, frozen mid-cut; a skater hanging calm in the air; a giant rising above a rim; a marble-built man under a cape-shaped shadow."
+    narrator "Different bodies. Different worlds. Same impossible feeling — like gravity has quietly agreed to help them."
+    p "Are these... famous people?"
+    show clav thinking at clav_body
+    c "No names in the facility."
+    p "Why?"
+    c "Names make people think this is celebrity."
+    c "It isn't."
+    show clav stern at clav_body
+    c "It's gravity."
+    narrator "You look again. Not posters. Specimens."
+    c "Some people mog without trying. Without knowing. Without caring."
+    c "They walk into the world already carrying something everyone else has to build."
+    p "So what, they're the goal?"
+    c "No."
+    c "They're proof."
+    c "Brain gets you through a test. Controlled conditions. Paper. Definitions."
+    c "But Brayden isn't a worksheet."
+    c "He doesn't beat people by being smarter. He beats them by making the room agree with him before anyone speaks."
+    c "That's Frame. That's Aura."
+    p "And Gigachad?"
+    pause 0.4
+    c "Those people mog in one direction. Movement. Body. Presence. Myth."
+    c "Gigachad is what happens when nothing is missing."
+    pause 0.4
+    c "You won't reach that."
+    p "...Oh."
+    c "Neither did I."
+    narrator "He says it too fast. Like the sentence bit him on the way out."
+    show clav smirk at clav_body
+    c "But you don't need the ceiling."
+    c "You need one step."
+    c "One step is the difference between a room forgetting you and a room checking where you're standing."
+    c "So."
+    c "Training wing."
+    hide clav
+    pause 0.6
+
+
+# ── SCENE 7 — THE TRAINING WING (battle tutorial + montage + spar) ──
+label chapter2_training:
+    scene bg ch2_gym with fade
+    play music "audio/training_montage.mp3" fadeout 1.5 fadein 1.0 volume persistent.vol_music
+    narrator "The training wing. Different people run each station. Nobody introduces themselves. Nobody has to."
+    # Keep the gym stage clear for Clav and future station-specific trainers.
+    show clav thinking at clav_body
+    c "Everything so far was observation. Brain. Frame. Aura. The scan at the door."
+    c "First you build the pieces. Then you learn what they do to someone."
+    hide clav
+
+    # ── THE MONTAGE (stations) ──
+    narrator "They run you through all of it. Hours of it."
+
+    narrator "The first station is a steel chair facing an anatomy terminal. Two skulls stare back at you. One weak. One classified."
+    show clav smirk at clav_body
+    c "Mewing Geometry. Four positions. Miss the window and the machine rejects your palate."
+    p "The machine can reject my palate?"
+    c "It can do worse."
+    hide clav
+    $ reset_mewing_minigame()
+    $ mewing_score = renpy.call_screen("mewing_minigame")
+
+    if mewing_score == 100:
+        narrator "The terminal flashes green on the first sequence. Somewhere behind the glass, a technician slowly removes his sunglasses."
+        show clav thinking at clav_body
+        c "Beginner's luck. Extremely classified beginner's luck."
+        hide clav
+    elif mewing_score >= 80:
+        narrator "The terminal makes you reset, then accepts the lock with a deep mechanical thunk."
+        show clav smirk at clav_body
+        c "Messy. But your palate has clearance."
+        hide clav
+    else:
+        narrator "By the time the terminal finally turns green, your tongue feels like it has completed basic training."
+        show clav stern at clav_body
+        c "Nobody saw the first attempts. The cameras are classified."
+        hide clav
+
+    narrator "A curtain jerks open at the next station. Behind it sits an arcade cabinet bolted to the floor, connected to a giant mechanical jaw on a rail."
+    show clav smirk at clav_body
+    c "Aura Harvester 6000."
+    p "Why does it have teeth?"
+    c "Improves retention."
+    c "Green outline adds aura. Red outline drains whatever you've built. Catch enough to reach one hundred."
+    p "So I can't run out of lives?"
+    c "No. You can only watch the number go back down."
+    p "That feels worse."
+    c "Correct."
+    hide clav
+
+    $ reset_aura_harvester("normal")
+    $ aura_result = renpy.call_screen("aura_harvester")
+    $ aura_training_score = aura_score
+
+    narrator "The jaw slams shut hard enough to shake the cabinet. Green lights race across the machine: {color=#69ff9a}AURA STABILIZED.{/color}"
+    show clav thinking at clav_body
+    c "One hundred. The federal minimum for entering a room like you belong there."
+    p "That cannot be a real measurement."
+    c "It has a number. Of course it's real."
+    hide clav
+
+    narrator "At the next station, a scanner lowers over a blank anatomical face. It has no eyes. Somehow it still looks judgmental."
+    show clav stern at clav_body
+    c "Dermal Purge. Clear active inflammation. Leave permanent marks alone."
+    p "And if I click a mole?"
+    c "The machine documents your lack of restraint."
+    hide clav
+
+    $ reset_acne_minigame("normal")
+    $ acne_training_score = renpy.call_screen("acne_pop_minigame")
+    $ aura += 100
+
+    narrator "The scan turns green: {color=#69e4ad}CLEAR SKIN. +100 AURA.{/color}"
+    if acne_mistakes == 0:
+        show clav thinking at clav_body
+        c "No collateral damage. Unexpectedly civilized."
+        hide clav
+    else:
+        show clav smirk at clav_body
+        c "You attacked [acne_mistakes] permanent features. We'll call that enthusiasm."
+        hide clav
+
+    # Additional playable stations can slot into this montage without changing
+    # the handoff into the battle tutorial.
+    narrator "After that, the stations stop feeling separate. The next hour comes back in flashes."
+    narrator "A posture harness yanks your shoulders into alignment every time you slouch. By the sixth correction, you start catching yourself before the machine does."
+    show clav stern at clav_body
+    c "Frame begins before anyone sees your face. Again."
+    hide clav
+    narrator "A height rig calibrates your stance down to the millimeter. Chin level. Weight balanced. Heels planted like the floor owes you stability."
+    narrator "Then a speech terminal throws insults at you through a blown speaker. Your job is not to answer. Your job is to make the silence feel like your decision."
+    p "This place spent federal money teaching people how not to reply?"
+    show clav smirk at clav_body
+    c "Billions. Try to look grateful."
+    hide clav
+    narrator "By the time the last restraint unlocks, your jaw aches in a muscle you didn't know existed. The sensor on your wrist keeps returning the same verdict: {color=#88ff88}AURA: RISING.{/color}"
+
+    # ── HOW A MOG BATTLE WORKS ──
+    narrator "Across the gym, two trainees square off. No fists. No words. One of them sets his jaw and stands a half-inch taller."
+    narrator "The other one's shoulders fold. He looks at the floor. The whole room knows exactly who won."
+    show clav stern at clav_body
+    c "That's a Mog Battle. Everything you built in here becomes a move."
+    c "Aura Blast applies pressure. Hold Frame answers force. Cringe slips through a block. Mewing makes yap hit nothing."
+    c "Read the tell. Give it the correct answer."
+    hide clav
+
+    narrator "A man in a black training shirt steps onto the mat. The name patch says COACH KAI. His posture says the patch was unnecessary."
+    narrator "Three lights switch on above him: ATTACK. BLOCK. YAP."
+    $ start_mog_battle("kai_tutorial")
+    $ kai_tutorial_result = renpy.call_screen("mog_battle_screen")
+    narrator "Kai taps RESTORE. Your Aura returns to {color=#69ff9a}100 / 100{/color}."
+
+    # ── THE GRADUATION SPAR ──
+    show clav smirk at clav_body
+    c "That was instruction. This one is yours."
+    c "No answer lights. No help."
+    hide clav
+    narrator "Coach Kai stays on the mat. Every hint switches off."
+    $ start_mog_battle("kai_graduation")
+    $ kai_graduation_result = renpy.call_screen("mog_battle_screen")
+    narrator "It's close. It is not clean. But when it's over, you're the one still standing up straight with {color=#69ff9a}[kai_graduation_result['aura_kept']] AURA{/color}."
+    pause 0.4
+    show clav smirk at clav_body
+    c "Adequate."
+    hide clav
+    stop music fadeout 1.5
+    pause 0.6
+
+
+# ── SCENE 8 — EUGENE (THE FIRST CHOICE THAT LOGS) ──
+label chapter2_eugene:
+    stop music fadeout 0.5  # silent scene — clear inherited music (audio-hardening)
+    scene bg ch2_janitor with fade
+    narrator "On the way out, a mop squeaks in a side corridor. You almost keep walking. You don't."
+    show eugene neutral at eugene_left
+    narrator "Folded-in shoulders. Eyes down. A lanyard that just says INTERN. You know that exact posture — you wore it for years."
+    p "...Eugene?"
+    eu "Oh. Hey."
+    p "What are you doing here?"
+    eu "Internship. Unpaid. But the wi-fi's honestly insane, so."
+    narrator "He keeps mopping. He isn't waiting for you to stick around. Nobody ever does."
+    pause 0.4
+    narrator "Then you notice the angle: his eyes down, yours up. For once, the room has already decided which of you matters more."
+    narrator "No voice tells you what to do. You can keep that advantage and make him feel it — or give it up before it turns you into someone familiar."
+
+    window hide
+    $ start_critical_choice()
+    show layer master at critical_choice_world
+
+    menu:
+        "MOG EUGENE":
+            $ stop_critical_choice()
+            show layer master at critical_choice_release
+            $ mogged_eugene = True
+            $ helped_eugene = False
+            pause 0.35
+            play sound "audio/battle_super_effective.mp3" volume persistent.vol_sfx * 0.9
+            show layer master at eugene_mog_impact
+            show expression Solid("#fff4df35") as mog_impact_flash onlayer overlay
+            pause 0.08
+            hide mog_impact_flash onlayer overlay
+            show eugene sad at eugene_left
+            pause 0.42
+            show layer master at critical_choice_release
+            narrator "You don't insult him. You don't need to. You straighten, hold his eyes, and let the silence compare you."
+            narrator "The hallway changes sides. Eugene's joke dies first. Then his shoulders fold, as if your new frame has actual weight."
+            eu "...yeah. 'Course."
+            narrator "It lands exactly the way you wanted. That's the worst part. No Clav in your ear. No audience to impress. This one was yours."
+        "DON'T MOG EUGENE":
+            $ stop_critical_choice()
+            show layer master at critical_choice_release
+            $ helped_eugene = True
+            $ mogged_eugene = False
+            narrator "You give up the angle. You crouch down, so you're not looking at him from above."
+            p "For what it's worth — the wi-fi bit was actually funny. And nobody who grinds this quiet stays invisible forever. I'd know."
+            show eugene happy at eugene_left with dissolve
+            narrator "Eugene stops mopping. Looks at you properly — the first time anyone's really looked at him all day."
+            eu "...huh. Most people who come through here don't even see me."
+            narrator "He stands a little straighter. You did that without an audience. Somehow, that feels more real than anything you proved today."
+    hide eugene with dissolve
+    pause 0.6
+
+
+# ── SCENE 9 — THE DRIVE BACK / THE INVITE ──
+label chapter2_return:
+    # Reuse the daytime desert road, tinted dark-navy for night (same road =
+    # continuity, and guaranteed people-free). The night_tint clears on the
+    # scene change to black at the end.
+    scene bg ch2_road with fade
+    show expression Solid("#0a1430cc") as night_tint
+    play music "audio/desert_ambient.mp3" fadein 1.0 volume persistent.vol_bed
+    narrator "Night. The desert unspools backward outside the window. You've been quiet a long time."
+    p "So what was that, actually. All of it."
+    c "Proof. That the grind isn't a phone thing. It's old, it's real, and it works."
+    c "You walked in an LTN. You're walking out a problem."
+    narrator "You catch your reflection in the side mirror and sit up without deciding to. Even the glass has an opinion about you now."
+    pause 0.5
+    play sound "audio/text_buzz.mp3" volume persistent.vol_sfx
+    narrator "Your phone lights up. The class group chat — the one you've been muted in since freshman year."
+    narrator "{i}FRIDAY. Brayden's place. Open invite. Whole school's going.{/i}"
+    pause 0.4
+    narrator "Open invite. Which has always, always meant {i}everyone except you.{/i} You read it three times."
+    c "Don't sit there wondering if you should go."
+    c "You're going to walk in like your name's on the lease."
+    pause 0.6
+    play sound "audio/text_buzz.mp3" volume persistent.vol_sfx
+    b "{i}yo heard you're coming friday{/i}"
+    pause 0.4
+    b "{i}just don't make it weird{/i}"
+    pause 0.6
+    narrator "You stare at the second message longer than the first."
+    narrator "For once, Brayden texted first."
+    narrator "Not to invite you. To make sure he still owned the frame before you walked in."
+    pause 1.0
+
     stop music fadeout 2.0
-    pause 0.4
-    narrator "Mr. Harker walks to his desk and totals your sheet."
-    pause 0.8
-    narrator "He looks up."
-    pause 0.4
-    show harker tired at harker_body
-    h "[povname]."
-
-    # Pass-only pause beat — let the mog land.
-    if final_score >= 60:
-        pause 0.7
-        narrator "He pauses."
-        pause 0.4
-        narrator "Longer than he needs to."
-        pause 0.6
-        show harker glasses at harker_body
-        h "Your score is {b}[final_score]{/b}."
-        pause 1.4
-        jump pass_class_scene
-    else:
-        show harker facepalm at harker_body
-        h "Your score is {b}[final_score]{/b}."
-        pause 1.2
-        jump fail_class_scene
-
-
-# ═════════════════════════════════════════════════════════════
-# SCENE 3A — PASS (≥60)
-# ═════════════════════════════════════════════════════════════
-
-label pass_class_scene:
-    # Silent scene (sfx only) — clear any inherited track so a jump/skip into
-    # it doesn't bleed a previous scene's music. (No-op in normal play.)
-    stop music fadeout 0.5
-    scene bg classroom_silent with fade
-    show harker glasses at harker_body
-    narrator "Mr. Harker slowly removes his glasses."
-    narrator "He looks at your sheet. Then at you."
-    h "...Well. You finally passed."
-    hide harker
-    pause 0.6
-    play sound "audio/bell_school.mp3" volume persistent.vol_sfx
-    narrator "The bell rings."
-    narrator "As you gather your books, every head in the room turns."
-    narrator "{i}No one speaks.{/i}"
-    narrator "Eyebrows raise."
-    show brayden shocked at clav_body
-    narrator "In the back row, Brayden stops chewing. He stares at your score on Mr. Harker's sheet. He doesn't say anything."
-    narrator "{i}That's new.{/i}"
-    hide brayden
-    $ brayden_threatened = True
-    pause 0.5
-    p "(...did I just mog the class?)"
-    pause 1.4
-
-    # ── THE MOG MOMENT ──
-    # Timed to mogging_sfx.mp3 — the hit lands at 5.75s into the file.
-    # Note: each `with dissolve` adds ~0.5s of wait that pauses don't count,
-    # so the YOU and JUST dissolves shave 1.0s of total time. Pauses are
-    # tuned with that overhead in mind.
-    scene bg black
-    play sound "audio/mogging_sfx.mp3" volume persistent.vol_sfx
-    pause 1.0
-    show text "{size=110}{color=#88ff88}{b}YOU{/b}{/color}" at truecenter with dissolve
-    pause 1.5
-    hide text
-    show text "{size=110}{color=#88ff88}{b}JUST{/b}{/color}" at truecenter with dissolve
-    pause 2.25
-    hide text
-    show text "{size=130}{color=#88ff88}{b}BRAINMOGGED{/b}{/color}" at truecenter with vpunch
-    pause 3.2
-    hide text with dissolve
-    pause 0.5
-
-    # ── STAT REVEAL ── RPG-style level-up after the mog lands.
-    show text "{size=44}{color=#88ff88}{b}INTELLIGENCE  ++{/b}{/color}" at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
-    pause 0.75
-    show text "{size=44}{color=#88ff88}{b}INTELLIGENCE  ++\nCOMMUNICATION  ++{/b}{/color}" at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
-    pause 0.75
-    show text "{size=44}{color=#88ff88}{b}INTELLIGENCE  ++\nCOMMUNICATION  ++\nCONFIDENCE  ++{/b}{/color}" at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
-    pause 2.2
-    hide text with dissolve
-    pause 0.6
-
-    # Clav is waiting in the hallway. The mirror theme begins here so its quiet
-    # opening has room to build without competing with the BRAINMOGGED sting.
-    $ set_cinematic_dialogue(True)
-    scene bg hallway with fade
-    show clav smirk at clav_body
-    play music "audio/mirror_scene.mp3" noloop fadein 1.5 volume persistent.vol_music
-
-    $ _wait_until_music_pos(2.0)
-    show screen cinematic_caption("One quiz.", "Clav")
-
-    $ _wait_until_music_pos(5.5)
-    show screen cinematic_caption("And now you're waiting for me to say you've changed.", "Clav")
-
-    $ _wait_until_music_pos(10.0)
-    show screen cinematic_caption("Was kind of hoping for a \"good job.\"", "[povname]")
-
-    $ _wait_until_music_pos(13.0)
-    show clav stern at clav_body
-    show screen cinematic_caption("You haven't changed.", "Clav")
-
-    $ _wait_until_music_pos(16.5)
-    show screen cinematic_caption("You proved you can.", "Clav")
-
-    $ _wait_until_music_pos(20.0)
-    show screen cinematic_caption("For once, you weren't trying to look smart.", "Clav")
-
-    $ _wait_until_music_pos(24.0)
-    show screen cinematic_caption("You were trying to get smarter.", "Clav")
-
-    $ _wait_until_music_pos(28.0)
-    show clav smirk at clav_body
-    show screen cinematic_caption("That's progress.", "Clav")
-
-    $ _wait_until_music_pos(31.0)
-    show screen cinematic_caption("Try not to make passing a personality.", "Clav")
-
-    $ _wait_until_music_pos(34.5)
-    show clav stern at clav_body
-    show screen cinematic_caption("Don't confuse a step for the summit.", "Clav")
-
-    $ _wait_until_music_pos(38.0)
-    hide screen cinematic_caption
-    hide clav with dissolve
-
-    $ _wait_until_music_pos(39.0)
     scene bg black with fade
-    show expression Text("THE NEXT MORNING", style="story_card_text") as text at truecenter with dissolve
+    pause 0.4
 
-    $ _wait_until_music_pos(42.0)
-    hide text with dissolve
-    jump mirror_scene
-
-
-# ═════════════════════════════════════════════════════════════
-# SCENE 4 — MIRROR & CITY (RESOLUTION)
-# ═════════════════════════════════════════════════════════════
-
-# ─── Cinematic helpers for the mirror monologue ──────────────
-# Slow "Ken Burns" drifts keep every background alive behind KOMIC's bars.
-transform kb_zoom:
-    subpixel True
-    zoom 1.05
-    linear 32.0 zoom 1.18
-
-transform kb_pan_right:
-    subpixel True
-    zoom 1.14 xoffset -45
-    linear 32.0 xoffset 45
-
-transform kb_pan_left:
-    subpixel True
-    zoom 1.14 xoffset 45
-    linear 32.0 xoffset -45
-
-# Portrait pan — start at the wrist/arm area (row ~700 of 1708), pan up to
-# the light at the top. Ren'Py centers the tall image (default top = -494px),
-# so yoffset = 494 - target_row. Timed to 14s (music pos 81→95).
-transform kb_pan_up:
-    subpixel True
-    yoffset 400
-    linear 14.0 yoffset 900
-
-label mirror_scene:
-    # KOMIC's steady cinematic bars hold the automatically timed monologue.
-    $ set_cinematic_dialogue(True)
-    show bg bedroom_dawn at kb_zoom with fade
-    # The mirror theme is already playing quietly from the NEXT MORNING card;
-    # swell it to full now that the bedroom is on screen. If the scene is
-    # entered directly (e.g. a dev jump), start the track here instead so it
-    # isn't silent. (All _wait_until_music_pos values are absolute seconds into
-    # mirror_scene.mp3; <from 42> skipped the slow intro, drop @1:13, peak @~1:35.)
-    if "mirror_scene.mp3" in (renpy.music.get_playing(channel="music") or ""):
-        # Pre-rolled from the NEXT MORNING card — swell it to full.
-        $ renpy.music.set_volume(persistent.vol_music, delay=2.0, channel="music")
-    else:
-        # Entered directly, or a stale track is still playing — replace it.
-        play music "<from 42>audio/mirror_scene.mp3" noloop fadein 1.0 volume persistent.vol_music
-
-    # One dim overlay over the whole sequence so captions read cleanly.
-    show expression Solid("#000000aa") as dim_overlay
-
-    # ══ SAD (~0:44–1:03) — the honest inventory. Full lines, no fade on text. ══
-    $ _wait_until_music_pos(44.0)
-    show screen cinematic_caption("{i}I'm nothing special.{/i}")
-
-    $ _wait_until_music_pos(48.0)
-    show screen cinematic_caption("{i}Average face. Average build. Average everything.{/i}")
-
-    $ _wait_until_music_pos(52.0)
-    show screen cinematic_caption("{i}As a kid, I was sure I'd grow into someone.{/i}")
-
-    $ _wait_until_music_pos(56.0)
-    show screen cinematic_caption("{i}Middle school. Freshman year. Still sure.{/i}")
-
-    $ _wait_until_music_pos(60.0)
-    show screen cinematic_caption("{i}...Some nights, I'm still sure.{/i}")
-
-    $ _wait_until_music_pos(63.0)
-    show screen cinematic_caption("{i}And there's no room I walk into where I'm the best at anything.{/i}")
-
-    # ══ Flashbacks (~1:07–1:12) — the images speak; just the quotes. ══
-    $ _wait_until_music_pos(66.0)
-    hide screen cinematic_caption
-    show bg bully1 at kb_pan_left with Dissolve(0.3)
-    show screen cinematic_caption("{size=34}\"Move, NPC.\"{/size}\n{size=20}— eighth grade{/size}")
-
-    $ _wait_until_music_pos(68.0)
-    show bg bully2 at kb_pan_right with Dissolve(0.3)
-    show screen cinematic_caption("{size=34}\"Look at this LTN.\"{/size}\n{size=20}— ninth grade{/size}")
-
-    $ _wait_until_music_pos(70.0)
-    show bg bully3 at kb_zoom with Dissolve(0.3)
-    show screen cinematic_caption("{size=38}\"Chopped.\"{/size}\n{size=20}— tenth grade{/size}")
-
-    # ══ DROP @1:13 — the verdict shatters (hard cut, on the beat). ══
-    $ _wait_until_music_pos(73.0)
-    hide screen cinematic_caption
-    show bg shattered_mirror at kb_zoom
-    $ _wait_until_music_pos(73.6)
-    show screen cinematic_caption("{i}{size=34}So. Average me.{/size}{/i}")
-
-    $ _wait_until_music_pos(77.0)
-    show screen cinematic_caption("{i}{size=34}You got time to be looking down?{/size}{/i}")
-
-    # ══ The lift — turn to hope (1:13–1:35) ══
-    $ _wait_until_music_pos(81.0)
-    hide screen cinematic_caption
-    show bg hope at kb_pan_up with Dissolve(0.6)
-    show screen cinematic_caption("{b}{size=38}I can change.{/size}{/b}")
-
-    $ _wait_until_music_pos(85.0)
-    show screen cinematic_caption("{b}{size=34}I'm done being someone the room forgets.{/size}{/b}")
-
-    $ _wait_until_music_pos(89.0)
-    show screen cinematic_caption("{b}{size=38}I'll do it until I can.{/size}{/b}")
-
-    $ _wait_until_music_pos(92.0)
-    show screen cinematic_caption("{b}{size=38}No more looking down.{/size}{/b}")
-
-    # ══ PEAK — heaven shows and the line fades out, a beat of heaven-only, then
-    # the real drop @~1:35. ("I will mog the world" fires +1.7s to hit the beat;
-    # a blank, text-free moment in between is intentional.) ══
-    $ _wait_until_music_pos(95.0)
-    show bg god_rays at kb_zoom with Dissolve(0.8)
-    hide screen cinematic_caption
-    with dissolve
-
-    $ _wait_until_music_pos(96.7)
-    show screen cinematic_caption("{b}{size=48}{color=#79c98b}I will mog the world.{/color}{/size}{/b}")
-
-    $ _wait_until_music_pos(101.0)
-    hide screen cinematic_caption
-    $ set_cinematic_dialogue(False)
-    hide dim_overlay
-
-    scene bg black with fade
-    pause 0.6
-
-    # Stacked end card — small caps "END OF CHAPTER 2" above, big green
-    # "BRAINMAXXED" below. Same family as the BRAINMOGGED reveal card.
+    # Stacked end card — same family as the merged Ch1 BRAINMAXXED card.
     show expression Text("END OF CHAPTER 2", style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
     pause 0.5
-    show expression Text("BRAINMAXXED", style="story_card_text", size=130, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
-    pause 3.0
+    show expression Text("THE MOGBENDER", style="story_card_text", size=120, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
+    pause 2.8
     hide endline_top with dissolve
     hide endline_bot with dissolve
     pause 0.4
 
+    # This is the current playable ending; future chapters can replace the
+    # credits jump without changing Chapter 2's closing beat.
     $ persistent.chapter2_complete = True
-
-    # ══ Credits roll over the song's "tears" tail (1:35–end). roll_credits is
-    # callable and returns here; the song keeps playing under it. After the
-    # player dismisses the credits, offer a save point, then into Chapter 3
-    # (whose own `stop music` clears the track on entry). ══
     $ credits_from_chapter = 2
-    call roll_credits
-
-    call chapter_break("Chapter 2 complete")
-    jump chapter3_start
-
-
-# ═════════════════════════════════════════════════════════════
-# SCENE 3B — FAIL (<60)
-# ═════════════════════════════════════════════════════════════
-
-label fail_class_scene:
-    stop music fadeout 0.5  # silent scene — clear inherited music (audio-hardening)
-    scene bg classroom with fade
-    show harker tired at harker_body
-    narrator "Mr. Harker doesn't snap at you."
-    narrator "He just looks at the paper."
-    narrator "He sighs through his nose."
-    show harker glasses at harker_body
-    narrator "Takes off his glasses."
-    narrator "Pinches the bridge of his nose."
-    narrator "He says nothing."
-    narrator "Somehow that's worse than yelling."
-    hide harker
-    pause 1.0
-    show brayden smirk at clav_body
-    b "Bro. You really thought \"skibidi\" was a definition? That's negative aura, dawg."
-    hide brayden
-    narrator "The class loses it. Phones come out. Someone is filming."
-    pause 0.8
-    narrator "Nobody around you laughs either. They just look away."
-    narrator "{i}Pity is louder than mockery.{/i}"
-    pause 1.0
-    scene bg hallway with fade
-    narrator "You gather your books. The hallway feels longer than usual."
-    p "(Invisible.)"
-    p "(Still invisible.)"
-    p "(Worse than invisible — now they know I tried.)"
-    pause 1.0
-
-    python:
-        clav_texts = [
-            "sighhh you are such a normie....",
-            "yawn. booth. don't be late.",
-            "i thought you were different. clearly not. library.",
-            "mid effort. mid result. we go again.",
-            "embarrassing. for me. booth in ten.",
-            "this is the part where you cope. i'll wait.",
-            "truly the most normie thing i've ever seen. library. now.",
-        ]
-        clav_msg = clav_texts[(chapter2_attempt - 1) % len(clav_texts)]
-
-    narrator "Your phone buzzes."
-    show clav facepalm at clav_body
-    narrator "{color=#9aa8ff}CLAV 🥶{/color}"
-    narrator "{i}\"[clav_msg]\"{/i}"
-    hide clav
-    pause 1.5
-
-    # Fail screen — player chooses to restart or quit to main menu
-    call screen fail_screen
-    $ fail_choice = _return
-
-    if fail_choice == "restart":
-        $ chapter2_attempt += 1
-        scene bg black with fade
-        pause 0.4
-        jump chapter2_start
-    else:
-        return
+    jump roll_credits

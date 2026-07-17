@@ -168,16 +168,22 @@ label start:
     play sound "audio/pill_pickup.mp3" volume persistent.vol_sfx
     show clav stern at clav_body
 
+    window hide
+    $ start_critical_choice()
+    show layer master at critical_choice_world
+
     menu:
-        "Two pills sit on the table. Clav watches, arms crossed."
-        "The red pill — Become a Chad.":
+        "TAKE THE RED PILL":
+            $ stop_critical_choice()
+            show layer master at critical_choice_release
             jump chad_pill_ending
-        "The blue pill — Remain an LTN.":
+        "TAKE THE BLUE PILL":
+            $ stop_critical_choice()
+            show layer master at critical_choice_release
             jump ltn_pill_ending
 
 
 label chad_pill_ending:
-    $ persistent.chapter1_complete = True
     $ took_chad_pill = True
     stop music fadeout 1.5
     play sound "audio/swallow_sfx.mp3" volume persistent.vol_sfx
@@ -201,7 +207,7 @@ label chad_pill_ending:
     pause 0.4
     # Merged chapter: Chopped flows straight into Brainmaxxing — no mid-chapter
     # save prompt here (the real chapter break is after the mirror monologue).
-    jump chapter2_start
+    jump chapter1_brainmaxxing
 
 
 label ltn_pill_ending:
@@ -228,7 +234,7 @@ label ltn_pill_ending:
     stop music fadeout 2.0
     scene bg black with fade
     pause 0.6
-    $ play_sfx("audio/printer.mp3")
+    play sound "audio/battle_block_scan.mp3" volume persistent.vol_sfx * 0.65
     pause 0.8
     call screen case_file_screen
     pause 0.3
@@ -242,8 +248,7 @@ label ltn_pill_ending:
     pause 0.6
 
     scene bg city_view with fade
-    show gigachad wall at clav_body with dissolve
-    narrator "A figure sits at a massive desk by the window. He sets the report down on a stack of identical files. He does not turn around."
+    narrator "Beyond the glass, a figure sits at a massive desk facing the city. He sets the report down on a stack of identical files. He does not turn around."
     pause 0.6
     stranger "How shameful."
     pause 1.5

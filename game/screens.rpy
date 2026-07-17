@@ -267,9 +267,22 @@ style input:
 screen choice(items):
     style_prefix "choice"
 
-    vbox:
-        for i in items:
-            textbutton i.caption action i.action
+    if critical_choice_active:
+        add Solid("#09070c70")
+
+        hbox:
+            xalign 0.5
+            yalign 0.62
+            spacing 28
+
+            for i in items:
+                textbutton i.caption:
+                    action i.action
+                    style "critical_choice_button"
+    else:
+        vbox:
+            for i in items:
+                textbutton i.caption action i.action
 
 
 style choice_vbox is vbox
@@ -294,6 +307,17 @@ style choice_button is default:
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
+
+style critical_choice_button is choice_button:
+    xysize (330, 72)
+    padding (20, 12)
+
+style critical_choice_button_text is choice_button_text:
+    size 23
+    bold True
+    xalign 0.5
+    yalign 0.5
+    text_align 0.5
 
 
 ## Quick Menu screen ###########################################################
@@ -413,6 +437,8 @@ screen navigation():
 
             if persistent.chapter1_complete:
                 textbutton _("CHAPTER SELECT") action ShowMenu("chapter_select")
+
+            textbutton _("MINIGAMES") action ShowMenu("minigame_select")
 
             null height 14
 
@@ -1777,7 +1803,7 @@ screen chapter_select():
         null height 30
 
         # Chapter 1 — always unlocked
-        textbutton "Chapter 1 — Chopped":
+        textbutton "Chapter 1 — Chopped / Brainmaxxing":
             action Confirm(
                 "Start Chapter 1?\nThis will overwrite your current game progress.",
                 yes=Start("start")
@@ -1787,9 +1813,9 @@ screen chapter_select():
             text_color "#cccccc"
             text_hover_color "#ffffff"
 
-        # Chapter 2 — locked until Ch1 complete
+        # Chapter 2 — locked until the complete Chopped/Brainmaxxing arc ends.
         if persistent.chapter1_complete:
-            textbutton "Chapter 2 — Brainmaxxing":
+            textbutton "Chapter 2 — The Mogbender":
                 action Confirm(
                     "Start Chapter 2?\nThis will overwrite your current game progress.",
                     yes=Start("chapter2_start")
@@ -1802,36 +1828,11 @@ screen chapter_select():
             vbox:
                 xalign 0.5
                 spacing 2
-                text "🔒  Chapter 2 — Brainmaxxing":
+                text "🔒  Chapter 2 — The Mogbender":
                     size 32
                     color "#555555"
                     xalign 0.5
                 text "(Complete Chapter 1 to unlock)":
-                    size 16
-                    color "#444444"
-                    xalign 0.5
-                    italic True
-
-        # Chapter 3 — locked until Ch2 complete
-        if persistent.chapter2_complete:
-            textbutton "Chapter 3 — The Mogbender":
-                action Confirm(
-                    "Start Chapter 3?\nThis will overwrite your current game progress.",
-                    yes=Start("chapter3_start")
-                )
-                xalign 0.5
-                text_size 32
-                text_color "#cccccc"
-                text_hover_color "#ffffff"
-        else:
-            vbox:
-                xalign 0.5
-                spacing 2
-                text "🔒  Chapter 3 — The Mogbender":
-                    size 32
-                    color "#555555"
-                    xalign 0.5
-                text "(Complete Chapter 2 to unlock)":
                     size 16
                     color "#444444"
                     xalign 0.5
@@ -1845,6 +1846,186 @@ screen chapter_select():
             text_size 24
             text_color "#888888"
             text_hover_color "#ffffff"
+
+
+## Free-play minigames. Story mode always launches the approachable profiles;
+## the original playtest tuning remains available here as Hard mode.
+screen minigame_select():
+    tag menu
+
+    add Transform(gui.main_menu_background, size=(config.screen_width, config.screen_height))
+    add Solid("#050806e8")
+
+    text "MINIGAMES":
+        xpos 74
+        ypos 54
+        size 48
+        color "#ffffff"
+        bold True
+
+    text "TRAINING ARCHIVE":
+        xpos 77
+        ypos 112
+        size 15
+        color "#79c98b"
+        bold True
+
+    vbox:
+        xpos 74
+        ypos 166
+        spacing 14
+
+        frame:
+            xysize (1132, 126)
+            background Solid("#101613f2")
+            padding (26, 20)
+
+            hbox:
+                yalign 0.5
+                spacing 24
+
+                vbox:
+                    xsize 610
+                    spacing 7
+                    text "MEWING GEOMETRY":
+                        size 25
+                        color "#f1f4f2"
+                        bold True
+                    text "Lock each position and hold the final frame.":
+                        size 15
+                        color "#9aa6a0"
+
+                textbutton "PLAY":
+                    xysize (210, 62)
+                    yalign 0.5
+                    background Solid("#1e6f43")
+                    hover_background Solid("#2a9c5f")
+                    text_size 19
+                    text_color "#ffffff"
+                    text_bold True
+                    action Function(renpy.call_in_new_context, "freeplay_mewing")
+
+        frame:
+            xysize (1132, 126)
+            background Solid("#101613f2")
+            padding (26, 20)
+
+            hbox:
+                yalign 0.5
+                spacing 16
+
+                vbox:
+                    xsize 610
+                    spacing 7
+                    text "AURA HARVESTER 6000":
+                        size 25
+                        color "#f1f4f2"
+                        bold True
+                    text "Catch green drops. Hard preserves the original precision rules.":
+                        size 15
+                        color "#9aa6a0"
+
+                textbutton "NORMAL":
+                    xysize (210, 62)
+                    yalign 0.5
+                    background Solid("#1e6f43")
+                    hover_background Solid("#2a9c5f")
+                    text_size 18
+                    text_color "#ffffff"
+                    text_bold True
+                    action Function(renpy.call_in_new_context, "freeplay_aura_normal")
+
+                textbutton "HARD":
+                    xysize (210, 62)
+                    yalign 0.5
+                    background Solid("#702f2f")
+                    hover_background Solid("#963d3d")
+                    text_size 18
+                    text_color "#ffffff"
+                    text_bold True
+                    action Function(renpy.call_in_new_context, "freeplay_aura_hard")
+
+        frame:
+            xysize (1132, 126)
+            background Solid("#101613f2")
+            padding (26, 20)
+
+            hbox:
+                yalign 0.5
+                spacing 16
+
+                vbox:
+                    xsize 610
+                    spacing 7
+                    text "DERMAL PURGE":
+                        size 25
+                        color "#f1f4f2"
+                        bold True
+                    text "Clear three waves. Hard preserves the original recovery clock.":
+                        size 15
+                        color "#9aa6a0"
+
+                textbutton "NORMAL":
+                    xysize (210, 62)
+                    yalign 0.5
+                    background Solid("#1e6f43")
+                    hover_background Solid("#2a9c5f")
+                    text_size 18
+                    text_color "#ffffff"
+                    text_bold True
+                    action Function(renpy.call_in_new_context, "freeplay_acne_normal")
+
+                textbutton "HARD":
+                    xysize (210, 62)
+                    yalign 0.5
+                    background Solid("#702f2f")
+                    hover_background Solid("#963d3d")
+                    text_size 18
+                    text_color "#ffffff"
+                    text_bold True
+                    action Function(renpy.call_in_new_context, "freeplay_acne_hard")
+
+    textbutton "BACK":
+        xpos 74
+        ypos 650
+        xysize (180, 46)
+        background Solid("#ffffff0c")
+        hover_background Solid("#79c98b22")
+        text_size 17
+        text_color "#c7d0cb"
+        text_hover_color "#ffffff"
+        text_bold True
+        action Return()
+
+
+label freeplay_mewing:
+    $ reset_mewing_minigame()
+    $ renpy.call_screen("mewing_minigame")
+    return
+
+
+label freeplay_aura_normal:
+    $ reset_aura_harvester("normal")
+    $ renpy.call_screen("aura_harvester")
+    return
+
+
+label freeplay_aura_hard:
+    $ reset_aura_harvester("hard")
+    $ renpy.call_screen("aura_harvester")
+    return
+
+
+label freeplay_acne_normal:
+    $ reset_acne_minigame("normal")
+    $ renpy.call_screen("acne_pop_minigame")
+    return
+
+
+label freeplay_acne_hard:
+    $ reset_acne_minigame("hard")
+    $ renpy.call_screen("acne_pop_minigame")
+    return
 
 
 ################################################################################
@@ -1871,70 +2052,144 @@ screen dev_skip_menu():
     frame:
         xalign 0.5
         yalign 0.5
+        xysize (1080, 660)
         background Solid("#000000ee")
-        padding (40, 30)
+        padding (36, 24)
 
         vbox:
-            spacing 10
+            xfill True
+            spacing 12
 
-            text "DEV — SKIP TO SCENE":
+            text "DEV MENU":
                 size 30
                 color "#ff8888"
                 xalign 0.5
 
-            null height 8
-
-            textbutton "Chapter 1 start":
-                action [Hide("dev_skip_menu"), Jump("start")]
+            text "SHIFT+D TO OPEN ANYWHERE":
+                size 12
+                color "#777777"
                 xalign 0.5
-                text_size 22
 
-            textbutton "Chapter 2 — bootcamp / flashcards":
-                action [SetVariable("chapter2_attempt", 1), Hide("dev_skip_menu"), Jump("chapter2_start")]
+            hbox:
                 xalign 0.5
-                text_size 22
+                spacing 54
 
-            textbutton "Quiz (skip bootcamp)":
-                action [SetVariable("chapter2_attempt", 1), Hide("dev_skip_menu"), Jump("class_quiz")]
-                xalign 0.5
-                text_size 22
+                vbox:
+                    xsize 450
+                    spacing 6
 
-            textbutton "Pass scene (score = 100)":
-                action [SetVariable("brain_score", 10), SetVariable("final_score", 100), Hide("dev_skip_menu"), Jump("pass_class_scene")]
-                xalign 0.5
-                text_size 22
+                    text "SKIP TO SCENE":
+                        size 18
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
 
-            textbutton "Mirror scene (flashback + finale)":
-                action [SetVariable("final_score", 100), Hide("dev_skip_menu"), Jump("mirror_scene")]
-                xalign 0.5
-                text_size 22
+                    null height 4
 
-            textbutton "Chapter 3 start (The Mogbender)":
-                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter3_start")]
-                xalign 0.5
-                text_size 22
+                    textbutton "Chapter 1 start":
+                        action [Hide("dev_skip_menu"), Jump("start")]
+                        xalign 0.5
+                        text_size 18
 
-            textbutton "Ch3 — base reveal":
-                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("ch3_base")]
-                xalign 0.5
-                text_size 22
+                    textbutton "Ch1 — Brainmaxxing / flashcards":
+                        action [SetVariable("brainmaxxing_attempt", 1), Hide("dev_skip_menu"), Jump("chapter1_brainmaxxing")]
+                        xalign 0.5
+                        text_size 18
 
-            textbutton "Ch3 — training montage":
-                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("ch3_training")]
-                xalign 0.5
-                text_size 22
+                    textbutton "Quiz (skip bootcamp)":
+                        action [SetVariable("brainmaxxing_attempt", 1), Hide("dev_skip_menu"), Jump("class_quiz")]
+                        xalign 0.5
+                        text_size 18
 
-            textbutton "Ch3 — Eugene":
-                action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("ch3_eugene")]
-                xalign 0.5
-                text_size 22
+                    textbutton "Pass scene (score = 100)":
+                        action [SetVariable("brain_score", 10), SetVariable("final_score", 100), Hide("dev_skip_menu"), Jump("pass_class_scene")]
+                        xalign 0.5
+                        text_size 18
 
-            textbutton "Credits roll":
-                action [Hide("dev_skip_menu"), Jump("roll_credits")]
-                xalign 0.5
-                text_size 22
+                    textbutton "Mirror scene (flashback + finale)":
+                        action [SetVariable("final_score", 100), Hide("dev_skip_menu"), Jump("mirror_scene")]
+                        xalign 0.5
+                        text_size 18
 
-            null height 14
+                    textbutton "Chapter 2 start (The Mogbender)":
+                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_start")]
+                        xalign 0.5
+                        text_size 18
+
+                    textbutton "Ch2 — base reveal":
+                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_base")]
+                        xalign 0.5
+                        text_size 18
+
+                    textbutton "Ch2 — training montage":
+                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_training")]
+                        xalign 0.5
+                        text_size 18
+
+                    textbutton "Ch2 — Eugene":
+                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_eugene")]
+                        xalign 0.5
+                        text_size 18
+
+                    textbutton "Credits roll":
+                        action [Hide("dev_skip_menu"), Jump("roll_credits")]
+                        xalign 0.5
+                        text_size 18
+
+                vbox:
+                    xsize 450
+                    spacing 8
+
+                    text "RETRY MINIGAMES":
+                        size 18
+                        color "#69e4ad"
+                        bold True
+                        xalign 0.5
+
+                    null height 4
+
+                    textbutton "Mewing Geometry":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_mewing")]
+                        xalign 0.5
+                        text_size 19
+
+                    textbutton "Aura Harvester":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_aura")]
+                        xalign 0.5
+                        text_size 19
+
+                    textbutton "Dermal Purge":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_acne")]
+                        xalign 0.5
+                        text_size 19
+
+                    null height 12
+
+                    text "RETRY MOG BATTLES":
+                        size 18
+                        color "#69e4ad"
+                        bold True
+                        xalign 0.5
+
+                    textbutton "Kai — tutorial":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_kai_tutorial")]
+                        xalign 0.5
+                        text_size 19
+
+                    textbutton "Kai — graduation":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_kai_graduation")]
+                        xalign 0.5
+                        text_size 19
+
+                    textbutton "Brayden battle":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_brayden")]
+                        xalign 0.5
+                        text_size 19
+
+                    textbutton "Clav battle":
+                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_clav")]
+                        xalign 0.5
+                        text_size 19
 
             textbutton "✕  Close (Esc)":
                 action Hide("dev_skip_menu")
@@ -1945,9 +2200,51 @@ screen dev_skip_menu():
     key "K_ESCAPE" action Hide("dev_skip_menu")
 
 
-# ─── Chapter 3 restricted-area warning ───────────────────────
+label dev_test_mewing:
+    $ reset_mewing_minigame()
+    $ renpy.call_screen("mewing_minigame")
+    return
+
+
+label dev_test_aura:
+    $ reset_aura_harvester()
+    $ renpy.call_screen("aura_harvester")
+    return
+
+
+label dev_test_acne:
+    $ reset_acne_minigame()
+    $ renpy.call_screen("acne_pop_minigame")
+    return
+
+
+label dev_test_kai_tutorial:
+    $ start_mog_battle("kai_tutorial")
+    $ renpy.call_screen("mog_battle_screen")
+    return
+
+
+label dev_test_kai_graduation:
+    $ start_mog_battle("kai_graduation")
+    $ renpy.call_screen("mog_battle_screen")
+    return
+
+
+label dev_test_brayden:
+    $ start_mog_battle("brayden")
+    $ renpy.call_screen("mog_battle_screen")
+    return
+
+
+label dev_test_clav:
+    $ start_mog_battle("clav")
+    $ renpy.call_screen("mog_battle_screen")
+    return
+
+
+# ─── Chapter 2 restricted-area warning ───────────────────────
 # Quick cinematic warning card immediately before the restricted sign reveal.
-screen ch3_travel_bar():
+screen ch2_travel_bar():
     modal True
     add Solid("#050507")
 
@@ -1975,10 +2272,10 @@ screen ch3_travel_bar():
 
 
 ################################################################################
-## STUDY FLASHCARDS — Chapter 2 vocab study (replaces dialogue loop)
+## STUDY FLASHCARDS — Chapter 1 Brainmaxxing vocab study
 ##
-## Reads VOCAB from chapter2.rpy. Tracks flipped cards in `ch2_studied`
-## (defaulted to set() in chapter2.rpy, reset to empty each entry).
+## Reads VOCAB from chapter1_brainmaxxing.rpy. Tracks flipped cards in
+## `brainmaxxing_studied` (reset to empty each entry).
 ## Click TAKE THE QUIZ to return → study_done → class_quiz.
 ################################################################################
 
@@ -2002,7 +2299,7 @@ screen study_flashcards():
             xalign 0.5
             italic True
         # Rotating Clav quip — picked when the screen is entered
-        text "{color=#9aa8ff}Clav:{/color}  {i}\"[ch2_clav_quip]\"{/i}":
+        text "{color=#9aa8ff}Clav:{/color}  {i}\"[brainmaxxing_clav_quip]\"{/i}":
             size 14
             color "#bbbbbb"
             xalign 0.5
@@ -2017,15 +2314,15 @@ screen study_flashcards():
         for idx in range(len(VOCAB)):
             button:
                 xysize (215, 230)
-                if idx in ch2_studied:
+                if idx in brainmaxxing_studied:
                     background Solid("#2a3a55")
                     hover_background Solid("#3a4a65")
                 else:
                     background Solid("#1a1a2a")
                     hover_background Solid("#2a2a3a")
-                action ToggleSetMembership(ch2_studied, idx)
+                action ToggleSetMembership(brainmaxxing_studied, idx)
 
-                if idx in ch2_studied:
+                if idx in brainmaxxing_studied:
                     vbox:
                         xalign 0.5
                         yalign 0.5
@@ -2066,7 +2363,7 @@ screen study_flashcards():
 
 
 ################################################################################
-## QUIZ QUESTION — Chapter 2 quiz screen with the word PINNED above choices.
+## QUIZ QUESTION — Chapter 1 Brainmaxxing quiz screen
 ##
 ## Called via:
 ##   renpy.call_screen("quiz_question", q_num=N, total=7, word="...", options=[...])
