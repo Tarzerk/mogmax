@@ -124,6 +124,23 @@ screen say(who, what):
 
 default cinematic_dialogue = False
 
+
+transform cinematic_top_bar_slide:
+    on show:
+        yoffset -120
+        easeout_cubic 0.5 yoffset 0
+    on hide:
+        easein_cubic 0.45 yoffset -120
+
+
+transform cinematic_bottom_bar_slide:
+    on show:
+        yoffset 253
+        easeout_cubic 0.5 yoffset 0
+    on hide:
+        easein_cubic 0.45 yoffset 253
+
+
 screen cinematic_bars():
     zorder -5
 
@@ -131,10 +148,12 @@ screen cinematic_bars():
         add Solid("#000000"):
             xysize (1280, 120)
             ypos 0
+            at cinematic_top_bar_slide
 
         add Solid("#000000"):
             xysize (1280, 253)
             ypos 467
+            at cinematic_bottom_bar_slide
 
 
 screen cinematic_caption(what, who=None):

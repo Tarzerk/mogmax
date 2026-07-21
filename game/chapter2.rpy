@@ -405,41 +405,43 @@ label chapter2_return:
     show expression Solid("#0a1430cc") as night_tint
     play music "audio/desert_ambient.mp3" fadein 1.0 volume persistent.vol_bed
     narrator "Night. The desert unspools backward outside the window. You've been quiet a long time."
-    p "So what was that, actually. All of it."
-    c "Proof. That the grind isn't a phone thing. It's old, it's real, and it works."
+    p "So what was that, actually? All of it."
+    show clav smirk at clav_body with dissolve
+    c "Proof. None of this started on your phone."
     c "You walked in an LTN. You're walking out a problem."
-    narrator "You catch your reflection in the side mirror and sit up without deciding to. Even the glass has an opinion about you now."
-    pause 0.5
-    play sound "audio/text_buzz.mp3" volume persistent.vol_sfx
-    narrator "Your phone lights up. The class group chat — the one you've been muted in since freshman year."
-    narrator "{i}FRIDAY. Brayden's place. Open invite. Whole school's going.{/i}"
-    pause 0.4
-    narrator "Open invite. Which has always, always meant {i}everyone except you.{/i} You read it three times."
-    c "Don't sit there wondering if you should go."
-    c "You're going to walk in like your name's on the lease."
-    pause 0.6
-    play sound "audio/text_buzz.mp3" volume persistent.vol_sfx
-    b "{i}yo heard you're coming friday{/i}"
-    pause 0.4
-    b "{i}just don't make it weird{/i}"
-    pause 0.6
-    narrator "You stare at the second message longer than the first."
-    narrator "For once, Brayden texted first."
-    narrator "Not to invite you. To make sure he still owned the frame before you walked in."
-    pause 1.0
+    hide clav with dissolve
+    narrator "You catch your reflection in the side mirror and sit up without deciding to."
 
-    stop music fadeout 2.0
-    scene bg black with fade
-    pause 0.4
+    # Let the invitation breathe in silence before the song takes over. Once
+    # Pound Cake starts, the credits still land on its first major beat at 0:11.
+    stop music fadeout 0.4
+    window hide
+    $ set_cinematic_dialogue(True)
 
-    # Stacked end card — same family as the merged Ch1 BRAINMAXXED card.
-    show expression Text("END OF CHAPTER 2", style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
-    pause 0.5
-    show expression Text("THE MOGBENDER", style="story_card_text", size=120, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
-    pause 2.8
-    hide endline_top with dissolve
-    hide endline_bot with dissolve
-    pause 0.4
+    pause 0.6
+    play sound "audio/text_notification.mp3" volume persistent.vol_sfx
+    pause 0.25
+    show screen cinematic_caption("{i}FRIDAY @ MY PLACE - 9PM\nOPEN INVITE\nEVERYBODY PULL UP{/i}", "Class Group Chat")
+    pause 3.4
+    hide screen cinematic_caption
+    pause 0.7
+
+    play music "audio/pound_cake.mp3" noloop fadein 0.15 volume persistent.vol_music
+
+    $ _wait_until_music_pos(1.20)
+    play sound "audio/text_notification.mp3" volume persistent.vol_sfx
+    $ _wait_until_music_pos(1.45)
+    show screen cinematic_caption("{i}jus so we clear{/i}", "Brayden")
+
+    $ _wait_until_music_pos(4.75)
+    play sound "audio/text_notification.mp3" volume persistent.vol_sfx
+    $ _wait_until_music_pos(5.0)
+    show screen cinematic_caption("{i}u aint invited{/i}", "Brayden")
+
+    $ _wait_until_music_pos(11.0)
+    hide screen cinematic_caption
+    $ set_cinematic_dialogue(False)
+    scene bg black
 
     # This is the current playable ending; future chapters can replace the
     # credits jump without changing Chapter 2's closing beat.
