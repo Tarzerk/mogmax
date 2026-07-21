@@ -74,6 +74,16 @@ transform _credits_scroll:
     linear 240.0 ypos -38000
 
 
+# Chapter 2 cuts into the roll on a music cue, so its first title is already
+# on-screen when the beat lands instead of rising from below the frame.
+transform _credits_scroll_on_beat:
+    xanchor 0.5
+    xpos 0.5
+    yanchor 0.0
+    ypos 260
+    linear 240.0 ypos -38460
+
+
 # ─── Credits Screen ──────────────────────────────────────────
 # Click anywhere OR the SKIP CREDITS button OR Esc/Enter/Space
 # dismisses and returns to the caller (main menu or game).
@@ -89,12 +99,20 @@ screen credits_screen():
         action Return()
 
     # Scrolling text body
-    text credits_body at _credits_scroll:
-        size 24
-        color "#ffffff"
-        text_align 0.5
-        xmaximum 1100
-        line_leading 2
+    if credits_from_chapter == 2:
+        text credits_body at _credits_scroll_on_beat:
+            size 24
+            color "#ffffff"
+            text_align 0.5
+            xmaximum 1100
+            line_leading 2
+    else:
+        text credits_body at _credits_scroll:
+            size 24
+            color "#ffffff"
+            text_align 0.5
+            xmaximum 1100
+            line_leading 2
 
     # Always-visible SKIP CREDITS button (bottom-center, on top of everything)
     frame:
@@ -119,8 +137,11 @@ screen credits_screen():
 # Label so in-game flows can `jump roll_credits` and end up at main menu
 # when the screen returns.
 label roll_credits:
+    $ _credits_origin = credits_from_chapter
     $ credits_body = build_credits_body(credits_from_chapter)
     call screen credits_screen
+    if _credits_origin == 2:
+        stop music fadeout 1.0
     # Reset so a later menu-triggered roll doesn't inherit a stale chapter.
     $ credits_from_chapter = 0
     return
