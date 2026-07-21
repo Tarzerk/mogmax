@@ -12,6 +12,10 @@ define gui.show_name = True
 define gui.about = _("MOGMAX — a satirical visual novel about the Mogging Epidemic of 2026.\n\nDeveloped by Tarzerk and Cebolla.")
 define build.name = "MOGMAX"
 
+# Match KOMIC's runtime icon setup so macOS uses the MOGMAX artwork when the
+# game is launched directly through Ren'Py as well as from a packaged build.
+define config.window_icon = "gui/window_icon.png"
+
 # Explicit screen size — default Ren'Py without gui.rpy is 800x600,
 # which makes our custom UI lay out incorrectly (buttons off-screen).
 define config.screen_width = 1280
