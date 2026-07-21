@@ -32,6 +32,7 @@ There are two ways in: download a prebuilt copy (easiest, no Ren'Py install) or 
 | Windows | `MOGMAX-<version>-pc.zip` |
 | macOS | `MOGMAX-<version>-mac.dmg` (or `MOGMAX-<version>-mac.zip` as fallback) |
 | iOS / Android | `MOGMAX-<version>-pc.zip` (yes — same file as Windows; see below) |
+| Web / itch.io | `MOGMAX-<version>-web.zip` |
 
 Release downloads are public — anyone with the link can grab them, no sign-in required. This is the right link to send to friends.
 
@@ -42,6 +43,7 @@ Release downloads are public — anyone with the link can grab them, no sign-in 
 | Windows | `MOGMAX-windows-and-pocket` |
 | macOS | `MOGMAX-mac-dmg` (or `MOGMAX-mac-zip` as fallback) |
 | iOS / Android | `MOGMAX-windows-and-pocket` |
+| Web / itch.io | `MOGMAX-web-itch` |
 
 GitHub gives you each artifact as a `.zip` wrapper. Unzip it first, then follow the platform steps below.
 
@@ -78,6 +80,10 @@ xattr -dr com.apple.quarantine /Applications/MOGMAX.app
 3. Tap **MOGMAX** in Pocket's library to launch.
 
 > If iOS rejects the import, unzip in the Files app, long-press the folder, **Compress**, then import that new zip. (iOS occasionally chokes on zips produced on other OSes.)
+
+### Web / itch.io
+
+Use `MOGMAX-<version>-web.zip` for browser play. It is a Ren'Py HTML5 export with `index.html` at the zip root, which is what itch.io expects for an HTML game upload.
 
 ### Run from source (developers)
 
