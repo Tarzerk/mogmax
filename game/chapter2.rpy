@@ -8,10 +8,20 @@ image bg ch2_road       = bg_image("images/backgrounds/bg_ch2_road.jpg")
 image bg ch2_gate       = bg_image("images/backgrounds/bg_ch2_gate.jpg")
 image bg ch2_sign       = bg_image("images/backgrounds/bg_ch2_sign.jpg")
 image bg ch2_corridor   = bg_image("images/backgrounds/bg_ch2_corridor.jpg")
+# Warm projection surface. The animated grain layer gives it texture while
+# preserving enough contrast for the black specimen silhouettes.
+image bg specimen_hall  = Solid("#aaa7a0")
+image projection grain = Transform(
+    "images/backgrounds/bg_ch2_projection_grain.jpg",
+    xysize=(1920, 1080),
+    fit="cover",
+)
+image projection glow = Solid("#f3efe3")
 image bg ch2_vault      = bg_image("images/backgrounds/bg_ch2_vault.jpg")
 image bg ch2_lab        = bg_image("images/backgrounds/bg_ch2_lab.jpg")
 image bg ch2_whiteboard = bg_image("images/backgrounds/bg_ch2_whiteboard.jpg")
 image bg ch2_filewall   = bg_image("images/backgrounds/bg_ch2_filewall.jpg")
+image bg ch2_labhall    = bg_image("images/backgrounds/bg_ch2_labhall.jpg")
 image bg ch2_gym        = bg_image("images/backgrounds/bg_ch2_gym.jpg")
 image bg ch2_janitor    = bg_image("images/backgrounds/bg_ch2_janitor.jpg")
 image bg scan_granted   = "#0a2a0a"
@@ -20,6 +30,38 @@ image bg scan_granted   = "#0a2a0a"
 # ═════════════════════════════════════════════════════════════
 # CHAPTER 2 — THE MOGBENDER
 # ═════════════════════════════════════════════════════════════
+
+transform projection_flicker:
+    zoom 1.05
+    xalign 0.5
+    yalign 0.5
+    blend "add"
+
+    parallel:
+        block:
+            linear 4.0 xoffset -6 yoffset 3
+            linear 4.0 xoffset 5 yoffset -2
+            repeat
+
+    parallel:
+        block:
+            alpha 0.12
+            linear 0.10 alpha 0.17
+            linear 0.08 alpha 0.13
+            pause 0.35
+            linear 0.06 alpha 0.18
+            linear 0.12 alpha 0.12
+            pause 0.55
+            repeat
+
+
+transform projection_breathe:
+    alpha 0.0
+    block:
+        linear 3.2 alpha 0.045
+        linear 3.8 alpha 0.0
+        repeat
+
 
 label chapter2_start:
     # Fade out the mirror theme carried in from Chapter 1 so the new chapter's
@@ -146,42 +188,72 @@ label chapter2_base:
     hide clav
     pause 0.6
 
-    # ── SCENE 6 — THE GIGACHAD FILE ──
-    scene bg ch2_filewall with fade
-    narrator "A whole wall of personnel files. Every face blacked out. Clearances you'll never have."
-    show gigachad wall at gigachad_file with dissolve
-    narrator "Except one. No redaction. A silhouette so clean it stops reading like a person and starts reading like a decision the universe made on a good day."
-    narrator "{b}⬛ LEVEL: GIGACHAD — CLEARANCE BEYOND THIS FACILITY{/b}"
-    p "...okay. Who is that?"
+    # ── SCENE 6 — FIRST CONTACT ──
+    scene bg ch2_labhall with fade
+    narrator "The lab narrows into a service hall. Glass cabinets on one side. Pipes and sealed doors on the other."
+    show gigachad standing at gigachad_file with dissolve
+    # Let the player notice him before anyone explains what they are seeing.
+    window hide
+    pause 2.5
+    window show
+    narrator "A man in a lab coat stands at the far end with his back to you. Even from here, his frame nearly fills the doorway."
+    narrator "He doesn't move. Still, you get the strange feeling you've interrupted something."
+    p "Clav... who is that?"
+    c "Keep walking."
+    p "You know him?"
+    c "Everyone here knows him."
+    narrator "The unmarked door in front of him unlocks. He steps through without looking back."
     hide gigachad with dissolve
-    show clav stern at clav_body
-    c "Wrong question. That's not a who. That's the ceiling."
-    c "Top of the scale. The number they don't let people be."
-    p "Has anyone ever actually—"
-    c "No."
+    narrator "The door seals behind him."
+    narrator "The hall feels bigger after he's gone. Not emptier. Bigger."
+    p "That didn't answer me."
+    pause 0.4
+    c "Gigachad."
+    p "That's his name?"
+    c "It's his classification."
+    p "For what?"
+    pause 0.4
+    c "Keep walking."
+    window hide
+    pause 0.5
+    play sound "audio/scan.mp3" volume (persistent.vol_sfx * 0.65)
     pause 0.3
-    c "A handful get close. Ever. In the whole history of the program."
-    narrator "For half a second something moves behind his face. Not pride. Closer to a bruise."
-    c "...I got close."
-    hide clav
-    narrator "He says it flat, like a weather report, and walks off before you can pull the thread."
-    narrator "You look back at the silhouette. And somewhere deep in your skull — a desk. A window full of city. A file set down on a stack of files exactly like it."
-    narrator "You have no idea why it feels like you've already met him."
-    pause 0.8
+    scene bg black with Fade(0.25, 0.25, 0.5)
 
     # ── SCENE 6.5 — THE NATURAL MOGGERS ──
-    scene bg ch2_corridor with fade
-    narrator "The next corridor is darker. Warmer. Glass displays line both walls, each one lit from below in gold."
-    narrator "No names. No plaques. Just silhouettes."
-    narrator "All of them at once: a small figure in a soccer kit, frozen mid-cut; a skater hanging calm in the air; a giant rising above a rim; a marble-built man under a cape-shaped shadow."
+label chapter2_projection_gallery:
+    scene bg black
+    window hide
+    stop ambient
+    $ set_cinematic_dialogue(True)
+    pause 0.5
+    play ambient "audio/projector_loop.mp3" loop fadein 0.6 volume (persistent.vol_sfx * 0.35)
+    scene bg specimen_hall
+    show projection grain at projection_flicker
+    show projection glow at projection_breathe
+    with Dissolve(0.8)
+    pause 0.4
+    window show
+    narrator "The next door opens onto a windowless room and one enormous blank wall."
+    narrator "An old projector chatters behind you. Grain crawls across the concrete."
+    # Every subject starts beyond the right edge. The stagger keeps the blank
+    # wall visible first, then feeds the reel in one silhouette at a time.
+    show spec_messi     at specimen_pass(0.0)
+    show spec_ronaldo   at specimen_pass(2.0)
+    show spec_alysa     at specimen_pass(4.0)
+    show spec_einstein  at specimen_pass(6.0, 14.0, 0.15)
+    show spec_squidward at specimen_pass(8.0, 14.0, 0.16)
+    show spec_anya      at specimen_pass(10.0)
+    show spec_spider    at specimen_pass(12.0, 14.0, 0.17)
+    narrator "One by one, figures enter the light."
+    narrator "No names. No plaques. Just bodies reduced to movement, posture, and presence."
+    narrator "A footballer caught mid-cut. A skater hanging calmly in the air. Shapes you almost recognize, sliding past one after another."
     narrator "Different bodies. Different worlds. Same impossible feeling — like gravity has quietly agreed to help them."
     p "Are these... famous people?"
-    show clav thinking at clav_body
     c "No names in the facility."
     p "Why?"
     c "Names make people think this is celebrity."
     c "It isn't."
-    show clav stern at clav_body
     c "It's gravity."
     narrator "You look again. Not posters. Specimens."
     c "Some people mog without trying. Without knowing. Without caring."
@@ -195,20 +267,34 @@ label chapter2_base:
     c "That's Frame. That's Aura."
     p "And Gigachad?"
     pause 0.4
+    # The parade clears out — the ceiling gets the corridor to itself.
+    hide spec_messi
+    hide spec_ronaldo
+    hide spec_alysa
+    hide spec_einstein
+    hide spec_squidward
+    hide spec_anya
+    hide spec_spider
+    with Dissolve(0.8)
     c "Those people mog in one direction. Movement. Body. Presence. Myth."
+    show gigachad projection at specimen_hero with Dissolve(1.2)
     c "Gigachad is what happens when nothing is missing."
     pause 0.4
     c "You won't reach that."
     p "...Oh."
     c "Neither did I."
     narrator "He says it too fast. Like the sentence bit him on the way out."
-    show clav smirk at clav_body
+    hide gigachad with dissolve
+    show clav smirk at clav_projection
     c "But you don't need the ceiling."
     c "You need one step."
     c "One step is the difference between a room forgetting you and a room checking where you're standing."
     c "So."
     c "Training wing."
-    hide clav
+    stop ambient fadeout 0.8
+    hide clav with dissolve
+    window hide
+    $ set_cinematic_dialogue(False)
     pause 0.6
 
 

@@ -80,9 +80,16 @@ transform clav_right:
 
 
 transform gigachad_file:
-    zoom 0.50
+    # The silhouette is black-on-white with no alpha — multiply drops the white
+    # out so only the figure sits against the background.
+    blend "multiply"
+    # Set back down the corridor: small enough that the whole frame fits on
+    # screen (at 0.50 he ran off the top), and stood at the far floor line
+    # rather than planted at the very bottom of the shot.
+    zoom 0.30
     xalign 0.5
-    yalign 1.0
+    ypos 0.76
+    yanchor 1.0
 
 
 # Critical decisions distort the story layer while the choice UI stays sharp.
@@ -236,9 +243,69 @@ image brayden smirk   = "images/characters/brayden/brayden smirk.png"
 image eugene neutral  = "images/characters/eugene/eugene_neutral.png"
 image eugene sad      = "images/characters/eugene/eugene_sad.png"
 image eugene happy    = "images/characters/eugene/eugene_happy.png"
-# Gigachad silhouettes — always back-facing / never turns around.
-image gigachad desk = "images/characters/gigachad/gigachad desk.png"
-image gigachad wall = "images/characters/gigachad/gigachad wall.png"
+# Gigachad silhouettes. "standing" is the canonical figure used wherever he
+# appears; "projection" is the completed broad-shouldered bust reserved for the
+# archive-reel payoff.
+# (The old back-facing-only rule is retired. "gigachad forward.png" is parked in
+# the folder for a later scene.) desk/wall stay defined and repointed so old
+# saves that reference them still load.
+image gigachad standing = "images/characters/gigachad/gigachad standing.png"
+image gigachad face     = "images/characters/gigachad/gigachad face.png"
+image gigachad projection = "images/characters/gigachad/gigachad_projection.png"
+image gigachad desk     = "images/characters/gigachad/gigachad standing.png"
+image gigachad wall     = "images/characters/gigachad/gigachad standing.png"
+
+# Natural moggers — archive projections in the Ch2 screening room. Silhouettes
+# only, never named in-game. Each gets its own tag so the whole reel can be on
+# screen at once. These PNGs are black-on-white with NO alpha, so everything
+# that shows them uses a multiply blend: white multiplies away to the
+# background, black stays black.
+image spec_messi     = "images/characters/specimens/messi.png"
+image spec_ronaldo   = "images/characters/specimens/ronaldo.png"
+image spec_alysa     = "images/characters/specimens/alysa.png"
+image spec_einstein  = "images/characters/specimens/einstein.png"
+image spec_squidward = "images/characters/specimens/squidward.png"
+image spec_anya      = "images/characters/specimens/anya.png"
+image spec_spider    = "images/characters/specimens/spider.png"
+
+
+# Each reel subject begins beyond the right edge, waits for its stagger, then
+# crosses the visible strip between the cinematic bars. Equal travel times keep
+# that spacing intact when the subjects loop.
+transform specimen_pass(delay, dur=14.0, size=0.18):
+    blend "multiply"
+    subpixel True
+    zoom size
+    ypos 0.408
+    yanchor 0.5
+    xanchor 0.5
+    xpos 1.18
+    pause delay
+    block:
+        linear dur xpos -0.18
+        xpos 1.18
+        repeat
+
+
+# The ceiling: centred, still, no drift.
+transform specimen_hero:
+    blend "multiply"
+    subpixel True
+    zoom 0.32
+    xpos 0.51
+    ypos 0.44
+    xanchor 0.5
+    yanchor 0.5
+    ease 14.0 zoom 0.46 xpos 0.55 ypos 0.60
+
+
+# Clav enters only after the reel and Gigachad projection clear. Lowering him
+# slightly keeps his hair from touching the top cinematic bar.
+transform clav_projection:
+    zoom 0.74
+    xalign 0.5
+    yalign 1.0
+    yoffset 25
 
 # Mogbender gate guards — shown one at a time in the base-entrance scene.
 image soldier = "images/characters/soldier/soldier.png"

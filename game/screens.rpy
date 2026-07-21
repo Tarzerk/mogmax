@@ -2140,6 +2140,11 @@ screen dev_skip_menu():
                         xalign 0.5
                         text_size 18
 
+                    textbutton "Ch2 — projection gallery":
+                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_projection_gallery")]
+                        xalign 0.5
+                        text_size 18
+
                     textbutton "Ch2 — training montage":
                         action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_training")]
                         xalign 0.5
