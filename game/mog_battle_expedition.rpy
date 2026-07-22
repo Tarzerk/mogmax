@@ -153,7 +153,7 @@ init 2 python:
         {"do": "dlg", "text": "{b}ATTACKING:{/b} every skill is its own minigame — quizzes, stare-downs, mash-offs. But {b}1 · YAP{/b} 🗣️ is the freebie: instant jab, small damage, builds {b}+1⚡ Aura{/b}. Try it on me."},
         {"do": "teach", "skill": "yap"},
         {"do": "dlg", "text": "See the {b}⚡ bolts{/b} under your Confidence? Yap jabs and parries fill them, skills spend them. {b}Aura is everything.{/b}"},
-        {"do": "dlg", "text": "{b}DEFENSE:{/b} when I swing, a mark flashes and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
+        {"do": "dlg", "text": "{b}DEFENSE:{/b} when I attack, I {b}glow{/b} — {color=#ff5d6c}{b}RED{/b}{/color} or {color=#ffd75e}{b}YELLOW{/b}{/color} — and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
         {"do": "guided", "kind": "dodge", "reps": 2,
          "mid": "THAT moment. Feel it. One more frozen rep."},
         {"do": "dlg", "text": "Real time now — no freeze. Watch the swing, press {b}S{/b} near impact. A {b}last-second dodge = PERFECT DODGE (+1⚡){/b}. {b}Dodge 2 swings.{/b}"},
@@ -161,14 +161,14 @@ init 2 python:
          "attack": {"w": 1.4, "red": True}, "rep_dmg": 4,
          "mid": "One. Again.",
          "fail": "Too slow — press {b}S{/b} as the swing lands. One more time."},
-        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+2⚡{/b}, heal a little, and {b}counterattack{/b}. One rule: {b}🔴 RED attacks can NEVER be parried{/b} — only dodged. Two frozen reps."},
+        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+2⚡{/b}, heal a little, and {b}counterattack{/b}. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
         {"do": "guided", "kind": "parry", "reps": 2,
          "mid": "That's the parry window — tighter than the dodge, better rewards. Again."},
         {"do": "dlg", "text": "Now in real time. Watch the swing, press {b}W{/b} at impact. {b}Land 2 parries.{/b}"},
         {"do": "real", "kind": "parry", "reps": 2,
          "attack": {"w": 1.4}, "rep_dmg": 4,
          "mid": "One. Again.",
-         "fail": "Almost. Watch the {b}❗{/b}, then {b}W{/b} {i}right as the swing lands{/i} — not when the mark appears. Again."},
+         "fail": "Almost. Watch for the {color=#ffd75e}{b}yellow glow{/b}{/color}, then {b}W{/b} {i}right as the swing lands{/i} — not when the glow appears. Again."},
         {"do": "dlg", "text": "CLEAN. 🔥 Parries also {b}restore Confidence{/b} and fill your {b}👑 MOG METER{/b} — landed attacks fill it too, and getting hit or flubbing a minigame {b}drains{/b} it. Full meter lights up {b}6 · MOGMAX{/b}."},
         {"do": "dlg", "text": "BRAIN TIME: press {b}3 · GALAXY BRAIN{/b} 🧠 — it quizzes you with a {b}vocab word{/b}. Answer right for a big-brain blast {b}+ a ⚡ refund{/b}. I'll spot you the Aura."},
         {"do": "teach", "skill": "brain",
@@ -1468,6 +1468,14 @@ screen mog_battle_screen():
                 at mogx_enemy_windup
             else:
                 at mogx_enemy_idle
+            # Attack tell: the enemy itself glows — RED = unparryable (dodge
+            # only), YELLOW = parry or dodge. The glow silhouette sits behind
+            # the art and travels with the lunge. Always present (alpha 0 when
+            # inactive) so toggling it never restarts the motion transforms.
+            $ tell_on = phase in ("defense", "guided_frozen") and S["alert_on"]
+            $ tell_color = "#ff5d6c" if (S["hit"] and S["hit"].get("red")) else "#ffd75e"
+            add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(322, 216), matrixcolor=ColorizeMatrix(Color(tell_color), Color(tell_color))):
+                xalign 0.5 ypos -8 alpha (0.7 if tell_on else 0.0)
             add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(300, 200)) xalign 0.5 ypos 0
         text config["enemy_name"]:
             xpos 20 ypos 202 size 20 color "#f7f8fa" bold True
@@ -1484,11 +1492,6 @@ screen mog_battle_screen():
         if estatus:
             text estatus:
                 xpos 20 ypos 288 size 14 color "#c07bff" bold True
-
-    # Alert mark (❗ / 🔴) above the enemy.
-    if phase in ("defense", "guided_frozen") and S["alert_on"]:
-        text ("🔴" if S["hit"].get("red") else "❗"):
-            xpos 950 ypos 34 size 44
 
     # Enemy hit flash.
     if S["flash"] == "enemy":
@@ -1975,7 +1978,7 @@ screen mogx_help_overlay():
             text "DEFENSE (their turn)" size 12 color "#ffd75e" bold True
             text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +2⚡ (+3⚡ perfect), heals a little, and counters." size 13 color "#aab4c5"
             text "• {b}S = DODGE{/b} — big window. A last-second {b}PERFECT DODGE{/b} earns +1⚡; a regular dodge earns nothing." size 13 color "#aab4c5"
-            text "• {b}🔴 red attacks can't be parried{/b} — dodge them. Watch for feints (delayed swings)." size 13 color "#aab4c5"
+            text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
             text "YOUR SKILLS (keys 1-6)" size 12 color "#ffd75e" bold True
             text "• {b}1 Yap 🗣️{/b} — free jab, +1⚡.  {b}2 Mog Stare 😎{/b} (4⚡) — strike while the fast marker is in the gold." size 13 color "#aab4c5"
             text "• {b}3 Galaxy Brain 🧠{/b} (2⚡) — vocab quiz; correct = big damage +1⚡ back." size 13 color "#aab4c5"
