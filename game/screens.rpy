@@ -435,9 +435,12 @@ style quick_button_text:
 ## This screen is included in the main and game menus, and provides navigation
 ## to other menus, and to start the game.
 
-screen navigation():
+screen navigation(main_menu_layout=None):
 
-    if main_menu:
+    if main_menu_layout is None:
+        $ main_menu_layout = main_menu
+
+    if main_menu_layout:
         $ _newest_slot = renpy.newest_slot(r'auto|quick|\d')
 
         vbox:
@@ -573,7 +576,7 @@ screen main_menu():
         xysize (3, 720)
 
     ## Actual menu contents are in the navigation screen.
-    use navigation
+    use navigation(main_menu_layout=True)
 
     if gui.show_name:
 
@@ -704,7 +707,7 @@ screen game_menu(title, scroll=None, bg=None):
 
                     transclude
 
-    use navigation
+    use navigation(main_menu_layout=False)
 
     textbutton _("Return"):
         style "return_button"
@@ -2036,13 +2039,13 @@ label freeplay_aura_hard:
 
 
 label freeplay_acne_normal:
-    $ reset_acne_minigame("normal")
+    $ reset_acne_minigame("normal", allow_quit=True)
     $ renpy.call_screen("acne_pop_minigame")
     return
 
 
 label freeplay_acne_hard:
-    $ reset_acne_minigame("hard")
+    $ reset_acne_minigame("hard", allow_quit=True)
     $ renpy.call_screen("acne_pop_minigame")
     return
 
@@ -2237,7 +2240,7 @@ label dev_test_aura:
 
 
 label dev_test_acne:
-    $ reset_acne_minigame()
+    $ reset_acne_minigame(allow_quit=True)
     $ renpy.call_screen("acne_pop_minigame")
     return
 

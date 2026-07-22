@@ -433,9 +433,9 @@ init python:
 
         ## Adjust the location of the textbox.
         gui.textbox_height = 240
-        gui.name_xpos = 80
-        gui.dialogue_xpos = 90
-        gui.dialogue_width = 1100
+        gui.name_xpos = 0.5
+        gui.dialogue_xpos = 0.5
+        gui.dialogue_width = 800
 
         ## Change the size and spacing of items in the game menu.
         gui.choice_button_width = 1240

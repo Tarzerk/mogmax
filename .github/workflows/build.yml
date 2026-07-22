@@ -17,7 +17,7 @@ env:
 
 jobs:
   build:
-    name: PC + Mac (single macOS runner)
+    name: PC + Mac + Web (single macOS runner)
     runs-on: macos-latest
     permissions:
       # `write` is required only for the tag-triggered Release step at the
@@ -48,6 +48,20 @@ jobs:
             -o /tmp/renpy-sdk.tar.bz2
           tar -xjf /tmp/renpy-sdk.tar.bz2 -C ~/renpy-sdk --strip-components=1
           rm /tmp/renpy-sdk.tar.bz2
+
+      # Ren'Py's browser export is a separate SDK add-on. The plain
+      # `--package web` distributor package is not the HTML5/itch.io build;
+      # `web_build` below creates the playable archive with index.html.
+      - name: Install RenPyWeb support
+        run: |
+          set -euo pipefail
+          if [ ! -d ~/renpy-sdk/web ]; then
+            curl -fSL \
+              "https://www.renpy.org/dl/${RENPY_VERSION}/renpy-${RENPY_VERSION}-web.zip" \
+              -o /tmp/renpy-web.zip
+            unzip -q /tmp/renpy-web.zip -d ~/renpy-sdk
+            rm /tmp/renpy-web.zip
+          fi
 
       # Lint catches indentation errors, missing labels, broken jumps —
       # cheaper to fail here than after a 5-minute build.
@@ -93,7 +107,17 @@ jobs:
             "$dmg_path"
           ls -lh "$dmg_path"
 
-      # Upload as three named artifacts so the Actions UI lets you grab each
+      # Produces ../MOGMAX-<version>-dists/MOGMAX-<version>-web.zip, an
+      # HTML5 package with index.html at the root for itch.io browser play.
+      - name: Build Web / itch.io package
+        run: |
+          set -euo pipefail
+          dist_dir="${{ steps.dists.outputs.dist_dir }}"
+          web_name="$(basename "$dist_dir" -dists)-web"
+          ~/renpy-sdk/renpy.sh ~/renpy-sdk/launcher web_build "$GITHUB_WORKSPACE" \
+            --destination "$dist_dir/$web_name"
+
+      # Upload as four named artifacts so the Actions UI lets you grab each
       # one with a single click instead of one huge bundle.
       #
       # The PC zip doubles as the Ren'Py Pocket package (it contains both
@@ -123,13 +147,21 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      # Tag-only step: publish a public GitHub Release with the three files
+      - name: Upload Web / itch.io (HTML5 zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MOGMAX-web-itch
+          path: ${{ steps.dists.outputs.dist_dir }}/MOGMAX-*-web.zip
+          if-no-files-found: error
+          retention-days: 90
+
+      # Tag-only step: publish a public GitHub Release with the four files
       # attached as assets. The Release page has direct download links that
       # don't require the visitor to be signed into GitHub — which is the
       # whole point of the v* tag workflow.
       #
-      # Trigger this by pushing a tag like v0.6 or v0.5.1:
-      #   git tag v0.6 && git push origin v0.6
+      # Trigger this by pushing a tag like v2.0 or v2.0.1:
+      #   git tag v2.0 && git push origin v2.0
       - name: Publish GitHub Release (tag pushes only)
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -144,4 +176,5 @@ jobs:
             --generate-notes \
             "$dist_dir"/MOGMAX-*-pc.zip \
             "$dist_dir"/MOGMAX-*-mac.dmg \
-            "$dist_dir"/MOGMAX-*-mac.zip
+            "$dist_dir"/MOGMAX-*-mac.zip \
+            "$dist_dir"/MOGMAX-*-web.zip

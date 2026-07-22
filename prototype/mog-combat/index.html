@@ -1,0 +1,1937 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MOGMAX Combat Lab</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070907;
+      --ink: #f4f0e8;
+      --muted: #a7ada5;
+      --line: #343a34;
+      --line-hot: #6a7469;
+      --panel: #10140f;
+      --panel-2: #171c16;
+      --teal: #35c18d;
+      --red: #dc5144;
+      --gold: #e7b84f;
+      --violet: #8b78e8;
+      --blue: #4f9fdf;
+      --orange: #e37a37;
+      --black: #050605;
+      --shadow: 0 22px 70px #000b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, #050605e8, #080b09f5),
+        url("../../game/images/backgrounds/bg_ch2_gym.jpg") center / cover fixed;
+      color: var(--ink);
+      font-family: Rubik, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+      user-select: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: default;
+      color: #6f756d;
+      border-color: #252a25;
+      background: #0d100d;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--line-hot);
+      background: #20261f;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .app {
+      width: min(1250px, calc(100vw - 24px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 14px 0 22px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px 12px;
+      background: #0b0d0bea;
+      border: 1px solid #2d332d;
+      box-shadow: var(--shadow);
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab,
+    .small-button {
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .tab.active {
+      color: #caffec;
+      border-color: var(--teal);
+      background: #17372b;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 13px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .meta strong {
+      color: var(--ink);
+    }
+
+    .small-button.warn {
+      border-color: #654036;
+      background: #241817;
+      color: #ffd4ca;
+    }
+
+    .arena {
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(360px, 1.04fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .side {
+      min-height: 492px;
+      border: 1px solid #30362f;
+      background: linear-gradient(180deg, #101410ef, #080a08f4);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .side.enemy {
+      background: linear-gradient(180deg, #15110eed, #090908f5);
+    }
+
+    .fighter-head {
+      position: relative;
+      min-height: 330px;
+      padding: 18px;
+      border-bottom: 1px solid #30362f;
+      overflow: hidden;
+    }
+
+    .fighter-head::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 12%, #35c18d2b, transparent 34%),
+        radial-gradient(circle at 85% 22%, #e7b84f24, transparent 31%),
+        linear-gradient(120deg, #ffffff08, transparent 44%);
+      pointer-events: none;
+    }
+
+    .enemy .fighter-head::before {
+      background:
+        radial-gradient(circle at 20% 12%, #dc51442a, transparent 34%),
+        radial-gradient(circle at 84% 25%, #8b78e82a, transparent 32%),
+        linear-gradient(120deg, #ffffff08, transparent 44%);
+    }
+
+    .nameplate {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .nameplate h1,
+    .nameplate h2 {
+      margin: 0;
+      font-size: clamp(32px, 4.2vw, 55px);
+      line-height: 0.9;
+      text-transform: uppercase;
+    }
+
+    .nameplate span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .portrait {
+      position: absolute;
+      right: 18px;
+      bottom: -12px;
+      z-index: 1;
+      width: min(44%, 248px);
+      height: 286px;
+      object-fit: contain;
+      transform-origin: bottom center;
+      filter: drop-shadow(0 24px 22px #000d);
+    }
+
+    .player .portrait {
+      right: 22px;
+      bottom: 26px;
+      width: min(42%, 224px);
+      height: 214px;
+      object-fit: cover;
+      object-position: center;
+      border: 3px solid #6b61d9;
+      background: #080a09;
+    }
+
+    .portrait.idle {
+      animation: idle 2.5s ease-in-out infinite;
+    }
+
+    .portrait.windup {
+      animation: windup 520ms ease forwards;
+    }
+
+    .portrait.lunge {
+      animation: lunge 210ms ease forwards;
+    }
+
+    .portrait.hurt {
+      animation: hurt 340ms ease;
+    }
+
+    .portrait.parry {
+      animation: parry 320ms ease;
+    }
+
+    .portrait.break {
+      animation: breakflash 560ms ease;
+    }
+
+    @keyframes idle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes windup {
+      0% { transform: translateX(0) rotate(0) scale(1); }
+      100% { transform: translateX(-16px) rotate(-2deg) scale(1.04); }
+    }
+
+    @keyframes lunge {
+      0% { transform: translateX(-16px) scale(1.04); }
+      65% { transform: translateX(-92px) rotate(-4deg) scale(1.1); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    @keyframes hurt {
+      0% { transform: translateX(0); filter: drop-shadow(0 0 0 #fff0); }
+      30% { transform: translateX(-14px) rotate(-5deg); filter: drop-shadow(0 0 22px #dc5144cc); }
+      60% { transform: translateX(10px) rotate(3deg); }
+      100% { transform: translateX(0); filter: drop-shadow(0 24px 22px #000d); }
+    }
+
+    @keyframes parry {
+      0% { filter: drop-shadow(0 0 0 #fff0); }
+      42% { filter: drop-shadow(0 0 28px #e7b84fff) brightness(1.65); }
+      100% { filter: drop-shadow(0 24px 22px #000d); }
+    }
+
+    @keyframes breakflash {
+      0% { transform: scale(1); filter: drop-shadow(0 0 0 #fff0); }
+      42% { transform: scale(1.07); filter: drop-shadow(0 0 30px #e7b84fff); }
+      100% { transform: scale(1); filter: drop-shadow(0 24px 22px #000d); }
+    }
+
+    .bars {
+      position: relative;
+      z-index: 2;
+      width: min(58%, 370px);
+      margin-top: 44px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 5px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .bar {
+      height: 15px;
+      border: 1px solid #353b34;
+      background: #232923;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 50%;
+      height: 100%;
+      background: var(--teal);
+      transition: width 240ms ease, background 240ms ease;
+    }
+
+    .hp-mid {
+      background: var(--gold);
+    }
+
+    .hp-low {
+      background: var(--red);
+    }
+
+    .flow {
+      background: linear-gradient(90deg, var(--blue), var(--teal));
+    }
+
+    .breakbar {
+      background: linear-gradient(90deg, var(--violet), var(--gold));
+    }
+
+    .tags {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 25px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border: 1px solid #3a423b;
+      background: #0c100bcc;
+      color: #dce3db;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .panel {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .intent {
+      min-height: 132px;
+      padding: 14px;
+      border-left: 5px solid var(--orange);
+      background: #171c16;
+    }
+
+    .kicker {
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .tell {
+      font-size: 22px;
+      line-height: 1.14;
+      font-weight: 900;
+    }
+
+    .hint {
+      min-height: 18px;
+      margin-top: 8px;
+      color: #caffec;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .challenge {
+      min-height: 236px;
+      padding: 14px;
+      border: 1px solid #30362f;
+      background: #0f130f;
+    }
+
+    .message {
+      min-height: 47px;
+      font-size: 18px;
+      line-height: 1.22;
+      font-weight: 900;
+    }
+
+    .qte-track {
+      position: relative;
+      height: 58px;
+      margin-top: 16px;
+      border: 1px solid #3b433a;
+      background: #20261f;
+      overflow: hidden;
+    }
+
+    .qte-good,
+    .qte-perfect {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+
+    .qte-good {
+      background: #35c18d55;
+    }
+
+    .qte-perfect {
+      background: #e7b84fc7;
+      box-shadow: 0 0 24px #e7b84f99;
+    }
+
+    .qte-needle {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      left: 0;
+      width: 4px;
+      background: #f4f0e8;
+      box-shadow: 0 0 18px #fff;
+    }
+
+    .ring-stage {
+      position: relative;
+      width: 220px;
+      height: 170px;
+      margin: 4px auto 0;
+    }
+
+    .ring-target,
+    .ring-shrink {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 112px;
+      height: 112px;
+      margin: -56px 0 0 -56px;
+      border-radius: 50%;
+    }
+
+    .ring-target {
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 22px #e7b84f90, inset 0 0 22px #e7b84f35;
+    }
+
+    .ring-shrink {
+      border: 4px solid #f4f0e8;
+      box-shadow: 0 0 20px #fff9;
+      transform: scale(2.2);
+    }
+
+    .qte-hits {
+      min-height: 28px;
+      margin-top: 10px;
+      color: var(--gold);
+      font-size: 18px;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .defense-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .defense-row button {
+      min-height: 54px;
+      border-radius: 6px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .defense-row small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .parry-btn {
+      color: #caffec;
+      border-color: #3c8d6c;
+      background: #173026;
+    }
+
+    .dodge-btn {
+      color: #ffdba2;
+      border-color: #a87d31;
+      background: #302412;
+    }
+
+    .jump-btn {
+      color: #ded9ff;
+      border-color: #675bc2;
+      background: #211d37;
+    }
+
+    .alert {
+      min-height: 42px;
+      margin-top: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 33px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .alert.parry {
+      color: var(--gold);
+      text-shadow: 0 0 22px #e7b84fa0;
+    }
+
+    .alert.dodge {
+      color: var(--red);
+      text-shadow: 0 0 22px #dc5144a0;
+    }
+
+    .alert.jump {
+      color: var(--violet);
+      text-shadow: 0 0 22px #8b78e8a0;
+    }
+
+    .move-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .move {
+      min-height: 126px;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: left;
+    }
+
+    .move.active {
+      border-color: var(--gold);
+      background: #312612;
+    }
+
+    .move strong {
+      display: block;
+      min-height: 38px;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.06;
+      text-transform: uppercase;
+    }
+
+    .move span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.22;
+      font-weight: 800;
+    }
+
+    .move em {
+      display: block;
+      margin-top: 7px;
+      color: var(--gold);
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .discipline-aura {
+      border-left: 5px solid var(--red);
+    }
+
+    .discipline-frame {
+      border-left: 5px solid var(--teal);
+    }
+
+    .discipline-cringe {
+      border-left: 5px solid var(--orange);
+    }
+
+    .discipline-mew {
+      border-left: 5px solid var(--blue);
+    }
+
+    .discipline-scan {
+      border-left: 5px solid var(--violet);
+    }
+
+    .discipline-giga {
+      border-left: 5px solid var(--gold);
+    }
+
+    .log {
+      min-height: 96px;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border: 1px solid #2d332d;
+      background: #0b0d0bea;
+      color: #cfd6ce;
+      font-size: 13px;
+      line-height: 1.36;
+    }
+
+    .log div + div {
+      margin-top: 5px;
+      color: #9ea69e;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: #030403dc;
+    }
+
+    .menu-panel,
+    .result-panel {
+      width: min(760px, 100%);
+      padding: 28px;
+      border: 1px solid #3c453d;
+      background: #10140f;
+      box-shadow: var(--shadow);
+    }
+
+    .menu-panel h1,
+    .result-panel h2 {
+      margin: 0 0 10px;
+      font-size: clamp(40px, 7vw, 72px);
+      line-height: 0.9;
+      text-transform: uppercase;
+    }
+
+    .menu-panel p,
+    .result-panel p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.38;
+    }
+
+    .menu-actions,
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .menu-actions button,
+    .result-actions button {
+      min-height: 48px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .stat {
+      padding: 10px;
+      border: 1px solid #30362f;
+      background: #0b0d0b;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: 24px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 980px) {
+      .topbar,
+      .arena {
+        grid-template-columns: 1fr;
+      }
+
+      .meta {
+        justify-content: flex-start;
+      }
+
+      .move-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .side {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app {
+        width: min(100vw - 16px, 1250px);
+        padding-top: 8px;
+      }
+
+      .fighter-head {
+        min-height: 304px;
+      }
+
+      .nameplate h1,
+      .nameplate h2 {
+        font-size: 34px;
+      }
+
+      .portrait,
+      .player .portrait {
+        width: 42%;
+        height: 174px;
+        bottom: 20px;
+      }
+
+      .bars {
+        width: 100%;
+        margin-top: 30px;
+      }
+
+      .move-grid,
+      .defense-row,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <nav class="tabs" id="tabs" aria-label="Battle select"></nav>
+      <div class="meta">
+        <span>Round <strong id="roundText">1</strong></span>
+        <span>Mode <strong id="modeText">Choose</strong></span>
+        <button class="small-button" id="menuButton" type="button">Menu</button>
+        <button class="small-button warn" id="restartButton" type="button">Restart</button>
+      </div>
+    </header>
+
+    <main class="arena">
+      <section class="side player">
+        <div class="fighter-head">
+          <div class="nameplate">
+            <div>
+              <h1>You</h1>
+              <span>Faceless trainee</span>
+            </div>
+          </div>
+          <img class="portrait idle" id="playerPortrait" alt="" src="../../game/images/minigames/acne_face.png">
+          <div class="bars">
+            <div class="bar-row">
+              <div class="bar-label"><span>Aura</span><span id="playerHpText">100 / 100</span></div>
+              <div class="bar"><div class="bar-fill" id="playerHpFill"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>Flow</span><span id="flowText">0 / 4</span></div>
+              <div class="bar"><div class="bar-fill flow" id="flowFill"></div></div>
+            </div>
+          </div>
+          <div class="tags" id="playerTags"></div>
+        </div>
+        <div class="panel">
+          <div class="challenge">
+            <div class="kicker" id="challengeKicker">Ready</div>
+            <div class="message" id="messageText">Pick a move. Timing and reads decide how much it matters.</div>
+            <div id="challengeArea"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="side enemy">
+        <div class="fighter-head">
+          <div class="nameplate">
+            <div>
+              <h2 id="enemyName">Coach Kai</h2>
+              <span id="enemySubtitle">Tutorial</span>
+            </div>
+          </div>
+          <img class="portrait idle" id="enemyPortrait" alt="" src="../../game/images/characters/harker/harker stopwatch.png">
+          <div class="bars">
+            <div class="bar-row">
+              <div class="bar-label"><span>Composure</span><span id="enemyHpText">80 / 80</span></div>
+              <div class="bar"><div class="bar-fill" id="enemyHpFill"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>Break</span><span id="breakText">0%</span></div>
+              <div class="bar"><div class="bar-fill breakbar" id="breakFill"></div></div>
+            </div>
+          </div>
+          <div class="tags" id="enemyTags"></div>
+        </div>
+        <div class="panel">
+          <div class="intent" id="intentBox">
+            <div class="kicker" id="intentKicker">Read the body</div>
+            <div class="tell" id="intentTell">Kai plants both feet and loads the shoulder.</div>
+            <div class="hint" id="intentHint"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="move-grid" id="moveGrid" aria-label="Moves"></section>
+    <section class="log" id="log"></section>
+  </div>
+
+  <div class="overlay" id="menuOverlay">
+    <div class="menu-panel">
+      <h1>MOGMAX Combat Lab</h1>
+      <p>Prototype pass: timing attacks, active defense, weakness reads, and a tutorial to hard battle ladder. Use number keys for moves. Use Space to confirm attacks and parry. Use D to dodge. Use J to jump.</p>
+      <div class="menu-actions">
+        <button type="button" data-start="ladder">Start Ladder</button>
+        <button type="button" data-start="tutorial">Tutorial</button>
+        <button type="button" data-start="easy">Easy Battle</button>
+        <button type="button" data-start="medium">Medium Battle</button>
+        <button type="button" data-start="hard">Hard Battle</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="resultOverlay">
+    <div class="result-panel">
+      <h2 id="resultTitle">Victory</h2>
+      <p id="resultCopy">The opponent breaks eye contact first.</p>
+      <div class="stats" id="resultStats"></div>
+      <div class="result-actions">
+        <button type="button" id="continueButton">Continue</button>
+        <button type="button" id="retryButton">Retry</button>
+        <button type="button" id="resultMenuButton">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const DISCIPLINES = {
+      aura: "Aura",
+      frame: "Frame",
+      cringe: "Cringe",
+      mew: "Mew",
+      scan: "Scan",
+      giga: "Giga"
+    };
+
+    const MOVES = [
+      {
+        id: "aura",
+        key: "1",
+        name: "Aura Chain",
+        discipline: "aura",
+        cost: 0,
+        qte: "chain",
+        hits: 3,
+        base: 7,
+        break: 5,
+        answer: "feint",
+        desc: "Free 3-hit pressure. Builds Flow on landed hits."
+      },
+      {
+        id: "frame",
+        key: "2",
+        name: "Hold Frame",
+        discipline: "frame",
+        cost: 1,
+        qte: "bar",
+        base: 14,
+        break: 22,
+        answer: "charge",
+        desc: "Best into committed attacks. Adds Shield on good reads."
+      },
+      {
+        id: "cringe",
+        key: "3",
+        name: "Cringe Check",
+        discipline: "cringe",
+        cost: 2,
+        qte: "rapid",
+        hits: 4,
+        base: 6,
+        break: 6,
+        answer: "guard",
+        desc: "Fast combo. Third stack detonates."
+      },
+      {
+        id: "mew",
+        key: "4",
+        name: "Mew Ward",
+        discipline: "mew",
+        cost: 2,
+        qte: "bar",
+        base: 0,
+        break: 0,
+        answer: "rant",
+        desc: "Heal and silence verbal pressure. Bait punishes it."
+      },
+      {
+        id: "scan",
+        key: "5",
+        name: "Read Scan",
+        discipline: "scan",
+        cost: 1,
+        qte: "bar",
+        base: 9,
+        break: 10,
+        answer: "analyze",
+        desc: "Reveals weakness and slows the next enemy phrase."
+      },
+      {
+        id: "giga",
+        key: "6",
+        name: "Giga Mog",
+        discipline: "giga",
+        cost: 4,
+        qte: "ring",
+        base: 42,
+        break: 35,
+        answer: null,
+        desc: "Full Flow finisher. Huge if the ring is clean."
+      }
+    ];
+
+    const MOVE_BY_ID = Object.fromEntries(MOVES.map((move) => [move.id, move]));
+
+    const INTENTS = {
+      charge: {
+        label: "Committed attack",
+        answer: "frame",
+        color: "#dc5144",
+        tells: [
+          "Both feet plant. One shoulder loads.",
+          "He steps into the pocket and refuses to blink.",
+          "The hit starts in the hips before the hands move."
+        ]
+      },
+      guard: {
+        label: "Guarded block",
+        answer: "cringe",
+        color: "#4f9fdf",
+        tells: [
+          "Elbows tuck. The opening disappears.",
+          "He gets smaller behind a sealed frame.",
+          "His chin vanishes and he waits for you to swing."
+        ]
+      },
+      rant: {
+        label: "Verbal pressure",
+        answer: "mew",
+        color: "#e37a37",
+        tells: [
+          "He inhales like the argument is preloaded.",
+          "One finger rises before the sentence does.",
+          "A full explanation forms behind his eyes."
+        ]
+      },
+      feint: {
+        label: "Feint",
+        answer: "aura",
+        color: "#e7b84f",
+        tells: [
+          "The shoulder twitches. The feet stay quiet.",
+          "He shows an opening and watches your reaction.",
+          "The first motion is loud. The weight never commits."
+        ]
+      },
+      bait: {
+        label: "Baited silence",
+        answer: "aura",
+        color: "#8b78e8",
+        tells: [
+          "The silence arrives too perfectly.",
+          "He pretends to inhale, then studies your mouth.",
+          "The opening looks polished enough to be a trap."
+        ]
+      },
+      analyze: {
+        label: "Pattern read",
+        answer: "scan",
+        color: "#b989ff",
+        tells: [
+          "He mouths the name of your last move.",
+          "His eyes skip ahead to your favorite answer.",
+          "The room goes quiet around your repetition."
+        ]
+      }
+    };
+
+    const BATTLES = [
+      {
+        id: "tutorial",
+        label: "Tutorial",
+        name: "Coach Kai",
+        subtitle: "First Contact",
+        portrait: "../../game/images/characters/harker/harker stopwatch.png",
+        hp: 86,
+        playerHp: 100,
+        weakness: "frame",
+        resist: null,
+        startFlow: 2,
+        damage: 7,
+        timing: { bar: 1120, rapid: 760, ring: 1320, parry: 220, perfect: 78, dodge: 340, jump: 340 },
+        forced: ["charge", "guard", "rant", "feint"],
+        weights: { charge: 42, guard: 28, rant: 30 },
+        patterns: ["single", "double"],
+        hintRounds: 5,
+        copy: "Kai calls the first reads. Learn the answers, timing confirms, then defense."
+      },
+      {
+        id: "easy",
+        label: "Easy",
+        name: "Kai Graduation",
+        subtitle: "No Callouts",
+        portrait: "../../game/images/characters/harker/harker pointing.png",
+        hp: 112,
+        playerHp: 100,
+        weakness: "aura",
+        resist: null,
+        startFlow: 1,
+        damage: 10,
+        timing: { bar: 990, rapid: 650, ring: 1200, parry: 185, perfect: 66, dodge: 305, jump: 305 },
+        weights: { charge: 36, guard: 26, rant: 25, feint: 13 },
+        patterns: ["single", "double", "delayed"],
+        hintRounds: 0,
+        copy: "Same tools, fewer signs. Kai starts hiding the real hit inside the rhythm."
+      },
+      {
+        id: "medium",
+        label: "Medium",
+        name: "Brayden",
+        subtitle: "Hallway Title Match",
+        portrait: "../../game/images/characters/brayden/brayden smirk.png",
+        hp: 142,
+        playerHp: 100,
+        weakness: "cringe",
+        resist: "frame",
+        startFlow: 1,
+        damage: 13,
+        timing: { bar: 900, rapid: 560, ring: 1080, parry: 160, perfect: 56, dodge: 275, jump: 275 },
+        weights: { charge: 31, guard: 24, rant: 18, feint: 18, bait: 9 },
+        patterns: ["double", "delayed", "red", "jump"],
+        hintRounds: 0,
+        copy: "Brayden mixes bait, faster hits, and red attacks that want a dodge."
+      },
+      {
+        id: "hard",
+        label: "Hard",
+        name: "Clav",
+        subtitle: "Final Exam",
+        portrait: "../../game/images/characters/clav/clav stern.png",
+        hp: 176,
+        playerHp: 100,
+        weakness: "scan",
+        resist: "cringe",
+        startFlow: 0,
+        damage: 16,
+        timing: { bar: 810, rapid: 500, ring: 980, parry: 138, perfect: 48, dodge: 245, jump: 245 },
+        weights: { charge: 25, guard: 20, rant: 18, feint: 18, bait: 10, analyze: 9 },
+        phaseAt: 0.48,
+        phaseWeakness: "mew",
+        phaseResist: "aura",
+        patterns: ["double", "triple", "red", "jump", "stutter"],
+        hintRounds: 0,
+        copy: "Clav reads repeats, changes weakness at half composure, and compresses timing."
+      }
+    ];
+
+    const state = {
+      battleIndex: 0,
+      ladder: false,
+      phase: "menu",
+      round: 1,
+      playerHp: 100,
+      enemyHp: 100,
+      breakMeter: 0,
+      flow: 0,
+      shield: 0,
+      ward: 0,
+      cringe: 0,
+      scanSlow: 0,
+      weaknessKnown: false,
+      phaseShifted: false,
+      intent: null,
+      lastMoves: [],
+      logs: [],
+      stats: null,
+      qte: null,
+      ring: null,
+      defense: null,
+      result: null
+    };
+
+    const els = {};
+    [
+      "tabs", "roundText", "modeText", "menuButton", "restartButton",
+      "playerHpText", "playerHpFill", "flowText", "flowFill", "playerTags",
+      "challengeKicker", "messageText", "challengeArea", "enemyName",
+      "enemySubtitle", "enemyPortrait", "playerPortrait", "enemyHpText",
+      "enemyHpFill", "breakText", "breakFill", "enemyTags", "intentBox",
+      "intentKicker", "intentTell", "intentHint", "moveGrid", "log",
+      "menuOverlay", "resultOverlay", "resultTitle", "resultCopy",
+      "resultStats", "continueButton", "retryButton", "resultMenuButton"
+    ].forEach((id) => {
+      els[id] = document.getElementById(id);
+    });
+
+    function battle() {
+      return BATTLES[state.battleIndex];
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function wait(ms) {
+      return new Promise((resolve) => window.setTimeout(resolve, ms));
+    }
+
+    function weightedPick(weights) {
+      const entries = Object.entries(weights);
+      const total = entries.reduce((sum, item) => sum + item[1], 0);
+      let roll = Math.random() * total;
+      for (const [key, weight] of entries) {
+        if (roll <= weight) return key;
+        roll -= weight;
+      }
+      return entries[0][0];
+    }
+
+    function addLog(text) {
+      state.logs.unshift(text);
+      state.logs = state.logs.slice(0, 5);
+    }
+
+    function flashPortrait(which, className) {
+      const element = which === "enemy" ? els.enemyPortrait : els.playerPortrait;
+      element.classList.remove(className);
+      void element.offsetWidth;
+      element.classList.add(className);
+      window.setTimeout(() => element.classList.remove(className), 420);
+    }
+
+    function pickIntent() {
+      const config = battle();
+      let key = config.forced && config.forced[state.round - 1];
+      const recent = state.lastMoves.slice(-3);
+      if (!key && config.id === "hard" && recent.length === 3 && recent.every((move) => move === recent[0])) {
+        key = "analyze";
+      }
+      if (!key) key = weightedPick(config.weights);
+      const data = INTENTS[key];
+      state.intent = {
+        key,
+        label: data.label,
+        answer: data.answer,
+        color: data.color,
+        tell: data.tells[(Math.random() * data.tells.length) | 0]
+      };
+    }
+
+    function resetBattle(index, ladder) {
+      const config = BATTLES[index];
+      state.battleIndex = index;
+      state.ladder = !!ladder;
+      state.phase = "choose";
+      state.round = 1;
+      state.playerHp = config.playerHp;
+      state.enemyHp = config.hp;
+      state.breakMeter = 0;
+      state.flow = config.startFlow || 0;
+      state.shield = 0;
+      state.ward = 0;
+      state.cringe = 0;
+      state.scanSlow = 0;
+      state.weaknessKnown = config.id === "tutorial";
+      state.phaseShifted = false;
+      state.lastMoves = [];
+      state.logs = [config.copy];
+      state.stats = { perfects: 0, clean: 0, misses: 0, parries: 0, perfectParries: 0, dodges: 0, jumps: 0, hitsTaken: 0, turns: 0 };
+      state.qte = null;
+      state.ring = null;
+      state.defense = null;
+      state.result = null;
+      els.menuOverlay.classList.add("hidden");
+      els.resultOverlay.classList.add("hidden");
+      pickIntent();
+      render();
+    }
+
+    function hpClass(ratio) {
+      if (ratio <= 0.28) return "hp-low";
+      if (ratio <= 0.55) return "hp-mid";
+      return "";
+    }
+
+    function currentWeakness() {
+      const config = battle();
+      return state.phaseShifted && config.phaseWeakness ? config.phaseWeakness : config.weakness;
+    }
+
+    function currentResist() {
+      const config = battle();
+      return state.phaseShifted && config.phaseResist !== undefined ? config.phaseResist : config.resist;
+    }
+
+    function revealWeakness() {
+      state.weaknessKnown = true;
+    }
+
+    function renderTabs() {
+      els.tabs.innerHTML = BATTLES.map((item, index) => (
+        `<button class="tab ${index === state.battleIndex ? "active" : ""}" type="button" data-tab="${index}">${item.label}</button>`
+      )).join("");
+    }
+
+    function renderBars() {
+      const config = battle();
+      const playerRatio = state.playerHp / config.playerHp;
+      const enemyRatio = state.enemyHp / config.hp;
+      els.playerHpText.textContent = `${Math.ceil(state.playerHp)} / ${config.playerHp}`;
+      els.playerHpFill.style.width = `${playerRatio * 100}%`;
+      els.playerHpFill.className = `bar-fill ${hpClass(playerRatio)}`;
+      els.flowText.textContent = `${state.flow} / 4`;
+      els.flowFill.style.width = `${(state.flow / 4) * 100}%`;
+      els.enemyHpText.textContent = `${Math.ceil(state.enemyHp)} / ${config.hp}`;
+      els.enemyHpFill.style.width = `${enemyRatio * 100}%`;
+      els.enemyHpFill.className = `bar-fill ${hpClass(enemyRatio)}`;
+      els.breakText.textContent = `${state.breakMeter}%`;
+      els.breakFill.style.width = `${state.breakMeter}%`;
+    }
+
+    function renderTags() {
+      const playerTags = [];
+      if (state.shield) playerTags.push(`Shield ${state.shield}`);
+      if (state.ward) playerTags.push(`Ward ${state.ward}`);
+      if (state.flow >= 4) playerTags.push("Giga Ready");
+      els.playerTags.innerHTML = playerTags.map((tag) => `<span class="tag">${tag}</span>`).join("");
+
+      const enemyTags = [state.intent.label];
+      if (state.weaknessKnown) {
+        enemyTags.push(`Weak: ${DISCIPLINES[currentWeakness()]}`);
+        if (currentResist()) enemyTags.push(`Resists: ${DISCIPLINES[currentResist()]}`);
+      } else {
+        enemyTags.push("Weak: Unknown");
+      }
+      if (state.cringe) enemyTags.push(`Cringe ${state.cringe}/3`);
+      if (state.breakMeter >= 72) enemyTags.push("Near Break");
+      els.enemyTags.innerHTML = enemyTags.map((tag) => `<span class="tag">${tag}</span>`).join("");
+    }
+
+    function renderIntent() {
+      const config = battle();
+      els.intentBox.style.borderLeftColor = state.intent.color;
+      els.intentKicker.textContent = config.hintRounds >= state.round ? "Training telegraph" : "Read the body";
+      els.intentTell.textContent = state.intent.tell;
+      if (config.hintRounds >= state.round && state.intent.answer) {
+        els.intentHint.textContent = `Answer: ${MOVE_BY_ID[state.intent.answer].name}`;
+      } else if (state.intent.key === "analyze") {
+        els.intentHint.textContent = "Break repetition or scan the read.";
+      } else {
+        els.intentHint.textContent = "";
+      }
+    }
+
+    function renderMoves() {
+      const usable = state.phase === "choose";
+      els.moveGrid.innerHTML = MOVES.map((move) => {
+        const locked = state.flow < move.cost;
+        const active = battle().hintRounds >= state.round && state.intent.answer === move.id;
+        return `
+          <button class="move discipline-${move.discipline} ${active ? "active" : ""}" type="button" data-move="${move.id}" ${usable && !locked ? "" : "disabled"}>
+            <strong>${move.key}. ${move.name}</strong>
+            <span>${locked ? `Needs ${move.cost} Flow.` : move.desc}</span>
+            <em>${move.cost ? `Cost ${move.cost} Flow` : "Free"}</em>
+          </button>
+        `;
+      }).join("");
+      document.querySelectorAll("[data-move]").forEach((button) => {
+        button.addEventListener("click", () => chooseMove(button.dataset.move));
+      });
+    }
+
+    function renderChallenge() {
+      els.challengeArea.innerHTML = "";
+      if (state.phase === "choose") {
+        els.challengeKicker.textContent = "Choose";
+        els.messageText.textContent = "Pick a move. Correct read plus clean timing is where the damage lives.";
+        return;
+      }
+      if (state.phase === "qte") {
+        els.challengeKicker.textContent = state.qte.label;
+        els.messageText.textContent = "Confirm on the green zone. Gold is perfect.";
+        els.challengeArea.innerHTML = `
+          <div class="qte-track">
+            <div class="qte-good" style="left:${state.qte.goodStart * 100}%;width:${state.qte.goodWidth * 100}%"></div>
+            <div class="qte-perfect" style="left:${(state.qte.perfectCenter - state.qte.perfectWidth / 2) * 100}%;width:${state.qte.perfectWidth * 100}%"></div>
+            <div class="qte-needle" id="qteNeedle"></div>
+          </div>
+          <div class="qte-hits" id="qteHits">${state.qte.hitText || ""}</div>
+        `;
+        return;
+      }
+      if (state.phase === "ring") {
+        els.challengeKicker.textContent = state.ring.label;
+        els.messageText.textContent = "Press Space when the white ring matches the gold ring.";
+        els.challengeArea.innerHTML = `
+          <div class="ring-stage">
+            <div class="ring-target"></div>
+            <div class="ring-shrink" id="ringShrink"></div>
+          </div>
+          <div class="qte-hits">${state.ring.hitText || ""}</div>
+        `;
+        return;
+      }
+      if (state.phase === "defense") {
+        els.challengeKicker.textContent = "Defend";
+        els.messageText.textContent = state.defense.message;
+        els.challengeArea.innerHTML = `
+          <div class="alert ${state.defense.currentType || ""}" id="alertText">${state.defense.alert || ""}</div>
+          <div class="defense-row">
+            <button class="parry-btn" type="button" data-defense="parry">Parry<small>Space</small></button>
+            <button class="dodge-btn" type="button" data-defense="dodge">Dodge<small>D</small></button>
+            <button class="jump-btn" type="button" data-defense="jump">Jump<small>J</small></button>
+          </div>
+        `;
+        document.querySelectorAll("[data-defense]").forEach((button) => {
+          button.addEventListener("click", () => pressDefense(button.dataset.defense));
+        });
+        return;
+      }
+      if (state.phase === "enemy") {
+        els.challengeKicker.textContent = "Incoming";
+        els.messageText.textContent = `${battle().name} starts a phrase.`;
+        return;
+      }
+      els.challengeKicker.textContent = "Complete";
+      els.messageText.textContent = state.result === "win" ? "Opponent broken." : "Frame broken.";
+    }
+
+    function renderPortraits() {
+      const config = battle();
+      els.enemyName.textContent = config.name;
+      els.enemySubtitle.textContent = config.subtitle;
+      els.enemyPortrait.src = config.portrait;
+    }
+
+    function renderLog() {
+      els.log.innerHTML = state.logs.map((line) => `<div>${line}</div>`).join("");
+    }
+
+    function render() {
+      renderTabs();
+      renderPortraits();
+      renderBars();
+      renderTags();
+      renderIntent();
+      renderMoves();
+      renderChallenge();
+      renderLog();
+      els.roundText.textContent = state.round;
+      els.modeText.textContent = state.phase === "choose" ? "Choose" : state.phase === "defense" ? "Defense" : state.phase === "qte" || state.phase === "ring" ? "Timing" : state.phase === "complete" ? "Done" : "Enemy";
+    }
+
+    function beginQte(label, duration, goodStart, goodWidth, hitText) {
+      return new Promise((resolve) => {
+        const perfectWidth = 0.075;
+        state.phase = "qte";
+        state.qte = {
+          start: performance.now(),
+          duration,
+          goodStart,
+          goodWidth,
+          perfectCenter: goodStart + goodWidth / 2,
+          perfectWidth,
+          resolve,
+          done: false,
+          label,
+          hitText
+        };
+        render();
+      });
+    }
+
+    function finishQte(grade) {
+      if (!state.qte || state.qte.done) return;
+      state.qte.done = true;
+      const resolve = state.qte.resolve;
+      state.qte = null;
+      state.phase = "busy";
+      resolve(grade);
+    }
+
+    function beginRing(label) {
+      return new Promise((resolve) => {
+        state.phase = "ring";
+        state.ring = {
+          start: performance.now(),
+          duration: battle().timing.ring,
+          resolve,
+          done: false,
+          label,
+          hitText: ""
+        };
+        render();
+      });
+    }
+
+    function finishRing(grade) {
+      if (!state.ring || state.ring.done) return;
+      state.ring.done = true;
+      const resolve = state.ring.resolve;
+      state.ring = null;
+      state.phase = "busy";
+      resolve(grade);
+    }
+
+    function gradeValue(grade) {
+      if (grade === "perfect") return 1.55;
+      if (grade === "good") return 1.08;
+      return 0.45;
+    }
+
+    function gradeName(grade) {
+      if (grade === "perfect") return "Perfect";
+      if (grade === "good") return "Clean";
+      return "Miss";
+    }
+
+    function typeMultiplier(move) {
+      if (move.discipline === "scan" || move.discipline === "giga") return 1;
+      if (move.discipline === currentWeakness()) return 1.55;
+      if (move.discipline === currentResist()) return 0.62;
+      return 1;
+    }
+
+    function intentMultiplier(move) {
+      if (state.intent.answer === move.id) return 1.36;
+      if (state.intent.key === "analyze") {
+        const repeated = state.lastMoves.length && state.lastMoves[state.lastMoves.length - 1] === move.id;
+        return repeated ? 0.35 : 1.18;
+      }
+      if (state.intent.key === "bait" && move.id === "mew") return 0.35;
+      if (state.intent.key === "guard" && move.id === "aura") return 0.55;
+      if (state.intent.key === "feint" && move.id === "frame") return 0.4;
+      return 1;
+    }
+
+    function damageEnemy(amount) {
+      state.enemyHp = clamp(state.enemyHp - amount, 0, battle().hp);
+      flashPortrait("enemy", "hurt");
+    }
+
+    function damagePlayer(amount) {
+      const absorbed = Math.min(state.shield, amount);
+      state.shield -= absorbed;
+      const final = Math.max(0, amount - absorbed);
+      state.playerHp = clamp(state.playerHp - final, 0, battle().playerHp);
+      if (final) {
+        state.stats.hitsTaken += 1;
+        flashPortrait("player", "hurt");
+      }
+      return final;
+    }
+
+    function healPlayer(amount) {
+      state.playerHp = clamp(state.playerHp + amount, 0, battle().playerHp);
+    }
+
+    function addBreak(amount) {
+      state.breakMeter = clamp(state.breakMeter + amount, 0, 100);
+      if (state.breakMeter >= 100 && state.enemyHp > 0) {
+        state.breakMeter = 35;
+        state.flow = clamp(state.flow + 1, 0, 4);
+        flashPortrait("enemy", "break");
+        addLog(`${battle().name} breaks. You keep the turn and gain Flow.`);
+        return true;
+      }
+      return false;
+    }
+
+    async function chooseMove(moveId) {
+      if (state.phase !== "choose") return;
+      const move = MOVE_BY_ID[moveId];
+      if (state.flow < move.cost) return;
+      state.flow -= move.cost;
+      state.phase = "busy";
+      render();
+      await performMove(move);
+    }
+
+    async function performMove(move) {
+      state.stats.turns += 1;
+      let damage = 0;
+      let breakGain = 0;
+      let landed = 0;
+      let perfects = 0;
+      let misses = 0;
+      let hitText = "";
+
+      if (move.qte === "chain" || move.qte === "rapid") {
+        const hits = move.hits || 1;
+        for (let index = 0; index < hits; index += 1) {
+          const speed = move.qte === "rapid" ? battle().timing.rapid : battle().timing.bar;
+          const width = move.qte === "rapid" ? 0.24 : 0.3;
+          const start = move.qte === "rapid" ? 0.35 + Math.random() * 0.34 : 0.54 + Math.random() * 0.13;
+          const grade = await beginQte(`${move.name} ${index + 1}/${hits}`, speed, start, width, hitText);
+          const value = gradeValue(grade);
+          if (grade === "miss") {
+            misses += 1;
+            hitText += "x ";
+          } else {
+            landed += 1;
+            if (grade === "perfect") perfects += 1;
+            hitText += grade === "perfect" ? "* " : "+ ";
+            damage += move.base * value;
+            breakGain += move.break * value;
+            state.flow = clamp(state.flow + 1, 0, 4);
+            damageEnemy(1);
+          }
+          await wait(145);
+          render();
+        }
+      } else if (move.qte === "ring") {
+        const grade = await beginRing(move.name);
+        const value = gradeValue(grade);
+        if (grade === "miss") {
+          misses += 1;
+        } else {
+          landed = 1;
+          if (grade === "perfect") perfects = 1;
+          damage = move.base * value;
+          breakGain = move.break * value;
+        }
+      } else {
+        const grade = await beginQte(move.name, battle().timing.bar, 0.48, 0.32, "");
+        const value = gradeValue(grade);
+        if (grade === "miss") misses += 1;
+        else {
+          landed = 1;
+          if (grade === "perfect") perfects = 1;
+          damage = move.base * value;
+          breakGain = move.break * value;
+        }
+      }
+
+      state.stats.perfects += perfects;
+      state.stats.clean += landed - perfects;
+      state.stats.misses += misses;
+
+      const intentMult = intentMultiplier(move);
+      const typeMult = typeMultiplier(move);
+      let note = "";
+      if (state.intent.answer === move.id) note = "Read confirmed.";
+      else if (state.intent.key === "analyze" && state.lastMoves[state.lastMoves.length - 1] === move.id) note = "Pattern read punishes the repeat.";
+      else if (state.intent.key === "bait" && move.id === "mew") note = "The silence was bait.";
+      else if (landed) note = "Loose read, usable execution.";
+      else note = "The timing slips.";
+
+      if (move.id === "mew") {
+        const heal = Math.ceil((state.intent.key === "rant" ? 20 : 12) * (perfects ? 1.35 : landed ? 1 : 0.55));
+        healPlayer(heal);
+        state.ward = state.intent.key === "rant" ? 2 : 1;
+        if (state.intent.key === "bait") {
+          damagePlayer(7);
+          note = "Bait catches the ward. You still recover, but it costs you.";
+        }
+        addLog(`${move.name}: ${note} Healed ${heal}.`);
+      } else if (move.id === "scan") {
+        revealWeakness();
+        state.scanSlow = 1;
+        const finalDamage = Math.ceil(damage * intentMult);
+        const finalBreak = Math.ceil(breakGain * intentMult);
+        damageEnemy(finalDamage);
+        addBreak(finalBreak);
+        addLog(`${move.name}: weakness revealed as ${DISCIPLINES[currentWeakness()]}. Next phrase slows.`);
+      } else {
+        const finalDamage = Math.ceil(damage * intentMult * typeMult);
+        const finalBreak = Math.ceil(breakGain * intentMult * typeMult);
+        damageEnemy(finalDamage);
+        const broke = addBreak(finalBreak);
+        if (move.id === "cringe" && landed) {
+          state.cringe += state.intent.key === "guard" ? 2 : 1;
+          if (state.cringe >= 3) {
+            state.cringe = 0;
+            damageEnemy(28);
+            addBreak(18);
+            note = "Third Cringe detonates.";
+          }
+        }
+        const typeNote = typeMult > 1 ? " Weakness hit." : typeMult < 1 ? " Resisted." : "";
+        addLog(`${move.name}: ${gradeName(perfects ? "perfect" : landed ? "good" : "miss")}. ${note}${typeNote} ${finalDamage} damage.`);
+        if (broke) {
+          endPlayerTurn(false);
+          return;
+        }
+      }
+
+      state.lastMoves.push(move.id);
+      state.lastMoves = state.lastMoves.slice(-4);
+
+      if (state.enemyHp <= 0) {
+        finishBattle("win");
+        return;
+      }
+      await wait(380);
+      endPlayerTurn(true);
+    }
+
+    async function endPlayerTurn(enemyActs) {
+      maybePhaseShift();
+      if (!enemyActs) {
+        state.phase = "choose";
+        render();
+        return;
+      }
+      state.phase = "enemy";
+      render();
+      await wait(420);
+      await enemySequence();
+    }
+
+    function maybePhaseShift() {
+      const config = battle();
+      if (!config.phaseAt || state.phaseShifted) return;
+      if (state.enemyHp / config.hp <= config.phaseAt) {
+        state.phaseShifted = true;
+        state.weaknessKnown = false;
+        state.breakMeter = Math.min(state.breakMeter, 45);
+        addLog(`${config.name} changes cadence. Weakness changed.`);
+      }
+    }
+
+    function buildPattern() {
+      const config = battle();
+      const family = config.patterns[(Math.random() * config.patterns.length) | 0];
+      const intent = state.intent.key;
+      let pattern;
+      if (family === "single") pattern = [{ type: "parry", windup: 980 }];
+      else if (family === "double") pattern = [{ type: "parry", windup: 820 }, { type: "parry", windup: 700 }];
+      else if (family === "delayed") pattern = [{ type: "parry", windup: 1040 }, { type: "dodge", windup: 860 }];
+      else if (family === "red") pattern = [{ type: "dodge", windup: 980 }, { type: "parry", windup: 640 }];
+      else if (family === "jump") pattern = [{ type: "jump", windup: 920 }, { type: "parry", windup: 700 }];
+      else if (family === "stutter") pattern = [{ type: "parry", windup: 680 }, { type: "jump", windup: 1020 }, { type: "dodge", windup: 610 }];
+      else pattern = [{ type: "parry", windup: 760 }, { type: "dodge", windup: 640 }, { type: "jump", windup: 640 }];
+
+      if (intent === "rant") pattern = pattern.concat([{ type: "jump", windup: 720 }]);
+      if (intent === "feint") pattern[0] = { ...pattern[0], windup: pattern[0].windup + 260, feint: true };
+      if (intent === "bait") pattern[0] = { type: "dodge", windup: 760 };
+      if (intent === "analyze") pattern = pattern.concat([{ type: "parry", windup: 560 }]);
+      if (state.scanSlow) {
+        pattern = pattern.map((hit) => ({ ...hit, windup: hit.windup + 230 }));
+        state.scanSlow = 0;
+      }
+      return pattern;
+    }
+
+    async function enemySequence() {
+      const pattern = buildPattern();
+      state.defense = {
+        message: `${battle().name} attacks. Match the beat type as it lands.`,
+        currentType: "",
+        alert: "",
+        active: null,
+        result: null,
+        lockUntil: 0
+      };
+      state.phase = "defense";
+      render();
+      await wait(280);
+
+      for (let index = 0; index < pattern.length; index += 1) {
+        const hit = pattern[index];
+        if (state.playerHp <= 0 || state.enemyHp <= 0) break;
+        await resolveEnemyHit(hit, index + 1, pattern.length);
+      }
+
+      if (state.result) return;
+
+      state.ward = Math.max(0, state.ward - 1);
+      state.shield = Math.max(0, state.shield - 5);
+      state.round += 1;
+      pickIntent();
+      state.phase = "choose";
+      state.defense = null;
+      addLog("Next read locks in.");
+      render();
+    }
+
+    async function resolveEnemyHit(hit, number, total) {
+      const start = performance.now();
+      const impact = start + hit.windup;
+      state.defense.active = { hit, impact };
+      state.defense.result = null;
+      state.defense.message = `${battle().name} phrase ${number}/${total}.`;
+      state.defense.currentType = hit.type;
+      state.defense.alert = hit.feint ? "..." : defenseAlert(hit.type);
+      els.enemyPortrait.classList.add("windup");
+      render();
+
+      while (performance.now() < impact + 86) {
+        if (state.defense.result) break;
+        await wait(16);
+      }
+
+      els.enemyPortrait.classList.remove("windup");
+      flashPortrait("enemy", "lunge");
+      const result = state.defense.result;
+      state.defense.active = null;
+      state.defense.alert = "";
+      state.defense.currentType = "";
+
+      let amount = battle().damage + (number - 1) * 2;
+      if (state.intent.key === "rant" && state.ward) amount = Math.ceil(amount * 0.35);
+      if (state.cringe && state.intent.key === "guard") amount = Math.ceil(amount * 0.82);
+
+      if (result === "perfect") {
+        state.stats.parries += hit.type === "parry" ? 1 : 0;
+        state.stats.perfectParries += 1;
+        state.flow = clamp(state.flow + 1, 0, 4);
+        damageEnemy(6);
+        addBreak(5);
+        flashPortrait("player", "parry");
+        addLog(`Perfect ${defenseLabel(hit.type)}. Riposte and Flow gained.`);
+      } else if (result === "clean") {
+        if (hit.type === "parry") state.stats.parries += 1;
+        if (hit.type === "dodge") state.stats.dodges += 1;
+        if (hit.type === "jump") state.stats.jumps += 1;
+        if (hit.type === "parry") state.flow = clamp(state.flow + 1, 0, 4);
+        addLog(`Clean ${defenseLabel(hit.type)}.`);
+      } else {
+        const dealt = damagePlayer(amount);
+        addLog(`${battle().name}'s hit lands for ${dealt}.`);
+      }
+
+      if (state.playerHp <= 0) {
+        finishBattle("loss");
+        return;
+      }
+      if (state.enemyHp <= 0) {
+        finishBattle("win");
+        return;
+      }
+      render();
+      await wait(310);
+    }
+
+    function defenseAlert(type) {
+      if (type === "parry") return "!";
+      if (type === "dodge") return "Red";
+      return "Low";
+    }
+
+    function defenseLabel(type) {
+      if (type === "parry") return "Parry";
+      if (type === "dodge") return "Dodge";
+      return "Jump";
+    }
+
+    function pressDefense(type) {
+      if (state.phase !== "defense" || !state.defense || !state.defense.active || state.defense.result) return;
+      const timing = battle().timing;
+      const hit = state.defense.active.hit;
+      const diff = performance.now() - state.defense.active.impact;
+      const goodWindow = hit.type === "parry" ? timing.parry : hit.type === "dodge" ? timing.dodge : timing.jump;
+      const perfectWindow = timing.perfect;
+      const earlyGrace = type === "parry" ? goodWindow : goodWindow + 90;
+      if (type !== hit.type) {
+        if (diff < -earlyGrace) {
+          addLog(`${defenseLabel(type)} is too early.`);
+          state.defense.lockUntil = performance.now() + 260;
+        } else {
+          state.defense.result = "wrong";
+        }
+        render();
+        return;
+      }
+      if (diff >= -perfectWindow && diff <= perfectWindow) {
+        state.defense.result = "perfect";
+      } else if (diff >= -goodWindow && diff <= Math.floor(goodWindow * 0.48)) {
+        state.defense.result = "clean";
+      } else if (diff < -goodWindow) {
+        addLog(`${defenseLabel(type)} is too early.`);
+      } else {
+        state.defense.result = "late";
+      }
+      render();
+    }
+
+    function finishBattle(outcome) {
+      state.phase = "complete";
+      state.result = outcome;
+      const won = outcome === "win";
+      els.resultTitle.textContent = won ? "Mog Confirmed" : "Frame Broken";
+      els.resultCopy.textContent = won
+        ? `${battle().name} breaks eye contact first. Aura kept: ${Math.ceil(state.playerHp)} / ${battle().playerHp}.`
+        : `${battle().name} found the rhythm first. Run it back.`;
+      const grade = gradeBattle();
+      els.resultStats.innerHTML = `
+        <div class="stat"><strong>${state.stats.perfects}</strong><span>Perfect strikes</span></div>
+        <div class="stat"><strong>${state.stats.perfectParries}</strong><span>Perfect defenses</span></div>
+        <div class="stat"><strong>${state.stats.hitsTaken}</strong><span>Hits taken</span></div>
+        <div class="stat"><strong>${grade}</strong><span>Grade</span></div>
+      `;
+      els.continueButton.style.display = won && state.ladder && state.battleIndex < BATTLES.length - 1 ? "inline-block" : "none";
+      els.resultOverlay.classList.remove("hidden");
+      render();
+    }
+
+    function gradeBattle() {
+      if (state.stats.hitsTaken === 0 && state.stats.perfectParries >= 2) return "S";
+      if (state.stats.hitsTaken <= 2 && state.stats.perfects >= 2) return "A";
+      if (state.stats.hitsTaken <= 5) return "B";
+      return "C";
+    }
+
+    function showMenu() {
+      state.phase = "menu";
+      els.menuOverlay.classList.remove("hidden");
+      els.resultOverlay.classList.add("hidden");
+      render();
+    }
+
+    function updateAnimation() {
+      if (state.phase === "qte" && state.qte) {
+        const p = (performance.now() - state.qte.start) / state.qte.duration;
+        const needle = document.getElementById("qteNeedle");
+        if (needle) needle.style.left = `${Math.min(100, p * 100)}%`;
+        if (p >= 1) finishQte("miss");
+      }
+      if (state.phase === "ring" && state.ring) {
+        const p = (performance.now() - state.ring.start) / state.ring.duration;
+        const shrink = document.getElementById("ringShrink");
+        const scale = 2.25 - (2.25 - 0.48) * p;
+        if (shrink) shrink.style.transform = `scale(${Math.max(0.48, scale)})`;
+        if (p >= 1) finishRing("miss");
+      }
+      window.requestAnimationFrame(updateAnimation);
+    }
+
+    function commitTiming() {
+      if (state.phase === "qte" && state.qte) {
+        const p = (performance.now() - state.qte.start) / state.qte.duration;
+        const perfect = Math.abs(p - state.qte.perfectCenter) <= state.qte.perfectWidth / 2;
+        const good = p >= state.qte.goodStart && p <= state.qte.goodStart + state.qte.goodWidth;
+        finishQte(perfect ? "perfect" : good ? "good" : "miss");
+      } else if (state.phase === "ring" && state.ring) {
+        const p = (performance.now() - state.ring.start) / state.ring.duration;
+        const scale = 2.25 - (2.25 - 0.48) * p;
+        const diff = Math.abs(scale - 1);
+        finishRing(diff <= 0.09 ? "perfect" : diff <= 0.27 ? "good" : "miss");
+      } else if (state.phase === "defense") {
+        pressDefense("parry");
+      }
+    }
+
+    els.tabs.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-tab]");
+      if (!button) return;
+      resetBattle(Number(button.dataset.tab), false);
+    });
+
+    els.restartButton.addEventListener("click", () => resetBattle(state.battleIndex, state.ladder));
+    els.menuButton.addEventListener("click", showMenu);
+    els.retryButton.addEventListener("click", () => resetBattle(state.battleIndex, state.ladder));
+    els.resultMenuButton.addEventListener("click", showMenu);
+    els.continueButton.addEventListener("click", () => resetBattle(clamp(state.battleIndex + 1, 0, BATTLES.length - 1), true));
+    els.menuOverlay.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-start]");
+      if (!button) return;
+      const target = button.dataset.start;
+      if (target === "ladder") resetBattle(0, true);
+      else resetBattle(BATTLES.findIndex((item) => item.id === target), false);
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        commitTiming();
+      }
+      if (event.code === "KeyD") pressDefense("dodge");
+      if (event.code === "KeyJ") pressDefense("jump");
+      if (state.phase === "choose" && /^[1-6]$/.test(event.key)) {
+        chooseMove(MOVES[Number(event.key) - 1].id);
+      }
+      if (event.code === "Escape") showMenu();
+    });
+
+    window.addEventListener("pointerdown", (event) => {
+      if (state.phase === "qte" || state.phase === "ring") {
+        const isButton = event.target.closest("button");
+        if (!isButton) commitTiming();
+      }
+    });
+
+    resetBattle(0, false);
+    els.menuOverlay.classList.remove("hidden");
+    window.requestAnimationFrame(updateAnimation);
+  </script>
+</body>
+</html>

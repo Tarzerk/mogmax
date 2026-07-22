@@ -809,7 +809,7 @@ transform mog_turn_drop:
     easeout 0.22 yoffset 0 alpha 1.0
 
 
-screen mog_battle_screen():
+screen mog_battle_legacy_screen():
     modal True
 
     on "show" action SetVariable("quick_menu", False)

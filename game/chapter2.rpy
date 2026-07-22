@@ -401,12 +401,12 @@ label chapter2_training:
     narrator "The other one's shoulders fold. He looks at the floor. The whole room knows exactly who won."
     show clav stern at clav_body
     c "That's a Mog Battle. Everything you built in here becomes a move."
-    c "Aura Blast applies pressure. Hold Frame answers force. Cringe slips through a block. Mewing makes yap hit nothing."
-    c "Read the tell. Give it the correct answer."
+    c "Yap is free pressure. Mog Stare hits hard. Galaxy Brain exposes weakness. Ratio Rush overwhelms. Power Nap restores Confidence."
+    c "Rotate the kit to build your Mog Meter. When they swing, parry with W or dodge with S. An early parry still becomes a block."
     hide clav
 
     narrator "A man in a black training shirt steps onto the mat. The name patch says COACH KAI. His posture says the patch was unnecessary."
-    narrator "Three lights switch on above him: ATTACK. BLOCK. YAP."
+    narrator "A timing line switches on between you. Kai raises one hand: green attacks can be parried, red attacks must be dodged."
     $ start_mog_battle("kai_tutorial")
     $ kai_tutorial_result = renpy.call_screen("mog_battle_screen")
     narrator "Kai taps RESTORE. Your Aura returns to {color=#69ff9a}100 / 100{/color}."
