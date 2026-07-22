@@ -54,6 +54,7 @@ default acne_game_state = "intro"
 default acne_feedback = "DERMAL SCAN READY"
 default acne_feedback_good = True
 default acne_flash_time = 0.0
+default acne_allow_quit = False
 
 
 init python:
@@ -539,27 +540,37 @@ init python:
     }
     ACNE_DIFFICULTY_PROFILES = {
         "normal": {
-            "max_time": 7.5,
-            "wave_floor": 6.0,
-            "clear_recovery": 0.25,
+            "initial_time": 8.5,
+            "max_time": 10.0,
+            "wave_floor": 8.0,
+            "clear_recovery": 0.45,
+            "time_bonuses": {
+                "small": 0.85,
+                "medium": 1.00,
+                "cyst": 0.65,
+            },
         },
         "hard": {
+            "initial_time": ACNE_INITIAL_TIME,
             "max_time": 6.5,
             "wave_floor": 5.0,
             "clear_recovery": 0.0,
+            "time_bonuses": ACNE_TIME_BONUSES,
         },
     }
 
     def _acne_rules():
         return ACNE_DIFFICULTY_PROFILES.get(renpy.store.acne_mode, ACNE_DIFFICULTY_PROFILES["normal"])
 
-    def reset_acne_minigame(mode="normal"):
+    def reset_acne_minigame(mode="normal", allow_quit=False):
         s = renpy.store
         if mode not in ACNE_DIFFICULTY_PROFILES:
             mode = "normal"
         s.acne_mode = mode
+        rules = ACNE_DIFFICULTY_PROFILES[mode]
+        s.acne_allow_quit = bool(allow_quit)
         s.acne_score = 0
-        s.acne_time_left = ACNE_INITIAL_TIME
+        s.acne_time_left = rules["initial_time"]
         s.acne_targets = []
         s.acne_spawn_timer = 0.4
         s.acne_next_id = 0
@@ -590,7 +601,8 @@ init python:
 
     def _acne_retry():
         mode = renpy.store.acne_mode
-        reset_acne_minigame(mode)
+        allow_quit = renpy.store.acne_allow_quit
+        reset_acne_minigame(mode, allow_quit)
         _acne_start()
 
     def _acne_stage(target):
@@ -753,8 +765,8 @@ init python:
             s.acne_best_combo = max(s.acne_best_combo, s.acne_combo)
             s.acne_combo_flash = 0.18
             recovery_scale = 0.65 if s.acne_combo < 3 else 0.85 if s.acne_combo < 5 else 1.0
-            time_bonus = ACNE_TIME_BONUSES[stage] * recovery_scale
             rules = _acne_rules()
+            time_bonus = rules["time_bonuses"][stage] * recovery_scale
             s.acne_time_left = min(rules["max_time"], s.acne_time_left + time_bonus)
 
             if clicked["hits"] < required_hits:
@@ -1375,6 +1387,10 @@ screen acne_pop_minigame():
     on "show" action SetVariable("quick_menu", False)
     on "hide" action SetVariable("quick_menu", True)
 
+    if acne_allow_quit:
+        key "game_menu" action Return("quit")
+        key "K_ESCAPE" action Return("quit")
+
     add Transform("images/minigames/acne_face.png", xysize=(1280, 720), fit="cover")
     add Solid("#02050432")
 
@@ -1413,6 +1429,19 @@ screen acne_pop_minigame():
         size 13
         color "#89948f"
         bold True
+
+    if acne_allow_quit:
+        textbutton "QUIT":
+            xpos 1124
+            ypos 96
+            xysize (118, 42)
+            background Solid("#101513dd")
+            hover_background Solid("#702f2f")
+            text_size 15
+            text_color "#d8e0dc"
+            text_hover_color "#ffffff"
+            text_bold True
+            action Return("quit")
 
     if acne_combo > 0 and acne_game_state == "playing":
         $ combo_rank = "CLEAN" if acne_combo < 4 else "SHARP" if acne_combo < 7 else "BRUTAL" if acne_combo < 10 else "FLAWLESS"
@@ -1560,7 +1589,7 @@ screen acne_pop_minigame():
                 color "#ffcf55"
                 bold True
 
-            text "5+ KOMBO UNLOCKS FULL TIME RECOVERY // MARKS COST 1.75 SECONDS":
+            text ("5+ KOMBO UNLOCKS FULL TIME RECOVERY // MARKS COST 1.75 SECONDS" if acne_mode == "hard" else "NORMAL: BIGGER CLOCK // COMBOS GIVE MORE RECOVERY"):
                 xalign 0.5
                 size 13
                 color "#ffcf55"
@@ -1572,7 +1601,7 @@ screen acne_pop_minigame():
                 color "#ff6969"
                 bold True
 
-            text ("FULL CLEAR ADDS +0.25 SEC RECOVERY" if acne_mode == "normal" else "HARD MODE: NO FULL-CLEAR RECOVERY"):
+            text ("FULL CLEAR ADDS +0.45 SEC RECOVERY" if acne_mode == "normal" else "HARD MODE: NO FULL-CLEAR RECOVERY"):
                 xalign 0.5
                 size 13
                 color ("#69e4ad" if acne_mode == "normal" else "#ffcf55")
@@ -1588,7 +1617,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_small.png":
                         xalign 0.5
-                    text "SMALL  +0.55 MAX":
+                    text ("SMALL  +0.85 MAX" if acne_mode == "normal" else "SMALL  +0.55 MAX"):
                         xalign 0.5
                         size 15
                         color "#e7ebe9"
@@ -1598,7 +1627,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_medium.png":
                         xalign 0.5
-                    text "MEDIUM  +0.45 MAX":
+                    text ("MEDIUM  +1.00 MAX" if acne_mode == "normal" else "MEDIUM  +0.45 MAX"):
                         xalign 0.5
                         size 15
                         color "#e7ebe9"
@@ -1608,7 +1637,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_cyst.png":
                         xalign 0.5
-                    text "CYST  +0.30 / HIT":
+                    text ("CYST  +0.65 / HIT" if acne_mode == "normal" else "CYST  +0.30 / HIT"):
                         xalign 0.5
                         size 15
                         color "#e7ebe9"

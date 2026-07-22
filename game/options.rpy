@@ -55,3 +55,4 @@ define config.mouse = {
 init python:
     build.classify('game/audio_check.rpy', None)
     build.classify('game/audio_check.rpyc', None)
+    build.classify('dist/**', None)
