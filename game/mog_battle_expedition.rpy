@@ -87,33 +87,35 @@ init 2 python:
             "patterns": (({"w": 1.15},), ({"w": 1.15}, {"w": 0.9})),
         },
         # Brayden: fast but FAIR — every combo has a fixed, learnable rhythm
-        # (short-short, short-short-LONG, etc). No dirty tells.
+        # (short-short, short-short-LONG, etc). No dirty tells. His windup is
+        # a crouch-and-spring, quicker than Kai's lean.
         "brayden": {
-            "dmg": 14, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.18,
+            "dmg": 17, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.18,
             "patterns": (
-                ({"w": 0.85}, {"w": 0.65}),
-                ({"w": 0.85}, {"w": 0.65}, {"w": 0.95}),
-                ({"w": 1.0, "red": True},),
-                ({"w": 0.9, "drain": True}, {"w": 0.7}),
+                ({"w": 0.75}, {"w": 0.58}),
+                ({"w": 0.75}, {"w": 0.58}, {"w": 0.85}),
+                ({"w": 0.9, "red": True},),
+                ({"w": 0.8, "drain": True}, {"w": 0.62}),
             ),
         },
         # Clav: fast AND a little unfair — "late" hits flash the tell only a
         # blink before impact, and phase-2 "notell" hits never flash at all.
+        # His windup barely moves: the glow is most of the warning you get.
         "clav": {
-            "dmg": 15, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.12,
+            "dmg": 18, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.12,
             "patterns": (
-                ({"w": 0.75}, {"w": 0.62}, {"w": 0.62}),
-                ({"w": 0.8, "late": True}, {"w": 0.62}),
-                ({"w": 1.0, "red": True}, {"w": 0.62}),
-                ({"w": 0.8, "drain": True}, {"w": 0.62, "feint": True}),
+                ({"w": 0.65}, {"w": 0.55}, {"w": 0.55}),
+                ({"w": 0.7, "late": True}, {"w": 0.55}),
+                ({"w": 0.9, "red": True}, {"w": 0.55}),
+                ({"w": 0.7, "drain": True}, {"w": 0.55, "feint": True}),
             ),
             "phase2": {
-                "dmg": 17, "feint": 0.22,
+                "dmg": 21, "feint": 0.25,
                 "patterns": (
-                    ({"w": 0.65}, {"w": 0.55}, {"w": 0.55}, {"w": 0.55}),
-                    ({"w": 0.7, "notell": True}, {"w": 0.55}, {"w": 0.85, "red": True}),
-                    ({"w": 0.6, "late": True}, {"w": 0.55, "feint": True}, {"w": 0.55}),
-                    ({"w": 0.7, "drain": True}, {"w": 0.55}, {"w": 0.55, "late": True}),
+                    ({"w": 0.58}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}),
+                    ({"w": 0.62, "notell": True}, {"w": 0.5}, {"w": 0.78, "red": True}),
+                    ({"w": 0.55, "late": True}, {"w": 0.5, "feint": True}, {"w": 0.5}),
+                    ({"w": 0.62, "drain": True}, {"w": 0.5}, {"w": 0.5, "late": True}),
                 ),
             },
         },
@@ -1043,7 +1045,10 @@ init 2 python:
                 if S["hit_elapsed"] >= S["impact_at"]:
                     S["hit_elapsed"] = S["impact_at"]
                     S["phase"] = "guided_frozen"
-            elif S["hit_elapsed"] >= S["impact_at"] + 0.08 and S["def_result"] is None:
+            elif S["hit_elapsed"] >= S["impact_at"] + 0.16 and S["def_result"] is None:
+                # Resolve the hit only after the dodge window (+0.13) has fully
+                # closed — otherwise a legit last-instant dodge could be beaten
+                # to the punch by this auto-resolve in the same frame.
                 _mogx_apply_defense("hit")
         renpy.restart_interaction()
 
@@ -1300,6 +1305,17 @@ transform mogx_enemy_windup:
     xoffset 0 yoffset 0 zoom 1.0
     easein 0.45 xoffset 42 yoffset -20 zoom 1.05
 
+# Brayden coils DOWN then springs up — a quicker, bouncier tell than Kai's.
+transform mogx_enemy_windup_brayden:
+    xoffset 0 yoffset 0 zoom 1.0
+    easein 0.16 yoffset 16 zoom 1.09
+    easein 0.20 xoffset 30 yoffset -28 zoom 1.05
+
+# Clav barely telegraphs: a slow, subtle coil — read the glow, not the body.
+transform mogx_enemy_windup_clav:
+    xoffset 0 yoffset 0 zoom 1.0
+    easein 0.55 xoffset 10 yoffset -6 zoom 0.985
+
 # The dive: leaves the windup pose and lands on the player's AVATAR (not the
 # HUD) exactly 0.30s later — the lunge is the parry/dodge timing cue.
 transform mogx_enemy_lunge:
@@ -1473,6 +1489,10 @@ screen mog_battle_screen():
                 at mogx_enemy_lunge
             elif phase == "guided_frozen":
                 at mogx_enemy_contact
+            elif phase in ("defense", "enemy_cringe") and S["battle_id"] == "brayden":
+                at mogx_enemy_windup_brayden
+            elif phase in ("defense", "enemy_cringe") and S["battle_id"] == "clav":
+                at mogx_enemy_windup_clav
             elif phase in ("defense", "enemy_cringe"):
                 at mogx_enemy_windup
             else:
