@@ -56,3 +56,12 @@ init python:
     build.classify('game/audio_check.rpy', None)
     build.classify('game/audio_check.rpyc', None)
     build.classify('dist/**', None)
+
+    # The mouse wheel no longer scrolls dialogue back/forward anywhere in the
+    # game — advancing is click/keyboard only. (Keyboard rollback and viewport
+    # scrolling in menus are unaffected.)
+    for _keysym in ("mousedown_4", "mousedown_5"):
+        if _keysym in config.keymap.get("rollback", []):
+            config.keymap["rollback"].remove(_keysym)
+        if _keysym in config.keymap.get("rollforward", []):
+            config.keymap["rollforward"].remove(_keysym)
