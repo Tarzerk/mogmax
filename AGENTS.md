@@ -29,6 +29,11 @@
 - Push the tag to GitHub. The workflow builds Windows/Linux, macOS, and web packages and publishes them on the matching GitHub Release.
 - Wait for the `Build distributables` workflow to finish successfully before uploading to itch.io.
 - Use the `MOGMAX-<version>-web.zip` release asset for itch.io. It must contain `index.html` at the ZIP root.
+- For reliable HTML5 uploads, extract the web ZIP and push the extracted folder with itch.io's Butler uploader:
+  `butler push /path/to/MOGMAX-<version>-web tarzerk/mogmax-testing:html5 --userversion <version>`
+- For the real page, use the same tested folder and channel name:
+  `butler push /path/to/MOGMAX-<version>-web tarzerk/mogmax:html5 --userversion <version>`
+- The browser uploader can fail on this roughly 164 MB build. Prefer Butler for release uploads.
 - Stage the browser build on the testing playground first:
   `https://tarzerk.itch.io/mogmax-testing`
 - Test the staged build at 1280x720, including the main menu, save/load, Chapter 1, Chapter 2 transitions, debug scene navigation, battles, and ending flow.
@@ -37,3 +42,4 @@
 - On both itch pages, mark only the newest web ZIP as `This file will be played in the browser`; hide or remove superseded browser builds so itch does not launch an old file.
 - Keep the embed at 1280x720, mobile friendly, with the fullscreen button enabled.
 - Do not change the real page's black/red theme during a release unless the user asks. The old Gigachad banner was intentionally removed.
+- Keep the real itch.io page set to `Draft` and hidden from the public until the user explicitly approves publishing it. Uploading a build is not permission to switch the page to `Public`.
