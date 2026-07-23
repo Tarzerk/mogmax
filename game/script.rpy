@@ -68,6 +68,12 @@ transform clav_body:
     xalign 0.7
     yalign 1.0
 
+transform clav_cinematic:
+    zoom 0.78
+    xalign 0.7
+    yalign 1.0
+    yoffset 25
+
 transform eugene_left:
     zoom 0.39
     xalign 0.23

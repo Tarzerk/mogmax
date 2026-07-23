@@ -524,7 +524,7 @@ label chapter2_return:
     play music "audio/desert_ambient.mp3" fadein 1.0 volume persistent.vol_bed
     narrator "Night. The desert unspools backward outside the window. You've been quiet a long time."
     p "So what was that, actually? All of it."
-    show clav smirk at clav_body with dissolve
+    show clav smirk at clav_cinematic with dissolve
     c "Proof. None of this started on your phone."
     c "You walked in an LTN. You're walking out a problem."
     hide clav with dissolve
