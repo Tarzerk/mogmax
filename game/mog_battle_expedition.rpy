@@ -239,7 +239,7 @@ init 2 python:
         "whoosh":  [("audio/whoosh_dodge.mp3", 0.85), ("audio/whoosh_dodge2.mp3", 0.85), ("audio/whoosh_dodge3.mp3", 0.85)],
         "heal":    ("audio/battle_health_recharge.mp3", 0.8),
         "mog":     ("audio/mogging_short.mp3", 1.0),
-        "miss":    ("audio/mew_reject.mp3", 0.55),
+        "miss":    ("audio/quiz_wrong.mp3", 0.7),
         "buff":    ("audio/scan_short.mp3", 0.6),
         "win":     ("audio/mew_complete.mp3", 0.9),
         "tap":     ("audio/typewriter-soft-click.mp3", 0.32),
@@ -636,6 +636,8 @@ init 2 python:
             _mogx_announce("RATIO'D 📉 %d HITS" % count, "purp")
         if count < 8:
             _mogx_gain_mog(-5)
+            if count > 0:
+                _mogx_sfx("quiz_no")
         if count >= 8 and S["ehp"] > 0:
             S["embarrassed"] = True
             _mogx_sfx("buff")
@@ -662,6 +664,7 @@ init 2 python:
         S["last_grade"] = grade
         if grade == "miss":
             _mogx_gain_mog(-5)
+            _mogx_sfx("quiz_no")
         heal = 30 if grade == "perfect" else 20 if grade == "good" else 12
         _mogx_heal_player(heal)
         cured = S["cringe"]
@@ -1526,6 +1529,7 @@ screen mog_battle_screen():
     $ phase = S["phase"]
     $ enemy_asset = config.get("enemy_asset") or "images/characters/harker/harker stopwatch.png"
     $ enemy_crop = config.get("enemy_crop") or (110, 50, 610, 790)
+    $ mogx_text_outlines = [(2, "#000000d8", 0, 1), (4, "#00000070", 0, 2)]
 
     timer 0.02 repeat True action Function(_mogx_tick)
 
@@ -1584,10 +1588,12 @@ screen mog_battle_screen():
     $ header = "%s  //  %s" % (config.get("title", "MOG BATTLE"), config["enemy_name"])
     text header:
         xpos 26 ypos 20 size 13 color "#aab4c5" bold True
+        outlines mogx_text_outlines
     textbutton "❓ HOW TO PLAY":
         xpos 1254 xanchor 1.0 ypos 12 padding (10, 6)
         background Solid("#111827c0") hover_background Solid("#1c2740")
         text_size 11 text_color "#d7dceb" text_bold True
+        text_outlines mogx_text_outlines
         action Function(_mogx_toggle_help)
 
     # ── ENEMY (upper right) ─────────────────────────────────────────
@@ -1637,19 +1643,24 @@ screen mog_battle_screen():
             add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(300, 200)) xalign 0.5 ypos 0
         text config["enemy_name"]:
             xpos 20 ypos 202 size 20 color "#f7f8fa" bold True
+            outlines mogx_text_outlines
         $ etitle = ("PHASE 2" if S["in_phase2"] else "PHASE 1")
         text ("%s  //  %s" % (etitle, S["battle_id"].replace("_", " ").upper())):
             xpos 20 ypos 229 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         text "EGO":
             xpos 20 ypos 252 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         text ("%d/%d" % (S["ehp"], S["emax"])):
             xpos 320 xanchor 1.0 ypos 252 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         add Solid("#222b3b") xpos 20 ypos 270 xysize (300, 9)
         add Solid("#ffb84d") xpos 20 ypos 270 xysize (int(300 * S["ehp"] / float(S["emax"])), 9)
         $ estatus = ("💫 BROKEN  " if S["stunned"] else "") + ("🫣 EMBARRASSED" if S["embarrassed"] else "")
         if estatus:
             text estatus:
                 xpos 20 ypos 288 size 14 color "#c07bff" bold True
+                outlines mogx_text_outlines
 
     # Enemy hit flash.
     if S["flash"] == "enemy":
@@ -1671,35 +1682,44 @@ screen mog_battle_screen():
             add Transform("images/minigames/acne_face.png", crop=(500, 40, 1050, 1050), fit="contain", xysize=(280, 176)) xpos 26 ypos 0
         text "YOU":
             xpos 26 ypos 176 size 20 color "#f7f8fa" bold True
+            outlines mogx_text_outlines
         text "ASPIRING MOGGER":
             xpos 26 ypos 202 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
 
         text "CONFIDENCE":
             xpos 0 ypos 226 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         text ("%d/%d" % (S["php"], S["pmax"])):
             xpos 340 xanchor 1.0 ypos 226 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         add Solid("#222b3b") xpos 0 ypos 244 xysize (340, 9)
         add Solid(_mogx_hp_color(S["php"], S["pmax"])) xpos 0 ypos 244 xysize (int(340 * S["php"] / float(S["pmax"])), 9)
 
         text "⚡ AURA":
             xpos 0 ypos 262 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         for pip in range(MOGX_AURA_MAX):
             if pip < S["aura"]:
-                text "⚡" xpos (86 + pip * 28) ypos 258 size 17
+                text "⚡" xpos (86 + pip * 28) ypos 258 size 17 outlines mogx_text_outlines
             else:
-                text "⚡" xpos (86 + pip * 28) ypos 258 size 17 at Transform(alpha=0.18)
+                text "⚡" xpos (86 + pip * 28) ypos 258 size 17 outlines mogx_text_outlines at Transform(alpha=0.18)
         text ("%d/%d" % (S["aura"], MOGX_AURA_MAX)):
             xpos 340 xanchor 1.0 ypos 262 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
 
         text "👑 MOG":
             xpos 0 ypos 288 size 10 color "#98a3b8" bold True
+            outlines mogx_text_outlines
         add Solid("#222b3b") xpos 86 ypos 291 xysize (214, 8)
         add Solid("#f15bb5" if S["mog"] < 100 else "#ffd75e") xpos 86 ypos 291 xysize (int(214 * S["mog"] / 100.0), 8)
         text ("%d%%" % S["mog"]):
             xpos 340 xanchor 1.0 ypos 287 size 10 color ("#ffd75e" if S["mog"] >= 100 else "#98a3b8") bold True
+            outlines mogx_text_outlines
         if S["cringe"]:
             text ("😬 CRINGE (%d turns left) — leaking ⚡, nap it off" % max(1, 3 - S["cringe_turns"])):
                 xpos 0 ypos 306 size 13 color "#ff5d6c" bold True
+                outlines mogx_text_outlines
 
     # ── Announcer ───────────────────────────────────────────────────
     if S["ann"] is not None:
@@ -1722,6 +1742,7 @@ screen mog_battle_screen():
     # ── Message band (top center, under the header) ─────────────────
     text S["message"]:
         xalign 0.5 ypos 52 xmaximum 1000 text_align 0.5 size 15 color "#d7dceb" bold True
+        outlines mogx_text_outlines
 
     # ── Skill deck (hidden while defending — the W/S buttons take its
     #    place in the bottom bar so the UI stays focused) ─────────────
@@ -1749,29 +1770,36 @@ screen mog_battle_screen():
                     fixed:
                         text skill["key"]:
                             xpos 2 ypos 0 size 10 color "#778197" bold True
+                            outlines mogx_text_outlines
                         if locked is not None and locked != "WAIT":
-                            text skill["icon"] xalign 0.5 ypos 4 size 30 at Transform(alpha=0.3)
+                            text skill["icon"] xalign 0.5 ypos 4 size 30 outlines mogx_text_outlines at Transform(alpha=0.3)
                         else:
-                            text skill["icon"] xalign 0.5 ypos 4 size 30
+                            text skill["icon"] xalign 0.5 ypos 4 size 30 outlines mogx_text_outlines
                         text skill["name"]:
                             xalign 0.5 ypos 48 size 14 color ("#f7f8fa" if locked is None else "#606879") bold True
+                            outlines mogx_text_outlines
                         text skill["kind"].upper():
                             xalign 0.5 ypos 68 size 9 color "#8791a5" bold True
+                            outlines mogx_text_outlines
                         if skill_id == "mogmax":
                             text ("READY!" if mog_ready else (locked if locked not in (None, "WAIT") else "%d%%" % S["mog"])):
                                 xalign 0.5 ypos 88 size 11 color ("#ffd75e" if mog_ready else "#5c6473") bold True
+                                outlines mogx_text_outlines
                         elif locked not in (None, "WAIT"):
                             text locked:
                                 xalign 0.5 ypos 88 size 10 color "#ff9d6c" bold True
+                                outlines mogx_text_outlines
                         else:
                             text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
                                 xalign 0.5 ypos 86 size 12 color "#ffd75e"
+                                outlines mogx_text_outlines
 
     # Skill hover description — sits on the free line just above the deck.
     $ deck_tt = GetTooltip()
     if deck_tt and phase == "player":
         text deck_tt:
             xalign 0.5 ypos 550 size 13 color "#aab4c5" text_align 0.5 xmaximum 1000
+            outlines mogx_text_outlines
 
     # ── Defense buttons (prototype-style, bottom center) ────────────
     if phase in ("defense", "guided_frozen", "defense_result") and S["hit"] is not None:
@@ -2106,7 +2134,7 @@ screen mogx_dialogue(S):
         padding (24, 18)
         vbox:
             spacing 8
-            text "COACH KAI":
+            text S["config"]["enemy_name"]:
                 size 11 color "#ffd75e" bold True
             text S["dlg_text"]:
                 size 17 color "#e8ecf8" line_spacing 4
