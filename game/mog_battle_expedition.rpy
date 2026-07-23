@@ -34,7 +34,7 @@ init 2 python:
         "sleep": {
             "key": "5", "name": "POWER NAP", "icon": "😴", "cost": 3,
             "kind": "sleepmaxx", "color": "#5eff9d",
-            "desc": "Heal Confidence and cure CRINGE. Time the bar.",
+            "desc": "Heal Confidence and cure CRINGE. Perfect timing refunds +1⚡.",
         },
         "mogmax": {
             "key": "6", "name": "MOGMAX", "icon": "👑", "cost": 0,
@@ -82,38 +82,65 @@ init 2 python:
             "dmg": 5, "heals": 0, "heal_amt": 0, "cringes": 0, "feint": 0.0,
             "patterns": (({"w": 1.25},), ({"w": 1.25}, {"w": 1.0})),
         },
+        # Ram notation: P = parryable, D = red dodge-only, ! = fast (short w),
+        # ... = long w on the next hit, ~ = "slow" drift ram, F = feint flag.
+        # "heavy" = 1.7x damage with a bigger dive and the heavy punch sound.
+        #
+        # EASY: 1-3 rams, consistent timing, no feints, D only as finisher.
         "kai_graduation": {
-            "dmg": 9, "heals": 1, "heal_amt": 15, "cringes": 1, "feint": 0.0,
-            "patterns": (({"w": 1.15},), ({"w": 1.15}, {"w": 0.9})),
+            "dmg": 12, "heals": 1, "heal_amt": 15, "cringes": 1, "feint": 0.0,
+            "patterns": (
+                ({"w": 1.15},),                                          # P /
+                ({"w": 0.95}, {"w": 0.95}),                              # P - P /
+                ({"w": 0.95}, {"w": 0.95}, {"w": 0.95}),                 # P - P - P /
+                ({"w": 0.95}, {"w": 1.35, "red": True, "heavy": True}),  # P ... D /
+                ({"w": 0.95}, {"w": 0.95}, {"w": 1.35, "red": True, "heavy": True}),  # signature P - P ... D /
+            ),
         },
         # Brayden: fast but FAIR — every combo has a fixed, learnable rhythm
-        # (short-short, short-short-LONG, etc). No dirty tells.
+        # (short-short, short-short-LONG, etc). No dirty tells. His windup is
+        # a crouch-and-spring, quicker than Kai's lean.
         "brayden": {
-            "dmg": 14, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.18,
+            # MEDIUM: acceleration, delayed rams, D anywhere, no feints.
+            "dmg": 17, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.0,
             "patterns": (
-                ({"w": 0.85}, {"w": 0.65}),
-                ({"w": 0.85}, {"w": 0.65}, {"w": 0.95}),
-                ({"w": 1.0, "red": True},),
-                ({"w": 0.9, "drain": True}, {"w": 0.7}),
+                ({"w": 0.9}, {"w": 0.45}),                               # P - !P /
+                ({"w": 0.45}, {"w": 1.2}),                               # !P ... P /
+                ({"w": 0.9}, {"w": 0.7}, {"w": 0.45}),                   # accelerating triple
+                ({"w": 1.0, "red": True, "heavy": True}, {"w": 0.8}, {"w": 0.7}),  # D ... P - P heavy opener
+                ({"w": 0.8}, {"w": 0.75, "red": True}, {"w": 0.9}),      # P - D - P
+                ({"w": 0.8}, {"w": 0.8}, {"w": 1.35}),                   # P - P ... P delayed final
+                ({"w": 0.45}, {"w": 0.45}, {"w": 1.2, "red": True, "heavy": True}),  # !P - !P ... D /
+                ({"w": 0.8, "drain": True, "windup": "zigzag"}, {"w": 0.62}),  # aura-drain juke
             ),
         },
         # Clav: fast AND a little unfair — "late" hits flash the tell only a
         # blink before impact, and phase-2 "notell" hits never flash at all.
+        # His windup barely moves: the glow is most of the warning you get.
         "clav": {
-            "dmg": 15, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.12,
+            # HARD: stutters, slow rams, feints, D with fast follow-ups,
+            # shared openers with different endings.
+            "dmg": 18, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.0,
             "patterns": (
-                ({"w": 0.75}, {"w": 0.62}, {"w": 0.62}),
-                ({"w": 0.8, "late": True}, {"w": 0.62}),
-                ({"w": 1.0, "red": True}, {"w": 0.62}),
-                ({"w": 0.8, "drain": True}, {"w": 0.62, "feint": True}),
+                ({"w": 1.3}, {"w": 0.7}, {"w": 0.45}),                   # P ... P - !P delayed triple
+                ({"w": 0.45}, {"w": 0.45}, {"w": 1.0, "slow": True}),    # !P - !P ... ~P
+                ({"w": 1.0, "slow": True, "windup": "spin"}, {"w": 0.45}),  # ~P - !P
+                ({"w": 0.95, "red": True, "heavy": True}, {"w": 0.45}),  # D - !P wall rebound
+                ({"w": 0.7}, {"w": 0.7}, {"w": 1.2, "red": True, "heavy": True}, {"w": 0.45}),  # P - P ... D - !P
+                ({"w": 1.15, "feint": True},),                           # F ... P
+                ({"w": 0.7, "drain": True, "windup": "spin"}, {"w": 0.55}),
             ),
             "phase2": {
-                "dmg": 17, "feint": 0.22,
+                "dmg": 21, "feint": 0.0,
                 "patterns": (
-                    ({"w": 0.65}, {"w": 0.55}, {"w": 0.55}, {"w": 0.55}),
-                    ({"w": 0.7, "notell": True}, {"w": 0.55}, {"w": 0.85, "red": True}),
-                    ({"w": 0.6, "late": True}, {"w": 0.55, "feint": True}, {"w": 0.55}),
-                    ({"w": 0.7, "drain": True}, {"w": 0.55}, {"w": 0.55, "late": True}),
+                    # shared opener P - P, three endings:
+                    ({"w": 0.7}, {"w": 0.7}, {"w": 1.25, "red": True, "heavy": True}),   # A: delayed heavy D
+                    ({"w": 0.7}, {"w": 0.7}, {"w": 0.45}, {"w": 0.45}),                  # B: two fast rams
+                    ({"w": 0.7}, {"w": 0.7}, {"w": 1.0, "slow": True}),                  # C: slow ram
+                    ({"w": 1.2}, {"w": 1.2}, {"w": 0.45}),                               # stutter charge
+                    ({"w": 1.0, "feint": True, "windup": "spin"}, {"w": 0.95, "red": True, "heavy": True}),  # F ... D
+                    ({"w": 0.62, "notell": True}, {"w": 0.5}, {"w": 0.8, "red": True, "heavy": True}),
+                    ({"w": 0.55, "late": True}, {"w": 0.5}, {"w": 0.9, "heavy": True}),
                 ),
             },
         },
@@ -153,22 +180,22 @@ init 2 python:
         {"do": "dlg", "text": "{b}ATTACKING:{/b} every skill is its own minigame — quizzes, stare-downs, mash-offs. But {b}1 · YAP{/b} 🗣️ is the freebie: instant jab, small damage, builds {b}+1⚡ Aura{/b}. Try it on me."},
         {"do": "teach", "skill": "yap"},
         {"do": "dlg", "text": "See the {b}⚡ bolts{/b} under your Confidence? Yap jabs and parries fill them, skills spend them. {b}Aura is everything.{/b}"},
-        {"do": "dlg", "text": "{b}DEFENSE:{/b} when I swing, a mark flashes and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
+        {"do": "dlg", "text": "{b}DEFENSE:{/b} when I attack, I {b}glow{/b} — {color=#ff5d6c}{b}RED{/b}{/color} or {color=#ffd75e}{b}YELLOW{/b}{/color} — and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
         {"do": "guided", "kind": "dodge", "reps": 2,
          "mid": "THAT moment. Feel it. One more frozen rep."},
-        {"do": "dlg", "text": "Real time now — no freeze. Watch the swing, press {b}S{/b} near impact. A {b}last-second dodge = PERFECT DODGE (+1⚡){/b}. {b}Dodge 2 swings.{/b}"},
+        {"do": "dlg", "text": "Real time now — no freeze. Watch the dive, press {b}S{/b} near impact. Dodges earn nothing by themselves — but take {b}zero hits{/b} from an attack and you bank {b}+1⚡ UNTOUCHED{/b}. {b}Dodge 2 swings.{/b}"},
         {"do": "real", "kind": "dodge", "reps": 2,
          "attack": {"w": 1.4, "red": True}, "rep_dmg": 4,
          "mid": "One. Again.",
          "fail": "Too slow — press {b}S{/b} as the swing lands. One more time."},
-        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+2⚡{/b}, heal a little, and {b}counterattack{/b}. One rule: {b}🔴 RED attacks can NEVER be parried{/b} — only dodged. Two frozen reps."},
+        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+1⚡{/b}, heal {b}+5{/b}, feed the {b}Mog Meter{/b}, and {b}counterattack{/b}. There are no half-parries — you land it or you don't. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
         {"do": "guided", "kind": "parry", "reps": 2,
          "mid": "That's the parry window — tighter than the dodge, better rewards. Again."},
         {"do": "dlg", "text": "Now in real time. Watch the swing, press {b}W{/b} at impact. {b}Land 2 parries.{/b}"},
         {"do": "real", "kind": "parry", "reps": 2,
          "attack": {"w": 1.4}, "rep_dmg": 4,
          "mid": "One. Again.",
-         "fail": "Almost. Watch the {b}❗{/b}, then {b}W{/b} {i}right as the swing lands{/i} — not when the mark appears. Again."},
+         "fail": "Almost. Watch for the {color=#ffd75e}{b}yellow glow{/b}{/color}, then {b}W{/b} {i}right as the swing lands{/i} — not when the glow appears. Again."},
         {"do": "dlg", "text": "CLEAN. 🔥 Parries also {b}restore Confidence{/b} and fill your {b}👑 MOG METER{/b} — landed attacks fill it too, and getting hit or flubbing a minigame {b}drains{/b} it. Full meter lights up {b}6 · MOGMAX{/b}."},
         {"do": "dlg", "text": "BRAIN TIME: press {b}3 · GALAXY BRAIN{/b} 🧠 — it quizzes you with a {b}vocab word{/b}. Answer right for a big-brain blast {b}+ a ⚡ refund{/b}. I'll spot you the Aura."},
         {"do": "teach", "skill": "brain",
@@ -179,7 +206,9 @@ init 2 python:
         {"do": "dlg", "text": "Chaos lesson: {b}4 · RATIO RUSH{/b} 🤡 — hammer {b}J{/b} and {b}K{/b}, {b}alternating{/b}, fast as you can. Every press is a hit. Get {b}8+ hits{/b} to pass (that also {b}Embarrasses{/b} your opponent)."},
         {"do": "teach", "skill": "jester",
          "fail": "Not enough hits — need {b}8+{/b}. Alternate faster, don't double-tap the same key. Run it back."},
-        {"do": "dlg", "text": "Recovery: {b}5 · POWER NAP{/b} 😴 — restores Confidence and {b}cures 😬 CRINGE{/b} (bosses WILL cringe you, and you can't dodge it). Time the bar — land the {b}green or gold{/b}."},
+        {"do": "dlg", "text": "Next one you need to {b}feel{/b}, not hear about. Hold still — this is a {b}CRINGE{/b}."},
+        {"do": "cringe_hit"},
+        {"do": "dlg", "text": "That. 😬 You're {b}CRINGED{/b}: every attack {b}-35%{/b} and you {b}leak 1⚡ every turn{/b} — and look at your Confidence. It hangs on for {b}three turns{/b}, bosses WILL do this to you, and you {b}can't dodge it{/b}. The fast cure: {b}5 · POWER NAP{/b} 😴 — time the bar into the {b}green or gold{/b} to heal up AND clear it now."},
         {"do": "teach", "skill": "sleep",
          "fail": "Restless sleep — you missed the zone. Watch the marker, SPACE in the green. Again."},
         {"do": "dlg", "text": "Last one. I'm filling your {b}👑 MOG METER{/b}. Press {b}6 · MOGMAX{/b}: the room goes dark and you {b}DRAW THE M{/b} — hit the five circles in order as they light. You pass with {b}4 of 5{/b}."},
@@ -202,9 +231,12 @@ init 2 python:
         "hit":     ("audio/battle_aura_beam.mp3", 0.5),
         "bighit":  ("audio/mogging_short.mp3", 0.8),
         "perfect": ("audio/battle_super_effective.mp3", 0.75),
-        "parry":   ("audio/parry_block.mp3", 0.95),
-        "hurt":    ("audio/punch_impact.mp3", 0.9),
-        "whoosh":  ("audio/whoosh_dodge.mp3", 0.85),
+        # Lists = variants; each play picks one at random so combos don't
+        # sound like a stuck sample.
+        "parry":   [("audio/parry_block.mp3", 0.95), ("audio/parry_block2.mp3", 0.95), ("audio/parry_block3.mp3", 0.95)],
+        "hurt":    [("audio/punch_impact.mp3", 0.9), ("audio/punch_impact2.mp3", 0.9)],
+        "hurt_heavy": ("audio/punch_heavy.mp3", 1.0),
+        "whoosh":  [("audio/whoosh_dodge.mp3", 0.85), ("audio/whoosh_dodge2.mp3", 0.85), ("audio/whoosh_dodge3.mp3", 0.85)],
         "heal":    ("audio/battle_health_recharge.mp3", 0.8),
         "mog":     ("audio/mogging_short.mp3", 1.0),
         "miss":    ("audio/mew_reject.mp3", 0.55),
@@ -219,7 +251,10 @@ init 2 python:
     }
 
     def _mogx_sfx(name, channel="battle_sfx"):
-        path, vol = MOGX_SFX[name]
+        entry = MOGX_SFX[name]
+        if isinstance(entry, list):
+            entry = renpy.random.choice(entry)
+        path, vol = entry
         _mogx_audio(path, vol, channel)
 
     # ------------------------------------------------------------------
@@ -256,6 +291,8 @@ init 2 python:
             "last_grade": None,
             # Enemy attack execution
             "queue": [], "queue_idx": 0, "hit": None,
+            "turn_hits": 0, "turn_pdodges": 0, "turn_parries": 0,
+            "turn_took_hit": False, "cringe_turns": 0,
             "hit_elapsed": 0.0, "impact_at": 0.0, "alert_at": 0.0,
             "alert_on": False, "alert_played": False,
             "def_result": None, "def_lock": 0.0, "def_pose": None,
@@ -264,7 +301,7 @@ init 2 python:
             "qte_elapsed": 0.0,
             "mash_count": 0, "mash_last": None,
             "quiz": None, "word_bag": [],
-            "osu_step": 0, "osu_hits": 0, "osu_clock": 0.0,
+            "osu_step": 0, "osu_hits": 0, "osu_clock": 0.0, "osu_results": [],
             # Tutorial interpreter
             "tut_idx": 0, "tut_reps": 0, "tut_free": False,
             "dlg_text": None, "dlg_next": None,
@@ -359,7 +396,7 @@ init 2 python:
             S["ehp"] += healed
             _mogx_float("enemy", "+%d EGO 😏" % healed, "green")
 
-    def _mogx_damage_player(amount):
+    def _mogx_damage_player(amount, heavy=False):
         S = mog_battle
         amount = max(0, int(round(amount)))
         if S["tutorial"]:
@@ -367,9 +404,9 @@ init 2 python:
         S["php"] = max(0, S["php"] - amount)
         S["stats"]["hits_taken"] += 1
         _mogx_gain_mog(-6)
-        _mogx_float("player", "-%d" % amount, "red")
+        _mogx_float("player", ("💥 -%d" % amount) if heavy else ("-%d" % amount), "red")
         _mogx_flash("player")
-        _mogx_sfx("hurt")
+        _mogx_sfx("hurt_heavy" if heavy else "hurt")
         if S["php"] <= S["pmax"] * 0.25:
             _mogx_audio("audio/battle_low_health.mp3", 0.55, "battle_warning")
         return amount
@@ -412,11 +449,11 @@ init 2 python:
         S["aura"] = max(0, S["aura"] - skill["cost"])
         if skill_id not in ("yap", "mogmax"):
             S["pending_cooldown"] = skill_id
-        # Cringe weakens the very next attack (Power Nap excluded), then clears.
+        # Cringe weakens EVERY attack while active (Power Nap excluded) and
+        # only Power Nap clears it — see the per-turn Aura leak in end_round.
         S["var_mult"] = 1.0
         if S["cringe"] and skill_id != "sleep":
             S["var_mult"] = 0.65
-            S["cringe"] = False
             _mogx_float("player", "😬 -35%", "red")
         S["last_grade"] = None
         S["qte_elapsed"] = 0.0
@@ -444,6 +481,7 @@ init 2 python:
             S["osu_step"] = 0
             S["osu_hits"] = 0
             S["osu_clock"] = 0.0
+            S["osu_results"] = []
             S["message"] = "DRAW THE M // Hit each circle as it glows, 1 through 5."
             _mogx_announce("👑 M O G M A X 👑", "gold")
             _mogx_sfx("mog")
@@ -628,8 +666,11 @@ init 2 python:
         _mogx_heal_player(heal)
         cured = S["cringe"]
         S["cringe"] = False
+        S["cringe_turns"] = 0
         if grade == "perfect":
             _mogx_announce("QUALITY REM 💤", "green")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "green")
         elif cured:
             _mogx_announce("STATUS CURED 😌", "green")
         S["message"] = "Power Nap // +%d Confidence%s." % (heal, ", CRINGE cured" if cured else "")
@@ -649,11 +690,12 @@ init 2 python:
         S = mog_battle
         if S["phase"] != "mogmax":
             return
+        S["osu_results"].append(hit)
         if hit:
             S["osu_hits"] += 1
             _mogx_sfx("step")
         else:
-            _mogx_sfx("miss")
+            _mogx_sfx("quiz_no")
         S["osu_step"] += 1
         S["osu_clock"] = 0.0
         if S["osu_step"] >= 5:
@@ -676,6 +718,8 @@ init 2 python:
             perfects = 1
             _mogx_announce("FULL COMBO M! 👑", "gold")
             _mogx_sfx("perfect")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "gold")
         if S["ehp"] > 0:
             if hits >= 4:
                 S["stunned"] = True
@@ -768,8 +812,12 @@ init 2 python:
         S["queue"] = pattern
         S["queue_idx"] = 0
         S["counter"] = 0
-        S["message"] = "%s attacks! W = parry · S = dodge%s" % (
-            name, " · %d-HIT COMBO!" % len(pattern) if len(pattern) > 1 else "")
+        S["turn_hits"] = 0
+        S["turn_pdodges"] = 0
+        S["turn_parries"] = 0
+        S["turn_took_hit"] = False
+        # Deliberately does NOT announce the combo length — read the rhythm.
+        S["message"] = "%s attacks! W = parry · S = dodge" % name
         S["phase"] = "enemy_intro"
         renpy.restart_interaction()
 
@@ -790,8 +838,9 @@ init 2 python:
         if S["phase"] != "enemy_cringe":
             return
         S["cringe"] = True
+        S["cringe_turns"] = 0
         _mogx_float("player", "😬", "red")
-        _mogx_announce("CRINGED 😬 UNDODGEABLE — NAP IT OFF", "red")
+        _mogx_announce("CRINGED 😬 — LEAKING AURA. NAP IT OFF", "red")
         _mogx_sfx("miss")
         S["phase"] = "enemy_result"
         renpy.restart_interaction()
@@ -849,10 +898,11 @@ init 2 python:
         in_dodge = MOGX_DODGE_WIN[0] <= dt <= MOGX_DODGE_WIN[1]
         if kind == "parry":
             if in_parry:
+                # A landed parry IS perfect — there's only one tier.
                 if hit.get("red"):
                     _mogx_apply_defense("failparry")
                 else:
-                    _mogx_apply_defense("perfect" if in_perfect else "parry")
+                    _mogx_apply_defense("parry")
             elif dt < MOGX_PARRY_WIN[0]:
                 _mogx_float("player", "too early!", "blue")
                 _mogx_sfx("miss")
@@ -871,52 +921,47 @@ init 2 python:
             return
         hit = S["hit"]
         S["def_result"] = result
+        S["turn_hits"] += 1
         dmg = S.get("rep_dmg_override") or S["edmg"]
+        if hit.get("heavy"):
+            dmg = int(round(dmg * 1.7))
         if S["embarrassed"]:
             dmg = int(round(dmg * 0.6))
 
-        if result == "perfect":
+        if result == "parry":
             S["stats"]["parries"] += 1
-            S["stats"]["perfect_parries"] += 1
+            S["turn_parries"] += 1
             S["def_pose"] = "parry"
-            _mogx_announce("PERFECT PARRY!", "gold")
+            _mogx_announce("PARRY!", "gold")
             _mogx_sfx("parry")
-            _mogx_sfx("perfect", "battle_impact")
-            _mogx_gain_aura(3)
-            _mogx_float("aura", "+3⚡", "gold")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "gold")
             if S["php"] < S["pmax"]:
-                _mogx_heal_player(8)
-            _mogx_gain_mog(34)
-            S["counter"] += 8
-        elif result == "parry":
-            S["stats"]["parries"] += 1
-            S["def_pose"] = "parry"
-            _mogx_announce("PARRY!", "blue")
-            _mogx_sfx("parry")
-            _mogx_gain_aura(2)
-            _mogx_float("aura", "+2⚡", "blue")
-            if S["php"] < S["pmax"]:
-                _mogx_heal_player(4)
-            _mogx_gain_mog(12)
-            S["counter"] += 5
+                _mogx_heal_player(5)
+            _mogx_gain_mog(20)
+            S["counter"] += 6
         elif result == "pdodge":
             S["def_pose"] = "dodge"
+            S["turn_pdodges"] += 1
             _mogx_announce("PERFECT DODGE 💨✨", "purp")
+            # Whoosh + a light chime only — the "super effective" smack reads
+            # as taking a hit, which is exactly wrong for a clean dodge.
+            # Aura pays out only for a FLAWLESS string (see finish_enemy_turn).
             _mogx_sfx("whoosh")
-            _mogx_sfx("perfect", "battle_impact")
-            _mogx_gain_aura(1)
-            _mogx_float("aura", "+1⚡", "purp")
+            _mogx_sfx("step", "battle_impact")
         elif result == "dodge":
             S["def_pose"] = "dodge"
             _mogx_announce("DODGED 💨", "purp")
             _mogx_sfx("whoosh")
         elif result == "failparry":
             S["def_pose"] = "hit"
+            S["turn_took_hit"] = True
             _mogx_announce("CAN'T PARRY THAT ❌", "red")
-            _mogx_damage_player(dmg)
+            _mogx_damage_player(dmg, heavy=hit.get("heavy"))
         else:  # hit
             S["def_pose"] = "hit"
-            _mogx_damage_player(dmg)
+            S["turn_took_hit"] = True
+            _mogx_damage_player(dmg, heavy=hit.get("heavy"))
             if hit.get("drain") and S["aura"] > 0:
                 stolen = min(2, S["aura"])
                 S["aura"] -= stolen
@@ -943,8 +988,6 @@ init 2 python:
             return
         S["queue_idx"] += 1
         if S["queue_idx"] < len(S["queue"]):
-            S["message"] = "COMBO %d/%d // Reset. Read the next impact." % (
-                S["queue_idx"] + 1, len(S["queue"]))
             _mogx_start_hit()
         else:
             _mogx_finish_enemy_turn()
@@ -952,6 +995,11 @@ init 2 python:
     def _mogx_finish_enemy_turn():
         S = mog_battle
         S["embarrassed"] = False
+        # Take ZERO hits across the whole string — by any mix of parries and
+        # dodges — and bank +1 Aura.
+        if S["turn_hits"] > 0 and not S["turn_took_hit"]:
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "UNTOUCHED ✨ +1⚡", "purp")
         if S["counter"] > 0 and S["php"] > 0 and S["ehp"] > 0:
             _mogx_announce("COUNTER!", "gold")
             _mogx_damage_enemy(S["counter"], "gold")
@@ -975,6 +1023,17 @@ init 2 python:
             return
         S["cooldown"] = S["pending_cooldown"]
         S["pending_cooldown"] = None
+        # Cringe leaks Aura each turn, but fades on its own after 3 turns so
+        # a broke player can't get locked out of ever affording the nap.
+        if S["cringe"]:
+            if S["aura"] > 0:
+                S["aura"] -= 1
+                _mogx_float("aura", "😬 -1⚡", "red")
+            S["cringe_turns"] += 1
+            if S["cringe_turns"] >= 3:
+                S["cringe"] = False
+                S["cringe_turns"] = 0
+                _mogx_float("player", "😮‍💨 cringe faded", "green")
         S["round"] += 1
         S["stats"]["turns"] += 1
         S["selected"] = None
@@ -1043,7 +1102,10 @@ init 2 python:
                 if S["hit_elapsed"] >= S["impact_at"]:
                     S["hit_elapsed"] = S["impact_at"]
                     S["phase"] = "guided_frozen"
-            elif S["hit_elapsed"] >= S["impact_at"] + 0.08 and S["def_result"] is None:
+            elif S["hit_elapsed"] >= S["impact_at"] + 0.16 and S["def_result"] is None:
+                # Resolve the hit only after the dodge window (+0.13) has fully
+                # closed — otherwise a legit last-instant dodge could be beaten
+                # to the punch by this auto-resolve in the same frame.
                 _mogx_apply_defense("hit")
         renpy.restart_interaction()
 
@@ -1098,6 +1160,18 @@ init 2 python:
             S["phase"] = "player"
             S["message"] = "LESSON // Use %s %s." % (
                 MOGX_SKILLS[skill]["name"], MOGX_SKILLS[skill]["icon"])
+        elif kind == "cringe_hit":
+            # Scripted: Kai cringes you and drops your Confidence so the
+            # Power Nap lesson has something real to heal and cure.
+            S["cringe"] = True
+            S["cringe_turns"] = 0
+            S["php"] = min(S["php"], 40)
+            _mogx_float("player", "😬", "red")
+            _mogx_flash("player")
+            _mogx_sfx("hurt")
+            _mogx_announce("CRINGED 😬", "red")
+            S["message"] = "Kai posts your L in the group chat. CRINGE applied."
+            S["phase"] = "tut_beat"
         elif kind == "guided":
             S["tut_reps"] = 0
             _mogx_tut_guided_rep()
@@ -1135,8 +1209,8 @@ init 2 python:
             S["def_pose"] = "parry"
             _mogx_announce("PARRY!", "blue")
             _mogx_sfx("parry")
-            _mogx_gain_aura(2)
-            _mogx_float("aura", "+2⚡", "blue")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "blue")
         else:
             S["def_pose"] = "dodge"
             _mogx_announce("DODGED 💨", "purp")
@@ -1145,6 +1219,13 @@ init 2 python:
             _mogx_float("aura", "+1⚡", "purp")
         S["phase"] = "guided_result"
         renpy.restart_interaction()
+
+    def _mogx_tut_beat_done():
+        S = mog_battle
+        if S["phase"] != "tut_beat":
+            return
+        S["tut_idx"] += 1
+        _mogx_tut_run()
 
     def _mogx_guided_done():
         S = mog_battle
@@ -1248,7 +1329,7 @@ init 2 python:
             "aura_kept": max(0, S["php"]),
             "rounds": S["round"],
             "perfect_attacks": stats["perfects"],
-            "perfect_defenses": stats["perfect_parries"],
+            "perfect_defenses": stats["parries"],
             "parries": stats["parries"],
             "hits_taken": stats["hits_taken"],
         }
@@ -1290,27 +1371,74 @@ label battle_kai_graduation:
 # ----------------------------------------------------------------------
 # Transforms
 # ----------------------------------------------------------------------
+# Every enemy-state transform opens with a FULL reset (xoffset/yoffset/zoom/
+# rotate) — Ren'Py carries unset properties over when transforms swap, which
+# left interrupted spins stuck mid-rotation (upside-down enemies).
 transform mogx_enemy_idle:
-    yoffset 0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     ease 1.2 yoffset -6
     ease 1.2 yoffset 0
     repeat
 
 transform mogx_enemy_windup:
-    xoffset 0 yoffset 0 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     easein 0.45 xoffset 42 yoffset -20 zoom 1.05
 
-# The dive: leaves the windup pose and lands on the player's AVATAR (not the
-# HUD) exactly 0.30s later — the lunge is the parry/dodge timing cue.
+# Brayden coils DOWN then springs up — a quicker, bouncier tell than Kai's.
+transform mogx_enemy_windup_brayden:
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
+    easein 0.16 yoffset 16 zoom 1.09
+    easein 0.20 xoffset 30 yoffset -28 zoom 1.05
+
+# Clav barely telegraphs: a slow, subtle coil — read the glow, not the body.
+transform mogx_enemy_windup_clav:
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
+    easein 0.55 xoffset 10 yoffset -6 zoom 0.985
+
+# Zig-zag windup: jukes side to side before committing.
+transform mogx_enemy_windup_zigzag:
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
+    block:
+        linear 0.09 xoffset -26
+        linear 0.09 xoffset 26
+        repeat 3
+    easein 0.14 xoffset 30 yoffset -16 zoom 1.05
+
+# Spin windup: two full spins, then winds up to full speed.
+transform mogx_enemy_windup_spin:
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
+    linear 0.26 rotate 360
+    rotate 0
+    linear 0.26 rotate 360
+    rotate 0
+    easein 0.20 xoffset 26 yoffset -14 zoom 1.14
+
+# The dive: leaves the windup pose and rams the player's AVATAR head-on
+# exactly 0.30s later — the lunge is the parry/dodge timing cue.
 transform mogx_enemy_lunge:
-    xoffset 42 yoffset -20 zoom 1.05
-    easein 0.30 xoffset -710 yoffset 165 zoom 1.32
+    xoffset 42 yoffset -20 zoom 1.05 rotate 0
+    easein 0.30 xoffset -795 yoffset 0 zoom 1.32
     pause 0.14
     easeout 0.28 xoffset 0 yoffset 0 zoom 1.0
 
+# Heavy dive: slower and bigger — the weight of the swing is readable.
+transform mogx_enemy_lunge_heavy:
+    xoffset 42 yoffset -20 zoom 1.05 rotate 0
+    easein 0.38 xoffset -795 yoffset 0 zoom 1.48
+    pause 0.16
+    easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
+
+# Slow ram (~): drifts across the arena — defend when it ARRIVES, not when
+# it starts moving.
+transform mogx_enemy_lunge_slow:
+    xoffset 42 yoffset -20 zoom 1.05 rotate 0
+    easein 0.60 xoffset -795 yoffset 0 zoom 1.36
+    pause 0.14
+    easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
+
 # Frozen-time lesson: held at the moment of contact.
 transform mogx_enemy_contact:
-    xoffset -710 yoffset 165 zoom 1.32
+    xoffset -795 yoffset 0 zoom 1.32 rotate 0
 
 # Whole player box (avatar + bars) rattles when a hit connects.
 transform mogx_box_shake:
@@ -1334,10 +1462,17 @@ transform mogx_player_dodge:
     easeout 0.10 xoffset -80 alpha 0.3
     easein 0.22 xoffset 0 alpha 1.0
 
+# Parry: the player shoves INTO the attack (up-right, toward the enemy).
 transform mogx_player_parry:
-    zoom 1.0
-    easeout 0.09 zoom 1.07
-    easein 0.18 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0
+    easeout 0.10 xoffset 48 yoffset -26 zoom 1.07
+    ease 0.24 xoffset 0 yoffset 0 zoom 1.0
+
+# ...and the enemy is knocked off the contact point, rocking back past home.
+transform mogx_enemy_parried:
+    xoffset -795 yoffset 0 zoom 1.32 rotate 0
+    easeout 0.24 xoffset 85 yoffset -45 zoom 1.02 rotate 9
+    ease 0.22 xoffset 0 yoffset 0 zoom 1.0 rotate 0
 
 transform mogx_impact_flash:
     alpha 0.85
@@ -1408,9 +1543,12 @@ screen mog_battle_screen():
     elif phase == "enemy_cringe":
         timer 0.9 action Function(_mogx_apply_enemy_cringe)
     elif phase == "defense_result":
-        timer 0.72 action Function(_mogx_hit_resolved)
+        # Mid-combo the next hit chains fast; only the last hit breathes.
+        timer (0.30 if S["queue_idx"] + 1 < len(S["queue"]) else 0.72) action Function(_mogx_hit_resolved)
     elif phase == "guided_result":
         timer 0.75 action Function(_mogx_guided_done)
+    elif phase == "tut_beat":
+        timer 1.2 action Function(_mogx_tut_beat_done)
     elif phase in ("enemy_result", "break_result"):
         timer 0.85 action Function(_mogx_end_round)
 
@@ -1446,8 +1584,6 @@ screen mog_battle_screen():
     $ header = "%s  //  %s" % (config.get("title", "MOG BATTLE"), config["enemy_name"])
     text header:
         xpos 26 ypos 20 size 13 color "#aab4c5" bold True
-    text ("ROUND %d" % S["round"]):
-        xpos 1130 xanchor 1.0 ypos 20 size 13 color "#aab4c5" bold True
     textbutton "❓ HOW TO PLAY":
         xpos 1254 xanchor 1.0 ypos 12 padding (10, 6)
         background Solid("#111827c0") hover_background Solid("#1c2740")
@@ -1458,16 +1594,46 @@ screen mog_battle_screen():
     fixed:
         xpos 800 ypos 76 xysize (360, 330)
         # Only the character art travels; name and EGO bar stay anchored.
+        $ hit_heavy = S["hit"] is not None and S["hit"].get("heavy")
+        $ hit_slow = S["hit"] is not None and S["hit"].get("slow")
+        $ lunge_lead = 0.60 if hit_slow else 0.38 if hit_heavy else 0.30
+        # Per-hit windup style ("zigzag"/"spin"), else the enemy's default.
+        $ windup_style = (S["hit"].get("windup") if S["hit"] else None) or {"brayden": "brayden", "clav": "clav"}.get(S["battle_id"], "lean")
         fixed:
             xysize (360, 210)
-            if phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - 0.30:
+            if phase in ("defense_result", "guided_result") and S["def_pose"] == "parry":
+                at mogx_enemy_parried
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead and hit_slow:
+                at mogx_enemy_lunge_slow
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead and hit_heavy:
+                at mogx_enemy_lunge_heavy
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead:
                 at mogx_enemy_lunge
             elif phase == "guided_frozen":
                 at mogx_enemy_contact
+            elif phase in ("defense", "enemy_cringe") and windup_style == "zigzag":
+                at mogx_enemy_windup_zigzag
+            elif phase in ("defense", "enemy_cringe") and windup_style == "spin":
+                at mogx_enemy_windup_spin
+            elif phase in ("defense", "enemy_cringe") and windup_style == "brayden":
+                at mogx_enemy_windup_brayden
+            elif phase in ("defense", "enemy_cringe") and windup_style == "clav":
+                at mogx_enemy_windup_clav
             elif phase in ("defense", "enemy_cringe"):
                 at mogx_enemy_windup
             else:
                 at mogx_enemy_idle
+            # Attack tell: the enemy itself glows — RED = unparryable (dodge
+            # only), YELLOW = parry or dodge. The glow silhouette sits behind
+            # the art and travels with the lunge. Always present (alpha 0 when
+            # inactive) so toggling it never restarts the motion transforms.
+            $ tell_on = phase in ("defense", "guided_frozen") and S["alert_on"]
+            $ tell_color = "#ff5d6c" if (S["hit"] and S["hit"].get("red")) else "#ffd75e"
+            # Two-layer glow: a wide soft halo plus a tight bright rim.
+            add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(348, 234), matrixcolor=ColorizeMatrix(Color(tell_color), Color(tell_color))):
+                xalign 0.5 ypos -17 alpha (0.5 if tell_on else 0.0)
+            add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(324, 218), matrixcolor=ColorizeMatrix(Color(tell_color), Color(tell_color))):
+                xalign 0.5 ypos -9 alpha (0.95 if tell_on else 0.0)
             add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(300, 200)) xalign 0.5 ypos 0
         text config["enemy_name"]:
             xpos 20 ypos 202 size 20 color "#f7f8fa" bold True
@@ -1484,11 +1650,6 @@ screen mog_battle_screen():
         if estatus:
             text estatus:
                 xpos 20 ypos 288 size 14 color "#c07bff" bold True
-
-    # Alert mark (❗ / 🔴) above the enemy.
-    if phase in ("defense", "guided_frozen") and S["alert_on"]:
-        text ("🔴" if S["hit"].get("red") else "❗"):
-            xpos 950 ypos 34 size 44
 
     # Enemy hit flash.
     if S["flash"] == "enemy":
@@ -1537,7 +1698,7 @@ screen mog_battle_screen():
         text ("%d%%" % S["mog"]):
             xpos 340 xanchor 1.0 ypos 287 size 10 color ("#ffd75e" if S["mog"] >= 100 else "#98a3b8") bold True
         if S["cringe"]:
-            text "😬 CRINGE — nap it off":
+            text ("😬 CRINGE (%d turns left) — leaking ⚡, nap it off" % max(1, 3 - S["cringe_turns"])):
                 xpos 0 ypos 306 size 13 color "#ff5d6c" bold True
 
     # ── Announcer ───────────────────────────────────────────────────
@@ -1558,56 +1719,59 @@ screen mog_battle_screen():
             color f["color"] outlines [(2, "#000000b0", 0, 1)]
             at Transform(alpha=f_alpha)
 
-    # ── Message band ────────────────────────────────────────────────
+    # ── Message band (top center, under the header) ─────────────────
     text S["message"]:
-        xalign 0.5 ypos 548 xmaximum 1130 text_align 0.5 size 14 color "#d7dceb" bold True
+        xalign 0.5 ypos 52 xmaximum 1000 text_align 0.5 size 15 color "#d7dceb" bold True
 
-    # ── Skill deck ──────────────────────────────────────────────────
-    hbox:
-        xpos 50 ypos 586 spacing 10
-        for skill_id in MOGX_SKILL_ORDER:
-            $ skill = MOGX_SKILLS[skill_id]
-            $ locked = _mogx_skill_lock(skill_id)
-            $ mog_ready = skill_id == "mogmax" and S["mog"] >= 100 and locked is None
-            button:
-                xysize (188, 118)
-                if mog_ready:
-                    background Solid("#3a2f10")
-                    at mogx_mog_ready_pulse
-                else:
-                    background Solid("#111827e8")
-                hover_background Solid(skill["color"] + "2d")
-                insensitive_background Solid("#0c111bd9")
-                sensitive locked is None
-                action Function(_mogx_choose, skill_id)
-                tooltip skill["desc"]
-                padding (10, 8)
-                fixed:
-                    text skill["key"]:
-                        xpos 2 ypos 0 size 10 color "#778197" bold True
-                    if locked is not None and locked != "WAIT":
-                        text skill["icon"] xalign 0.5 ypos 4 size 30 at Transform(alpha=0.3)
+    # ── Skill deck (hidden while defending — the W/S buttons take its
+    #    place in the bottom bar so the UI stays focused) ─────────────
+    $ defending = phase in ("defense", "guided_frozen", "defense_result", "guided_result", "enemy_intro", "enemy_heal", "enemy_cringe") and S["hit"] is not None
+    if not defending:
+        hbox:
+            xpos 50 ypos 586 spacing 10
+            for skill_id in MOGX_SKILL_ORDER:
+                $ skill = MOGX_SKILLS[skill_id]
+                $ locked = _mogx_skill_lock(skill_id)
+                $ mog_ready = skill_id == "mogmax" and S["mog"] >= 100 and locked is None
+                button:
+                    xysize (188, 118)
+                    if mog_ready:
+                        background Solid("#3a2f10")
+                        at mogx_mog_ready_pulse
                     else:
-                        text skill["icon"] xalign 0.5 ypos 4 size 30
-                    text skill["name"]:
-                        xalign 0.5 ypos 48 size 14 color ("#f7f8fa" if locked is None else "#606879") bold True
-                    text skill["kind"].upper():
-                        xalign 0.5 ypos 68 size 9 color "#8791a5" bold True
-                    if skill_id == "mogmax":
-                        text ("READY!" if mog_ready else (locked if locked not in (None, "WAIT") else "%d%%" % S["mog"])):
-                            xalign 0.5 ypos 88 size 11 color ("#ffd75e" if mog_ready else "#5c6473") bold True
-                    elif locked not in (None, "WAIT"):
-                        text locked:
-                            xalign 0.5 ypos 88 size 10 color "#ff9d6c" bold True
-                    else:
-                        text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
-                            xalign 0.5 ypos 86 size 12 color "#ffd75e"
+                        background Solid("#111827e8")
+                    hover_background Solid(skill["color"] + "2d")
+                    insensitive_background Solid("#0c111bd9")
+                    sensitive locked is None
+                    action Function(_mogx_choose, skill_id)
+                    tooltip skill["desc"]
+                    padding (10, 8)
+                    fixed:
+                        text skill["key"]:
+                            xpos 2 ypos 0 size 10 color "#778197" bold True
+                        if locked is not None and locked != "WAIT":
+                            text skill["icon"] xalign 0.5 ypos 4 size 30 at Transform(alpha=0.3)
+                        else:
+                            text skill["icon"] xalign 0.5 ypos 4 size 30
+                        text skill["name"]:
+                            xalign 0.5 ypos 48 size 14 color ("#f7f8fa" if locked is None else "#606879") bold True
+                        text skill["kind"].upper():
+                            xalign 0.5 ypos 68 size 9 color "#8791a5" bold True
+                        if skill_id == "mogmax":
+                            text ("READY!" if mog_ready else (locked if locked not in (None, "WAIT") else "%d%%" % S["mog"])):
+                                xalign 0.5 ypos 88 size 11 color ("#ffd75e" if mog_ready else "#5c6473") bold True
+                        elif locked not in (None, "WAIT"):
+                            text locked:
+                                xalign 0.5 ypos 88 size 10 color "#ff9d6c" bold True
+                        else:
+                            text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
+                                xalign 0.5 ypos 86 size 12 color "#ffd75e"
 
-    # Skill hover description.
+    # Skill hover description — sits on the free line just above the deck.
     $ deck_tt = GetTooltip()
     if deck_tt and phase == "player":
         text deck_tt:
-            xalign 0.5 ypos 706 yanchor 1.0 size 12 color "#aab4c5" text_align 0.5 xmaximum 900
+            xalign 0.5 ypos 550 size 13 color "#aab4c5" text_align 0.5 xmaximum 1000
 
     # ── Defense buttons (prototype-style, bottom center) ────────────
     if phase in ("defense", "guided_frozen", "defense_result") and S["hit"] is not None:
@@ -1652,14 +1816,12 @@ screen mogx_defense_buttons(S):
     $ hit = S["hit"]
     $ is_red = bool(hit.get("red"))
     $ focus = S["def_focus"]
-    if is_red and S["phase"] != "defense_result":
-        text "🔴 RED — DODGE ONLY":
-            xalign 0.5 ypos 398 size 17 color "#ff5d6c" bold True
-            outlines [(2, "#000000c0", 0, 1)]
+    # No "DODGE ONLY" banner — the red glow IS the tell.
+    # The two defense buttons live where the skill deck normally sits.
     hbox:
-        xalign 0.5 ypos 434 spacing 28
+        xalign 0.5 ypos 588 spacing 32
         button:
-            xysize (215, 66)
+            xysize (300, 110)
             background Solid("#0d1422e0" if focus == "dodge" else "#6db1ff22")
             hover_background Solid("#6db1ff50")
             sensitive focus != "dodge"
@@ -1667,14 +1829,14 @@ screen mogx_defense_buttons(S):
             if focus == "parry":
                 at mogx_freeze_pulse
             hbox:
-                xalign 0.5 yalign 0.5 spacing 10
+                xalign 0.5 yalign 0.5 spacing 14
                 frame:
-                    xysize (38, 38) padding (0, 0)
+                    xysize (52, 52) padding (0, 0)
                     background Solid("#2a2438" if focus == "parry" else "#1b2236")
-                    text "W" xalign 0.5 yalign 0.5 size 17 bold True color ("#ffb347" if focus == "parry" else "#ffffff")
-                text "🛡️ PARRY" yalign 0.5 size 15 bold True color ("#525b6e" if focus == "dodge" else "#ffffff")
+                    text "W" xalign 0.5 yalign 0.5 size 24 bold True color ("#ffb347" if focus == "parry" else "#ffffff")
+                text "🛡️ PARRY" yalign 0.5 size 20 bold True color ("#525b6e" if focus == "dodge" else "#ffffff")
         button:
-            xysize (215, 66)
+            xysize (300, 110)
             background Solid("#0d1422e0" if focus == "parry" else "#c07bff22")
             hover_background Solid("#c07bff50")
             sensitive focus != "parry"
@@ -1682,12 +1844,12 @@ screen mogx_defense_buttons(S):
             if focus == "dodge":
                 at mogx_freeze_pulse
             hbox:
-                xalign 0.5 yalign 0.5 spacing 10
+                xalign 0.5 yalign 0.5 spacing 14
                 frame:
-                    xysize (38, 38) padding (0, 0)
+                    xysize (52, 52) padding (0, 0)
                     background Solid("#2a2438" if focus == "dodge" else "#1b2236")
-                    text "S" xalign 0.5 yalign 0.5 size 17 bold True color ("#ffb347" if focus == "dodge" else "#ffffff")
-                text "💨 DODGE" yalign 0.5 size 15 bold True color ("#525b6e" if focus == "parry" else "#ffffff")
+                    text "S" xalign 0.5 yalign 0.5 size 24 bold True color ("#ffb347" if focus == "dodge" else "#ffffff")
+                text "💨 DODGE" yalign 0.5 size 20 bold True color ("#525b6e" if focus == "parry" else "#ffffff")
 
 
 screen mogx_freeze_hint(S):
@@ -1894,17 +2056,18 @@ screen mogx_mogmax_panel(S):
         for index, point in enumerate(MOGX_OSU_POINTS):
             $ active = index == S["osu_step"]
             $ done = index < S["osu_step"]
+            $ node_hit = done and index < len(S["osu_results"]) and S["osu_results"][index]
             button:
                 xpos point[0] ypos point[1] xanchor 0.5 yanchor 0.5 xysize (88, 88)
-                background Solid("#ffd75e" if active else "#5eff9d" if done else "#ffffff20")
+                background Solid("#ffd75e" if active else "#5eff9d" if node_hit else "#ff5d6c" if done else "#ffffff20")
                 hover_background Solid("#ffffff" if active else "#ffffff30")
                 sensitive active
                 action Function(_mogx_osu_press, index)
                 if active:
                     at mogx_mogmax_point
-                text ("OK" if done else str(index + 1)):
-                    xalign 0.5 yalign 0.5 size 22 bold True
-                    color ("#0d1422" if active or done else "#ffffff")
+                text (("OK" if node_hit else "NAH ❌") if done else str(index + 1)):
+                    xalign 0.5 yalign 0.5 size (22 if not done or node_hit else 16) bold True
+                    color ("#0d1422" if active or node_hit else "#ffffff")
         if S["osu_step"] < 5:
             $ ring = max(0.0, 1.0 - S["osu_clock"] / MOGX_OSU_WIN)
             add Solid("#ffd75e"):
@@ -1973,9 +2136,10 @@ screen mogx_help_overlay():
             spacing 8
             text "❓ How to play" size 26 color "#f7f8fa" bold True
             text "DEFENSE (their turn)" size 12 color "#ffd75e" bold True
-            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +2⚡ (+3⚡ perfect), heals a little, and counters." size 13 color "#aab4c5"
-            text "• {b}S = DODGE{/b} — big window. A last-second {b}PERFECT DODGE{/b} earns +1⚡; a regular dodge earns nothing." size 13 color "#aab4c5"
-            text "• {b}🔴 red attacks can't be parried{/b} — dodge them. Watch for feints (delayed swings)." size 13 color "#aab4c5"
+            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit: +1⚡, +5 Confidence, feeds the Mog Meter, and counters." size 13 color "#aab4c5"
+            text "• {b}S = DODGE{/b} — avoids the hit, earns nothing by itself. Take {b}zero hits{/b} across a whole attack — any mix of parries and dodges — and bank {b}+1⚡{/b}." size 13 color "#aab4c5"
+            text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
+            text "• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning." size 13 color "#aab4c5"
             text "YOUR SKILLS (keys 1-6)" size 12 color "#ffd75e" bold True
             text "• {b}1 Yap 🗣️{/b} — free jab, +1⚡.  {b}2 Mog Stare 😎{/b} (4⚡) — strike while the fast marker is in the gold." size 13 color "#aab4c5"
             text "• {b}3 Galaxy Brain 🧠{/b} (2⚡) — vocab quiz; correct = big damage +1⚡ back." size 13 color "#aab4c5"
@@ -1984,7 +2148,7 @@ screen mogx_help_overlay():
             text "RULES OF THE HALLWAY" size 12 color "#ffd75e" bold True
             text "• Used skills go {b}⏳ on timeout{/b} for one turn — rotate your kit." size 13 color "#aab4c5"
             text "• The {b}👑 Mog Meter{/b} fills from parries and landed hits — and drains when you get hit or flub a minigame." size 13 color "#aab4c5"
-            text "• Enemies heal (deny by bursting or BREAKing them), throw undodgeable 😬 CRINGE, and some hits YOINK your ⚡." size 13 color "#aab4c5"
+            text "• Enemies heal (deny by bursting or BREAKing them), and some hits YOINK your ⚡. Undodgeable 😬 CRINGE weakens every attack AND leaks 1⚡ per turn — lasts 3 turns, or nap it off early." size 13 color "#aab4c5"
             null height 6
             textbutton "CLOSE":
                 xalign 0.5 xysize (200, 46)
@@ -2016,9 +2180,6 @@ screen mogx_results(S):
                 vbox:
                     text "PARRIES" xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["parries"]) xalign 0.5 size 26 color "#6db1ff" bold True
-                vbox:
-                    text "PERFECT PARRIES" xalign 0.5 size 10 color "#8f9b95" bold True
-                    text str(result["perfect_defenses"]) xalign 0.5 size 26 color "#ffd75e" bold True
                 vbox:
                     text "PERFECT STRIKES" xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["perfect_attacks"]) xalign 0.5 size 26 color "#5eff9d" bold True

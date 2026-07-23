@@ -484,6 +484,10 @@ label chapter2_eugene:
 
 # ── SCENE 9 — THE DRIVE BACK / THE INVITE ──
 label chapter2_return:
+    # The whole drive home is letterboxed: bars up before the road fades in,
+    # and mouse-wheel rollback is off for the scene — click to advance only.
+    $ set_cinematic_dialogue(True)
+    $ _rollback = False
     # Reuse the daytime desert road, tinted dark-navy for night (same road =
     # continuity, and guaranteed people-free). The night_tint clears on the
     # scene change to black at the end.
@@ -502,7 +506,6 @@ label chapter2_return:
     # Pound Cake starts, the credits still land on its first major beat at 0:11.
     stop music fadeout 0.4
     window hide
-    $ set_cinematic_dialogue(True)
 
     pause 0.6
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
@@ -527,6 +530,7 @@ label chapter2_return:
     $ _wait_until_music_pos(11.0)
     hide screen cinematic_caption
     $ set_cinematic_dialogue(False)
+    $ _rollback = True
     scene bg black
 
     # This is the current playable ending; future chapters can replace the
