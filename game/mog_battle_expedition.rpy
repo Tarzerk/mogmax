@@ -266,7 +266,7 @@ init 2 python:
             "qte_elapsed": 0.0,
             "mash_count": 0, "mash_last": None,
             "quiz": None, "word_bag": [],
-            "osu_step": 0, "osu_hits": 0, "osu_clock": 0.0,
+            "osu_step": 0, "osu_hits": 0, "osu_clock": 0.0, "osu_results": [],
             # Tutorial interpreter
             "tut_idx": 0, "tut_reps": 0, "tut_free": False,
             "dlg_text": None, "dlg_next": None,
@@ -446,6 +446,7 @@ init 2 python:
             S["osu_step"] = 0
             S["osu_hits"] = 0
             S["osu_clock"] = 0.0
+            S["osu_results"] = []
             S["message"] = "DRAW THE M // Hit each circle as it glows, 1 through 5."
             _mogx_announce("👑 M O G M A X 👑", "gold")
             _mogx_sfx("mog")
@@ -651,11 +652,12 @@ init 2 python:
         S = mog_battle
         if S["phase"] != "mogmax":
             return
+        S["osu_results"].append(hit)
         if hit:
             S["osu_hits"] += 1
             _mogx_sfx("step")
         else:
-            _mogx_sfx("miss")
+            _mogx_sfx("quiz_no")
         S["osu_step"] += 1
         S["osu_clock"] = 0.0
         if S["osu_step"] >= 5:
@@ -1929,17 +1931,18 @@ screen mogx_mogmax_panel(S):
         for index, point in enumerate(MOGX_OSU_POINTS):
             $ active = index == S["osu_step"]
             $ done = index < S["osu_step"]
+            $ node_hit = done and index < len(S["osu_results"]) and S["osu_results"][index]
             button:
                 xpos point[0] ypos point[1] xanchor 0.5 yanchor 0.5 xysize (88, 88)
-                background Solid("#ffd75e" if active else "#5eff9d" if done else "#ffffff20")
+                background Solid("#ffd75e" if active else "#5eff9d" if node_hit else "#ff5d6c" if done else "#ffffff20")
                 hover_background Solid("#ffffff" if active else "#ffffff30")
                 sensitive active
                 action Function(_mogx_osu_press, index)
                 if active:
                     at mogx_mogmax_point
-                text ("OK" if done else str(index + 1)):
-                    xalign 0.5 yalign 0.5 size 22 bold True
-                    color ("#0d1422" if active or done else "#ffffff")
+                text (("OK" if node_hit else "NAH ❌") if done else str(index + 1)):
+                    xalign 0.5 yalign 0.5 size (22 if not done or node_hit else 16) bold True
+                    color ("#0d1422" if active or node_hit else "#ffffff")
         if S["osu_step"] < 5:
             $ ring = max(0.0, 1.0 - S["osu_clock"] / MOGX_OSU_WIN)
             add Solid("#ffd75e"):
