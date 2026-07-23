@@ -34,7 +34,7 @@ init 2 python:
         "sleep": {
             "key": "5", "name": "POWER NAP", "icon": "😴", "cost": 3,
             "kind": "sleepmaxx", "color": "#5eff9d",
-            "desc": "Heal Confidence and cure CRINGE. Time the bar.",
+            "desc": "Heal Confidence and cure CRINGE. Perfect timing refunds +1⚡.",
         },
         "mogmax": {
             "key": "6", "name": "MOGMAX", "icon": "👑", "cost": 0,
@@ -183,12 +183,12 @@ init 2 python:
         {"do": "dlg", "text": "{b}DEFENSE:{/b} when I attack, I {b}glow{/b} — {color=#ff5d6c}{b}RED{/b}{/color} or {color=#ffd75e}{b}YELLOW{/b}{/color} — and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
         {"do": "guided", "kind": "dodge", "reps": 2,
          "mid": "THAT moment. Feel it. One more frozen rep."},
-        {"do": "dlg", "text": "Real time now — no freeze. Watch the dive, press {b}S{/b} near impact. A last-second dodge is a {b}PERFECT DODGE{/b} — and if you perfect-dodge {b}every hit{/b} of an attack, you bank {b}+1⚡{/b}. {b}Dodge 2 swings.{/b}"},
+        {"do": "dlg", "text": "Real time now — no freeze. Watch the dive, press {b}S{/b} near impact. Dodges earn nothing by themselves — but take {b}zero hits{/b} from an attack and you bank {b}+1⚡ UNTOUCHED{/b}. {b}Dodge 2 swings.{/b}"},
         {"do": "real", "kind": "dodge", "reps": 2,
          "attack": {"w": 1.4, "red": True}, "rep_dmg": 4,
          "mid": "One. Again.",
          "fail": "Too slow — press {b}S{/b} as the swing lands. One more time."},
-        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+1⚡{/b} per parry ({b}+1 more{/b} for parrying a whole combo), heal a little, and {b}counterattack{/b}. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
+        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+1⚡{/b}, heal {b}+5{/b}, feed the {b}Mog Meter{/b}, and {b}counterattack{/b}. There are no half-parries — you land it or you don't. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
         {"do": "guided", "kind": "parry", "reps": 2,
          "mid": "That's the parry window — tighter than the dodge, better rewards. Again."},
         {"do": "dlg", "text": "Now in real time. Watch the swing, press {b}W{/b} at impact. {b}Land 2 parries.{/b}"},
@@ -292,7 +292,7 @@ init 2 python:
             # Enemy attack execution
             "queue": [], "queue_idx": 0, "hit": None,
             "turn_hits": 0, "turn_pdodges": 0, "turn_parries": 0,
-            "cringe_turns": 0,
+            "turn_took_hit": False, "cringe_turns": 0,
             "hit_elapsed": 0.0, "impact_at": 0.0, "alert_at": 0.0,
             "alert_on": False, "alert_played": False,
             "def_result": None, "def_lock": 0.0, "def_pose": None,
@@ -669,6 +669,8 @@ init 2 python:
         S["cringe_turns"] = 0
         if grade == "perfect":
             _mogx_announce("QUALITY REM 💤", "green")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "green")
         elif cured:
             _mogx_announce("STATUS CURED 😌", "green")
         S["message"] = "Power Nap // +%d Confidence%s." % (heal, ", CRINGE cured" if cured else "")
@@ -716,6 +718,8 @@ init 2 python:
             perfects = 1
             _mogx_announce("FULL COMBO M! 👑", "gold")
             _mogx_sfx("perfect")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "gold")
         if S["ehp"] > 0:
             if hits >= 4:
                 S["stunned"] = True
@@ -811,6 +815,7 @@ init 2 python:
         S["turn_hits"] = 0
         S["turn_pdodges"] = 0
         S["turn_parries"] = 0
+        S["turn_took_hit"] = False
         # Deliberately does NOT announce the combo length — read the rhythm.
         S["message"] = "%s attacks! W = parry · S = dodge" % name
         S["phase"] = "enemy_intro"
@@ -893,10 +898,11 @@ init 2 python:
         in_dodge = MOGX_DODGE_WIN[0] <= dt <= MOGX_DODGE_WIN[1]
         if kind == "parry":
             if in_parry:
+                # A landed parry IS perfect — there's only one tier.
                 if hit.get("red"):
                     _mogx_apply_defense("failparry")
                 else:
-                    _mogx_apply_defense("perfect" if in_perfect else "parry")
+                    _mogx_apply_defense("parry")
             elif dt < MOGX_PARRY_WIN[0]:
                 _mogx_float("player", "too early!", "blue")
                 _mogx_sfx("miss")
@@ -922,32 +928,18 @@ init 2 python:
         if S["embarrassed"]:
             dmg = int(round(dmg * 0.6))
 
-        if result == "perfect":
+        if result == "parry":
             S["stats"]["parries"] += 1
-            S["stats"]["perfect_parries"] += 1
             S["turn_parries"] += 1
             S["def_pose"] = "parry"
-            _mogx_announce("PERFECT PARRY!", "gold")
+            _mogx_announce("PARRY!", "gold")
             _mogx_sfx("parry")
-            _mogx_sfx("perfect", "battle_impact")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "gold")
             if S["php"] < S["pmax"]:
-                _mogx_heal_player(8)
-            _mogx_gain_mog(34)
-            S["counter"] += 8
-        elif result == "parry":
-            S["stats"]["parries"] += 1
-            S["turn_parries"] += 1
-            S["def_pose"] = "parry"
-            _mogx_announce("PARRY!", "blue")
-            _mogx_sfx("parry")
-            _mogx_gain_aura(1)
-            _mogx_float("aura", "+1⚡", "blue")
-            if S["php"] < S["pmax"]:
-                _mogx_heal_player(4)
-            _mogx_gain_mog(12)
-            S["counter"] += 5
+                _mogx_heal_player(5)
+            _mogx_gain_mog(20)
+            S["counter"] += 6
         elif result == "pdodge":
             S["def_pose"] = "dodge"
             S["turn_pdodges"] += 1
@@ -963,10 +955,12 @@ init 2 python:
             _mogx_sfx("whoosh")
         elif result == "failparry":
             S["def_pose"] = "hit"
+            S["turn_took_hit"] = True
             _mogx_announce("CAN'T PARRY THAT ❌", "red")
             _mogx_damage_player(dmg, heavy=hit.get("heavy"))
         else:  # hit
             S["def_pose"] = "hit"
+            S["turn_took_hit"] = True
             _mogx_damage_player(dmg, heavy=hit.get("heavy"))
             if hit.get("drain") and S["aura"] > 0:
                 stolen = min(2, S["aura"])
@@ -1001,14 +995,11 @@ init 2 python:
     def _mogx_finish_enemy_turn():
         S = mog_battle
         S["embarrassed"] = False
-        # End-of-string bonuses: perfect-dodging EVERY hit banks +1 Aura;
-        # parrying EVERY hit banks +1 on top of the per-parry gains.
-        if S["turn_hits"] > 0 and S["turn_pdodges"] == S["turn_hits"]:
+        # Take ZERO hits across the whole string — by any mix of parries and
+        # dodges — and bank +1 Aura.
+        if S["turn_hits"] > 0 and not S["turn_took_hit"]:
             _mogx_gain_aura(1)
-            _mogx_float("aura", "FLAWLESS 💨 +1⚡", "purp")
-        elif S["turn_hits"] > 0 and S["turn_parries"] == S["turn_hits"]:
-            _mogx_gain_aura(1)
-            _mogx_float("aura", "FULL PARRY 🛡️ +1⚡", "gold")
+            _mogx_float("aura", "UNTOUCHED ✨ +1⚡", "purp")
         if S["counter"] > 0 and S["php"] > 0 and S["ehp"] > 0:
             _mogx_announce("COUNTER!", "gold")
             _mogx_damage_enemy(S["counter"], "gold")
@@ -1338,7 +1329,7 @@ init 2 python:
             "aura_kept": max(0, S["php"]),
             "rounds": S["round"],
             "perfect_attacks": stats["perfects"],
-            "perfect_defenses": stats["perfect_parries"],
+            "perfect_defenses": stats["parries"],
             "parries": stats["parries"],
             "hits_taken": stats["hits_taken"],
         }
@@ -1827,10 +1818,7 @@ screen mogx_defense_buttons(S):
     $ hit = S["hit"]
     $ is_red = bool(hit.get("red"))
     $ focus = S["def_focus"]
-    if is_red and S["phase"] != "defense_result":
-        text "🔴 RED — DODGE ONLY":
-            xalign 0.5 ypos 516 size 18 color "#ff5d6c" bold True
-            outlines [(2, "#000000c0", 0, 1)]
+    # No "DODGE ONLY" banner — the red glow IS the tell.
     # The two defense buttons live where the skill deck normally sits.
     hbox:
         xalign 0.5 ypos 588 spacing 32
@@ -2150,8 +2138,8 @@ screen mogx_help_overlay():
             spacing 8
             text "❓ How to play" size 26 color "#f7f8fa" bold True
             text "DEFENSE (their turn)" size 12 color "#ffd75e" bold True
-            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +1⚡ per parry (+1 more for parrying a whole string), heals a little, and counters." size 13 color "#aab4c5"
-            text "• {b}S = DODGE{/b} — avoids the hit. Perfect-dodge {b}every hit{/b} of an attack string (last-second timing) to bank +1⚡; ordinary dodges earn nothing." size 13 color "#aab4c5"
+            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit: +1⚡, +5 Confidence, feeds the Mog Meter, and counters." size 13 color "#aab4c5"
+            text "• {b}S = DODGE{/b} — avoids the hit, earns nothing by itself. Take {b}zero hits{/b} across a whole attack — any mix of parries and dodges — and bank {b}+1⚡{/b}." size 13 color "#aab4c5"
             text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
             text "• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning." size 13 color "#aab4c5"
             text "YOUR SKILLS (keys 1-6)" size 12 color "#ffd75e" bold True
@@ -2194,9 +2182,6 @@ screen mogx_results(S):
                 vbox:
                     text "PARRIES" xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["parries"]) xalign 0.5 size 26 color "#6db1ff" bold True
-                vbox:
-                    text "PERFECT PARRIES" xalign 0.5 size 10 color "#8f9b95" bold True
-                    text str(result["perfect_defenses"]) xalign 0.5 size 26 color "#ffd75e" bold True
                 vbox:
                     text "PERFECT STRIKES" xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["perfect_attacks"]) xalign 0.5 size 26 color "#5eff9d" bold True
