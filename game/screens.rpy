@@ -173,19 +173,6 @@ screen cinematic_caption(what, who=None):
             style "say_dialogue"
 
 
-# A quiet narration line that can sit on screen at the same time as a
-# cinematic_caption — used so silent players still register sound cues
-# (phone buzzes) during the music-synced outro.
-screen cinematic_note(what):
-    zorder 99
-    text what:
-        xalign 0.5 yalign 0.30 xmaximum 900 text_align 0.5
-        size 24 color "#c9d2e4" outlines [(2, "#000000a0", 0, 1)]
-        at transform:
-            alpha 0.0
-            ease 0.6 alpha 1.0
-
-
 style story_card_text is default:
     font gui.interface_text_font
     size 36
