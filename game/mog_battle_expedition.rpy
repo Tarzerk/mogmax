@@ -82,59 +82,65 @@ init 2 python:
             "dmg": 5, "heals": 0, "heal_amt": 0, "cringes": 0, "feint": 0.0,
             "patterns": (({"w": 1.25},), ({"w": 1.25}, {"w": 1.0})),
         },
-        # "heavy" hits do 1.7x damage, dive bigger/slower, and land with the
-        # heavy punch sound. Their longer windup IS the tell.
+        # Ram notation: P = parryable, D = red dodge-only, ! = fast (short w),
+        # ... = long w on the next hit, ~ = "slow" drift ram, F = feint flag.
+        # "heavy" = 1.7x damage with a bigger dive and the heavy punch sound.
+        #
+        # EASY: 1-3 rams, consistent timing, no feints, D only as finisher.
         "kai_graduation": {
             "dmg": 12, "heals": 1, "heal_amt": 15, "cringes": 1, "feint": 0.0,
             "patterns": (
-                ({"w": 1.15},),
-                ({"w": 1.15}, {"w": 0.9}),
-                ({"w": 1.05}, {"w": 1.35, "heavy": True}),
+                ({"w": 1.15},),                                          # P /
+                ({"w": 0.95}, {"w": 0.95}),                              # P - P /
+                ({"w": 0.95}, {"w": 0.95}, {"w": 0.95}),                 # P - P - P /
+                ({"w": 0.95}, {"w": 1.35, "red": True, "heavy": True}),  # P ... D /
+                ({"w": 0.95}, {"w": 0.95}, {"w": 1.35, "red": True, "heavy": True}),  # signature P - P ... D /
             ),
         },
         # Brayden: fast but FAIR — every combo has a fixed, learnable rhythm
         # (short-short, short-short-LONG, etc). No dirty tells. His windup is
         # a crouch-and-spring, quicker than Kai's lean.
         "brayden": {
-            "dmg": 17, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.18,
+            # MEDIUM: acceleration, delayed rams, D anywhere, no feints.
+            "dmg": 17, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.0,
             "patterns": (
-                # slow · slow · FAST
-                ({"w": 0.9}, {"w": 0.9}, {"w": 0.45}),
-                # fast ×4, then a red heavy you MUST dodge
-                ({"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.9, "red": True, "heavy": True}),
-                # zig-zag juke into a heavy finisher
-                ({"w": 0.8, "windup": "zigzag"}, {"w": 0.55}, {"w": 0.85, "heavy": True}),
-                ({"w": 0.95, "red": True, "heavy": True, "windup": "zigzag"},),
-                ({"w": 0.8, "drain": True}, {"w": 0.62}),
-                # HEAVY bookends around a fast middle
-                ({"w": 1.0, "heavy": True}, {"w": 0.5}, {"w": 0.5}, {"w": 1.0, "heavy": True}),
+                ({"w": 0.9}, {"w": 0.45}),                               # P - !P /
+                ({"w": 0.45}, {"w": 1.2}),                               # !P ... P /
+                ({"w": 0.9}, {"w": 0.7}, {"w": 0.45}),                   # accelerating triple
+                ({"w": 1.0, "red": True, "heavy": True}, {"w": 0.8}, {"w": 0.7}),  # D ... P - P heavy opener
+                ({"w": 0.8}, {"w": 0.75, "red": True}, {"w": 0.9}),      # P - D - P
+                ({"w": 0.8}, {"w": 0.8}, {"w": 1.35}),                   # P - P ... P delayed final
+                ({"w": 0.45}, {"w": 0.45}, {"w": 1.2, "red": True, "heavy": True}),  # !P - !P ... D /
+                ({"w": 0.8, "drain": True, "windup": "zigzag"}, {"w": 0.62}),  # aura-drain juke
             ),
         },
         # Clav: fast AND a little unfair — "late" hits flash the tell only a
         # blink before impact, and phase-2 "notell" hits never flash at all.
         # His windup barely moves: the glow is most of the warning you get.
         "clav": {
-            "dmg": 18, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.12,
+            # HARD: stutters, slow rams, feints, D with fast follow-ups,
+            # shared openers with different endings.
+            "dmg": 18, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.0,
             "patterns": (
-                ({"w": 0.65}, {"w": 0.55}, {"w": 0.55}),
-                # spin, spin, then full speed
-                ({"w": 0.85, "windup": "spin"}, {"w": 0.45}, {"w": 0.9, "heavy": True}),
-                # two reds back to back — dodge, dodge
-                ({"w": 0.6, "red": True}, {"w": 0.45, "red": True}),
-                ({"w": 0.7, "late": True}, {"w": 0.55}, {"w": 0.9, "heavy": True}),
-                ({"w": 0.7, "drain": True}, {"w": 0.55, "feint": True}),
+                ({"w": 1.3}, {"w": 0.7}, {"w": 0.45}),                   # P ... P - !P delayed triple
+                ({"w": 0.45}, {"w": 0.45}, {"w": 1.0, "slow": True}),    # !P - !P ... ~P
+                ({"w": 1.0, "slow": True, "windup": "spin"}, {"w": 0.45}),  # ~P - !P
+                ({"w": 0.95, "red": True, "heavy": True}, {"w": 0.45}),  # D - !P wall rebound
+                ({"w": 0.7}, {"w": 0.7}, {"w": 1.2, "red": True, "heavy": True}, {"w": 0.45}),  # P - P ... D - !P
+                ({"w": 1.15, "feint": True},),                           # F ... P
+                ({"w": 0.7, "drain": True, "windup": "spin"}, {"w": 0.55}),
             ),
             "phase2": {
-                "dmg": 21, "feint": 0.25,
+                "dmg": 21, "feint": 0.0,
                 "patterns": (
-                    # fast ×4 into a spinning heavy
-                    ({"w": 0.58}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.95, "heavy": True, "windup": "spin"}),
+                    # shared opener P - P, three endings:
+                    ({"w": 0.7}, {"w": 0.7}, {"w": 1.25, "red": True, "heavy": True}),   # A: delayed heavy D
+                    ({"w": 0.7}, {"w": 0.7}, {"w": 0.45}, {"w": 0.45}),                  # B: two fast rams
+                    ({"w": 0.7}, {"w": 0.7}, {"w": 1.0, "slow": True}),                  # C: slow ram
+                    ({"w": 1.2}, {"w": 1.2}, {"w": 0.45}),                               # stutter charge
+                    ({"w": 1.0, "feint": True, "windup": "spin"}, {"w": 0.95, "red": True, "heavy": True}),  # F ... D
                     ({"w": 0.62, "notell": True}, {"w": 0.5}, {"w": 0.8, "red": True, "heavy": True}),
-                    # spin into fast-fast, capped by a heavy
-                    ({"w": 0.85, "windup": "spin"}, {"w": 0.45}, {"w": 0.45}, {"w": 0.9, "heavy": True}),
-                    # dodge · dodge · then a parryable heavy — switch stance fast
-                    ({"w": 0.55, "red": True}, {"w": 0.45, "red": True}, {"w": 0.75, "heavy": True}),
-                    ({"w": 0.62, "drain": True}, {"w": 0.5}, {"w": 0.5, "late": True}),
+                    ({"w": 0.55, "late": True}, {"w": 0.5}, {"w": 0.9, "heavy": True}),
                 ),
             },
         },
@@ -177,7 +183,7 @@ init 2 python:
         {"do": "dlg", "text": "{b}DEFENSE:{/b} when I attack, I {b}glow{/b} — {color=#ff5d6c}{b}RED{/b}{/color} or {color=#ffd75e}{b}YELLOW{/b}{/color} — and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
         {"do": "guided", "kind": "dodge", "reps": 2,
          "mid": "THAT moment. Feel it. One more frozen rep."},
-        {"do": "dlg", "text": "Real time now — no freeze. Watch the swing, press {b}S{/b} near impact. A {b}last-second dodge = PERFECT DODGE (+1⚡){/b}. {b}Dodge 2 swings.{/b}"},
+        {"do": "dlg", "text": "Real time now — no freeze. Watch the dive, press {b}S{/b} near impact. A last-second dodge is a {b}PERFECT DODGE{/b} — and if you perfect-dodge {b}every hit{/b} of an attack, you bank {b}+1⚡{/b}. {b}Dodge 2 swings.{/b}"},
         {"do": "real", "kind": "dodge", "reps": 2,
          "attack": {"w": 1.4, "red": True}, "rep_dmg": 4,
          "mid": "One. Again.",
@@ -285,6 +291,7 @@ init 2 python:
             "last_grade": None,
             # Enemy attack execution
             "queue": [], "queue_idx": 0, "hit": None,
+            "turn_hits": 0, "turn_pdodges": 0,
             "hit_elapsed": 0.0, "impact_at": 0.0, "alert_at": 0.0,
             "alert_on": False, "alert_played": False,
             "def_result": None, "def_lock": 0.0, "def_pose": None,
@@ -799,6 +806,8 @@ init 2 python:
         S["queue"] = pattern
         S["queue_idx"] = 0
         S["counter"] = 0
+        S["turn_hits"] = 0
+        S["turn_pdodges"] = 0
         # Deliberately does NOT announce the combo length — read the rhythm.
         S["message"] = "%s attacks! W = parry · S = dodge" % name
         S["phase"] = "enemy_intro"
@@ -902,6 +911,7 @@ init 2 python:
             return
         hit = S["hit"]
         S["def_result"] = result
+        S["turn_hits"] += 1
         dmg = S.get("rep_dmg_override") or S["edmg"]
         if hit.get("heavy"):
             dmg = int(round(dmg * 1.7))
@@ -934,13 +944,13 @@ init 2 python:
             S["counter"] += 5
         elif result == "pdodge":
             S["def_pose"] = "dodge"
+            S["turn_pdodges"] += 1
             _mogx_announce("PERFECT DODGE 💨✨", "purp")
             # Whoosh + a light chime only — the "super effective" smack reads
             # as taking a hit, which is exactly wrong for a clean dodge.
+            # Aura pays out only for a FLAWLESS string (see finish_enemy_turn).
             _mogx_sfx("whoosh")
             _mogx_sfx("step", "battle_impact")
-            _mogx_gain_aura(1)
-            _mogx_float("aura", "+1⚡", "purp")
         elif result == "dodge":
             S["def_pose"] = "dodge"
             _mogx_announce("DODGED 💨", "purp")
@@ -985,6 +995,10 @@ init 2 python:
     def _mogx_finish_enemy_turn():
         S = mog_battle
         S["embarrassed"] = False
+        # Perfect-dodging EVERY hit of the string banks +1 Aura.
+        if S["turn_hits"] > 0 and S["turn_pdodges"] == S["turn_hits"]:
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "FLAWLESS 💨 +1⚡", "purp")
         if S["counter"] > 0 and S["php"] > 0 and S["ehp"] > 0:
             _mogx_announce("COUNTER!", "gold")
             _mogx_damage_enemy(S["counter"], "gold")
@@ -1387,24 +1401,32 @@ transform mogx_enemy_windup_spin:
     rotate 0
     easein 0.20 xoffset 26 yoffset -14 zoom 1.14
 
-# The dive: leaves the windup pose and lands on the player's AVATAR (not the
-# HUD) exactly 0.30s later — the lunge is the parry/dodge timing cue.
+# The dive: leaves the windup pose and rams the player's AVATAR head-on
+# exactly 0.30s later — the lunge is the parry/dodge timing cue.
 transform mogx_enemy_lunge:
     xoffset 42 yoffset -20 zoom 1.05
-    easein 0.30 xoffset -710 yoffset 165 zoom 1.32
+    easein 0.30 xoffset -795 yoffset 0 zoom 1.32
     pause 0.14
     easeout 0.28 xoffset 0 yoffset 0 zoom 1.0
 
 # Heavy dive: slower and bigger — the weight of the swing is readable.
 transform mogx_enemy_lunge_heavy:
     xoffset 42 yoffset -20 zoom 1.05
-    easein 0.38 xoffset -710 yoffset 165 zoom 1.48
+    easein 0.38 xoffset -795 yoffset 0 zoom 1.48
     pause 0.16
+    easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
+
+# Slow ram (~): drifts across the arena — defend when it ARRIVES, not when
+# it starts moving.
+transform mogx_enemy_lunge_slow:
+    xoffset 42 yoffset -20 zoom 1.05
+    easein 0.60 xoffset -795 yoffset 0 zoom 1.36
+    pause 0.14
     easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
 
 # Frozen-time lesson: held at the moment of contact.
 transform mogx_enemy_contact:
-    xoffset -710 yoffset 165 zoom 1.32
+    xoffset -795 yoffset 0 zoom 1.32
 
 # Whole player box (avatar + bars) rattles when a hit connects.
 transform mogx_box_shake:
@@ -1436,7 +1458,7 @@ transform mogx_player_parry:
 
 # ...and the enemy is knocked off the contact point, rocking back past home.
 transform mogx_enemy_parried:
-    xoffset -710 yoffset 165 zoom 1.32
+    xoffset -795 yoffset 0 zoom 1.32
     easeout 0.24 xoffset 85 yoffset -45 zoom 1.02 rotate 9
     ease 0.22 xoffset 0 yoffset 0 zoom 1.0 rotate 0
 
@@ -1563,13 +1585,16 @@ screen mog_battle_screen():
         xpos 800 ypos 76 xysize (360, 330)
         # Only the character art travels; name and EGO bar stay anchored.
         $ hit_heavy = S["hit"] is not None and S["hit"].get("heavy")
-        $ lunge_lead = 0.38 if hit_heavy else 0.30
+        $ hit_slow = S["hit"] is not None and S["hit"].get("slow")
+        $ lunge_lead = 0.60 if hit_slow else 0.38 if hit_heavy else 0.30
         # Per-hit windup style ("zigzag"/"spin"), else the enemy's default.
         $ windup_style = (S["hit"].get("windup") if S["hit"] else None) or {"brayden": "brayden", "clav": "clav"}.get(S["battle_id"], "lean")
         fixed:
             xysize (360, 210)
             if phase in ("defense_result", "guided_result") and S["def_pose"] == "parry":
                 at mogx_enemy_parried
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead and hit_slow:
+                at mogx_enemy_lunge_slow
             elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead and hit_heavy:
                 at mogx_enemy_lunge_heavy
             elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead:
@@ -2105,7 +2130,7 @@ screen mogx_help_overlay():
             text "❓ How to play" size 26 color "#f7f8fa" bold True
             text "DEFENSE (their turn)" size 12 color "#ffd75e" bold True
             text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +2⚡ (+3⚡ perfect), heals a little, and counters." size 13 color "#aab4c5"
-            text "• {b}S = DODGE{/b} — big window. A last-second {b}PERFECT DODGE{/b} earns +1⚡; a regular dodge earns nothing." size 13 color "#aab4c5"
+            text "• {b}S = DODGE{/b} — avoids the hit. Perfect-dodge {b}every hit{/b} of an attack string (last-second timing) to bank +1⚡; ordinary dodges earn nothing." size 13 color "#aab4c5"
             text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
             text "• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning." size 13 color "#aab4c5"
             text "YOUR SKILLS (keys 1-6)" size 12 color "#ffd75e" bold True
