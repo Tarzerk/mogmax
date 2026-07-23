@@ -2067,6 +2067,32 @@ screen dev_overlay():
         key "shift_K_d" action Show("dev_skip_menu")
 
 
+screen dev_skip_jump_button(label_text, jump_label, setup_actions=[]):
+    textbutton label_text:
+        action setup_actions + [
+            Hide("dev_chapter1_skip_menu"),
+            Hide("dev_chapter2_skip_menu"),
+            Hide("dev_minigame_skip_menu"),
+            Hide("dev_battle_skip_menu"),
+            Hide("dev_skip_menu"),
+            Jump(jump_label),
+        ]
+        xalign 0.5
+        text_size 18
+
+
+screen dev_skip_call_button(label_text, call_label):
+    textbutton label_text:
+        action [
+            Hide("dev_minigame_skip_menu"),
+            Hide("dev_battle_skip_menu"),
+            Hide("dev_skip_menu"),
+            Function(renpy.call_in_new_context, call_label),
+        ]
+        xalign 0.5
+        text_size 19
+
+
 screen dev_skip_menu():
     modal True
     zorder 1000
@@ -2074,13 +2100,13 @@ screen dev_skip_menu():
     frame:
         xalign 0.5
         yalign 0.5
-        xysize (1080, 660)
+        xysize (760, 500)
         background Solid("#000000ee")
-        padding (36, 24)
+        padding (36, 26)
 
         vbox:
             xfill True
-            spacing 12
+            spacing 14
 
             text "DEV MENU":
                 size 30
@@ -2092,139 +2118,374 @@ screen dev_skip_menu():
                 color "#777777"
                 xalign 0.5
 
+            null height 4
+
             hbox:
                 xalign 0.5
-                spacing 54
+                spacing 44
 
                 vbox:
-                    xsize 450
-                    spacing 6
+                    xsize 300
+                    spacing 9
 
-                    text "SKIP TO SCENE":
+                    text "STORY JUMPS":
                         size 18
                         color "#b8c0bc"
                         bold True
                         xalign 0.5
 
-                    null height 4
-
-                    textbutton "Chapter 1 start":
-                        action [Hide("dev_skip_menu"), Jump("start")]
+                    textbutton "Chapter 1 scenes":
+                        action [Hide("dev_skip_menu"), Show("dev_chapter1_skip_menu")]
                         xalign 0.5
-                        text_size 18
+                        text_size 22
 
-                    textbutton "Ch1 — Brainmaxxing / flashcards":
-                        action [SetVariable("brainmaxxing_attempt", 1), Hide("dev_skip_menu"), Jump("chapter1_brainmaxxing")]
+                    textbutton "Chapter 2 scenes":
+                        action [Hide("dev_skip_menu"), Show("dev_chapter2_skip_menu")]
                         xalign 0.5
-                        text_size 18
-
-                    textbutton "Quiz (skip bootcamp)":
-                        action [SetVariable("brainmaxxing_attempt", 1), Hide("dev_skip_menu"), Jump("class_quiz")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Pass scene (score = 100)":
-                        action [SetVariable("brain_score", 10), SetVariable("final_score", 100), Hide("dev_skip_menu"), Jump("pass_class_scene")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Mirror scene (flashback + finale)":
-                        action [SetVariable("final_score", 100), Hide("dev_skip_menu"), Jump("mirror_scene")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Chapter 2 start (The Mogbender)":
-                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_start")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Ch2 — base reveal":
-                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_base")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Ch2 — projection gallery":
-                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_projection_gallery")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Ch2 — training montage":
-                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_training")]
-                        xalign 0.5
-                        text_size 18
-
-                    textbutton "Ch2 — Eugene":
-                        action [SetVariable("brayden_threatened", True), Hide("dev_skip_menu"), Jump("chapter2_eugene")]
-                        xalign 0.5
-                        text_size 18
+                        text_size 22
 
                     textbutton "Credits roll":
                         action [Hide("dev_skip_menu"), Jump("roll_credits")]
                         xalign 0.5
-                        text_size 18
+                        text_size 20
 
                 vbox:
-                    xsize 450
-                    spacing 8
+                    xsize 300
+                    spacing 9
 
-                    text "RETRY MINIGAMES":
+                    text "PLAYTESTS":
                         size 18
                         color "#69e4ad"
                         bold True
                         xalign 0.5
 
-                    null height 4
-
-                    textbutton "Mewing Geometry":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_mewing")]
+                    textbutton "Training minigames":
+                        action [Hide("dev_skip_menu"), Show("dev_minigame_skip_menu")]
                         xalign 0.5
-                        text_size 19
+                        text_size 22
 
-                    textbutton "Aura Harvester":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_aura")]
+                    textbutton "Mog battles":
+                        action [Hide("dev_skip_menu"), Show("dev_battle_skip_menu")]
                         xalign 0.5
-                        text_size 19
+                        text_size 22
 
-                    textbutton "Dermal Purge":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_acne")]
-                        xalign 0.5
-                        text_size 19
+            null height 18
 
-                    null height 12
-
-                    text "RETRY MOG BATTLES":
-                        size 18
-                        color "#69e4ad"
-                        bold True
-                        xalign 0.5
-
-                    textbutton "Kai — tutorial":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_kai_tutorial")]
-                        xalign 0.5
-                        text_size 19
-
-                    textbutton "Kai — graduation":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_kai_graduation")]
-                        xalign 0.5
-                        text_size 19
-
-                    textbutton "Brayden battle":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_brayden")]
-                        xalign 0.5
-                        text_size 19
-
-                    textbutton "Clav battle":
-                        action [Hide("dev_skip_menu"), Function(renpy.call_in_new_context, "dev_test_clav")]
-                        xalign 0.5
-                        text_size 19
-
-            textbutton "✕  Close (Esc)":
+            textbutton "Close (Esc)":
                 action Hide("dev_skip_menu")
                 xalign 0.5
                 text_size 18
                 text_color "#888888"
 
     key "K_ESCAPE" action Hide("dev_skip_menu")
+
+
+screen dev_chapter1_skip_menu():
+    modal True
+    zorder 1001
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xysize (840, 580)
+        background Solid("#050505f4")
+        padding (34, 24)
+
+        vbox:
+            xfill True
+            spacing 10
+
+            text "CHAPTER 1 SCENES":
+                size 28
+                color "#ff8888"
+                xalign 0.5
+
+            text "Chopped + Brainmaxxing":
+                size 13
+                color "#777777"
+                xalign 0.5
+
+            textbutton "Back to dev menu":
+                action [Hide("dev_chapter1_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 16
+                text_color "#888888"
+
+            null height 4
+
+            hbox:
+                xalign 0.5
+                spacing 34
+
+                vbox:
+                    xsize 360
+                    spacing 7
+
+                    text "CHOPPED":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Start / name prompt", "start")
+
+                    use dev_skip_jump_button("Red pill handoff", "chad_pill_ending", [SetVariable("took_chad_pill", True)])
+
+                    use dev_skip_jump_button("Blue pill ending", "ltn_pill_ending")
+
+                    null height 8
+
+                    text "BRAINMAXXING":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Flashcards", "chapter1_brainmaxxing", [SetVariable("brainmaxxing_attempt", 1)])
+
+                    use dev_skip_jump_button("Quiz", "class_quiz", [SetVariable("brainmaxxing_attempt", 1)])
+
+                vbox:
+                    xsize 360
+                    spacing 7
+
+                    text "QUIZ OUTCOMES":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Pass scene", "pass_class_scene", [SetVariable("brain_score", 10), SetVariable("final_score", 100), SetVariable("brayden_threatened", True)])
+
+                    use dev_skip_jump_button("Fail scene", "fail_class_scene", [SetVariable("brainmaxxing_attempt", 1), SetVariable("brain_score", 3), SetVariable("final_score", 30)])
+
+                    use dev_skip_jump_button("Mirror finale", "mirror_scene", [SetVariable("final_score", 100), SetVariable("brayden_threatened", True)])
+
+                    use dev_skip_jump_button("Chapter 2 handoff", "chapter2_start", [SetVariable("brayden_threatened", True)])
+
+                    use dev_skip_jump_button("Credits roll", "roll_credits", [SetVariable("credits_from_chapter", 1)])
+
+            null height 8
+
+            textbutton "Back":
+                action [Hide("dev_chapter1_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 18
+                text_color "#888888"
+
+    key "K_ESCAPE" action [Hide("dev_chapter1_skip_menu"), Show("dev_skip_menu")]
+
+
+screen dev_chapter2_skip_menu():
+    modal True
+    zorder 1001
+
+    default ch2_setup = [SetVariable("took_chad_pill", True), SetVariable("brayden_threatened", True)]
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xysize (1120, 650)
+        background Solid("#050505f4")
+        padding (34, 24)
+
+        vbox:
+            xfill True
+            spacing 10
+
+            text "CHAPTER 2 SCENES":
+                size 28
+                color "#ff8888"
+                xalign 0.5
+
+            text "The Mogbender":
+                size 13
+                color "#777777"
+                xalign 0.5
+
+            textbutton "Back to dev menu":
+                action [Hide("dev_chapter2_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 16
+                text_color "#888888"
+
+            null height 4
+
+            hbox:
+                xalign 0.5
+                spacing 38
+
+                vbox:
+                    xsize 500
+                    spacing 6
+
+                    text "ARRIVAL":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Title card", "chapter2_start", ch2_setup)
+
+                    use dev_skip_jump_button("Pickup", "chapter2_pickup", ch2_setup)
+
+                    use dev_skip_jump_button("Road trip", "chapter2_road", ch2_setup)
+
+                    use dev_skip_jump_button("Restricted sign", "chapter2_restricted_sign", ch2_setup)
+
+                    use dev_skip_jump_button("Gate + soldiers", "chapter2_gate", ch2_setup)
+
+                    null height 8
+
+                    text "FACILITY":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Base security / vault", "chapter2_base", ch2_setup)
+
+                    use dev_skip_jump_button("Lab reveal", "chapter2_lab_reveal", ch2_setup)
+
+                    use dev_skip_jump_button("Gigachad hallway", "chapter2_gigachad_hall", ch2_setup)
+
+                    use dev_skip_jump_button("Projection gallery", "chapter2_projection_gallery", ch2_setup)
+
+                vbox:
+                    xsize 500
+                    spacing 6
+
+                    text "TRAINING":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Training intro", "chapter2_training", ch2_setup)
+
+                    use dev_skip_jump_button("Montage aftermath", "dev_ch2_training_montage", ch2_setup)
+
+                    use dev_skip_jump_button("Kai tutorial battle", "dev_ch2_kai_tutorial", ch2_setup)
+
+                    use dev_skip_jump_button("Kai graduation spar", "dev_ch2_kai_graduation", ch2_setup)
+
+                    null height 8
+
+                    text "ENDING RUN":
+                        size 17
+                        color "#b8c0bc"
+                        bold True
+                        xalign 0.5
+
+                    use dev_skip_jump_button("Eugene choice", "chapter2_eugene", ch2_setup)
+
+                    use dev_skip_jump_button("Drive home", "chapter2_return", ch2_setup)
+
+                    use dev_skip_jump_button("Text invite finale", "dev_ch2_invite", ch2_setup)
+
+                    use dev_skip_jump_button("Credits roll", "roll_credits", ch2_setup + [SetVariable("credits_from_chapter", 2)])
+
+            null height 6
+
+            textbutton "Back":
+                action [Hide("dev_chapter2_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 18
+                text_color "#888888"
+
+    key "K_ESCAPE" action [Hide("dev_chapter2_skip_menu"), Show("dev_skip_menu")]
+
+
+screen dev_minigame_skip_menu():
+    modal True
+    zorder 1001
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xysize (560, 420)
+        background Solid("#050505f4")
+        padding (34, 24)
+
+        vbox:
+            xfill True
+            spacing 12
+
+            text "TRAINING MINIGAMES":
+                size 26
+                color "#69e4ad"
+                xalign 0.5
+
+            textbutton "Back to dev menu":
+                action [Hide("dev_minigame_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 16
+                text_color "#888888"
+
+            null height 4
+
+            use dev_skip_call_button("Mewing Geometry", "dev_test_mewing")
+
+            use dev_skip_call_button("Aura Harvester", "dev_test_aura")
+
+            use dev_skip_call_button("Dermal Purge", "dev_test_acne")
+
+            null height 10
+
+            textbutton "Back":
+                action [Hide("dev_minigame_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 18
+                text_color "#888888"
+
+    key "K_ESCAPE" action [Hide("dev_minigame_skip_menu"), Show("dev_skip_menu")]
+
+
+screen dev_battle_skip_menu():
+    modal True
+    zorder 1001
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xysize (560, 470)
+        background Solid("#050505f4")
+        padding (34, 24)
+
+        vbox:
+            xfill True
+            spacing 12
+
+            text "MOG BATTLES":
+                size 26
+                color "#69e4ad"
+                xalign 0.5
+
+            textbutton "Back to dev menu":
+                action [Hide("dev_battle_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 16
+                text_color "#888888"
+
+            null height 4
+
+            use dev_skip_call_button("Kai tutorial", "dev_test_kai_tutorial")
+
+            use dev_skip_call_button("Kai graduation", "dev_test_kai_graduation")
+
+            use dev_skip_call_button("Brayden battle", "dev_test_brayden")
+
+            use dev_skip_call_button("Clav battle", "dev_test_clav")
+
+            null height 10
+
+            textbutton "Back":
+                action [Hide("dev_battle_skip_menu"), Show("dev_skip_menu")]
+                xalign 0.5
+                text_size 18
+                text_color "#888888"
+
+    key "K_ESCAPE" action [Hide("dev_battle_skip_menu"), Show("dev_skip_menu")]
 
 
 label dev_test_mewing:
