@@ -484,6 +484,10 @@ label chapter2_eugene:
 
 # ── SCENE 9 — THE DRIVE BACK / THE INVITE ──
 label chapter2_return:
+    # The whole drive home is letterboxed: bars up before the road fades in,
+    # and mouse-wheel rollback is off for the scene — click to advance only.
+    $ set_cinematic_dialogue(True)
+    $ _rollback = False
     # Reuse the daytime desert road, tinted dark-navy for night (same road =
     # continuity, and guaranteed people-free). The night_tint clears on the
     # scene change to black at the end.
@@ -502,14 +506,10 @@ label chapter2_return:
     # Pound Cake starts, the credits still land on its first major beat at 0:11.
     stop music fadeout 0.4
     window hide
-    $ set_cinematic_dialogue(True)
 
     pause 0.6
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
     pause 0.25
-    # Narration first (same box, same style), then the message replaces it.
-    show screen cinematic_caption("{i}\"Your phone buzzes. The class group chat, blowing up.\"{/i}")
-    pause 1.8
     show screen cinematic_caption("{i}FRIDAY @ MY PLACE - 9PM\nOPEN INVITE\nEVERYBODY PULL UP{/i}", "Class Group Chat")
     pause 3.4
     hide screen cinematic_caption
@@ -519,11 +519,7 @@ label chapter2_return:
 
     $ _wait_until_music_pos(1.20)
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
-    # Narration first, then his messages — all keyed to music position so the
-    # credits still hit the beat at 0:11.
     $ _wait_until_music_pos(1.45)
-    show screen cinematic_caption("{i}\"Another buzz. A private message. Brayden — who has never once texted you first.\"{/i}")
-    $ _wait_until_music_pos(3.5)
     show screen cinematic_caption("{i}jus so we clear{/i}", "Brayden")
 
     $ _wait_until_music_pos(4.75)
@@ -534,6 +530,7 @@ label chapter2_return:
     $ _wait_until_music_pos(11.0)
     hide screen cinematic_caption
     $ set_cinematic_dialogue(False)
+    $ _rollback = True
     scene bg black
 
     # This is the current playable ending; future chapters can replace the
