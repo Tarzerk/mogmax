@@ -2067,6 +2067,91 @@ screen dev_overlay():
         key "shift_K_d" action Show("dev_skip_menu")
 
 
+init python:
+    import math
+
+    class SleepyEyeOverlay(renpy.Displayable):
+        def __init__(self, opening=0.0, **kwargs):
+            super(SleepyEyeOverlay, self).__init__(**kwargs)
+            self.opening = max(0.0, min(2.0, float(opening)))
+
+        def render(self, width, height, st, at):
+            width = int(config.screen_width)
+            height = int(config.screen_height)
+            rv = renpy.Render(width, height)
+            canvas = rv.canvas()
+
+            if self.opening <= 0.01:
+                canvas.rect("#000000", (0, 0, width, height))
+                return rv
+
+            if self.opening >= 1.95:
+                return rv
+
+            center_y = height / 2.0
+            half_open = 295.0 * self.opening
+            edge_open = max(0.0, self.opening - 1.0) * (height / 2.0)
+            points = []
+
+            for i in range(49):
+                x = (width * i) / 48.0
+                curve = math.sin(math.pi * (x / float(width)))
+                points.append((x, curve))
+
+            upper_lid = [(x, center_y - edge_open - (half_open * curve)) for x, curve in points]
+            lower_lid = [(x, center_y + edge_open + (half_open * curve)) for x, curve in points]
+
+            canvas.polygon("#000000", [(0, 0), (width, 0)] + list(reversed(upper_lid)))
+            canvas.polygon("#000000", lower_lid + [(width, height), (0, height)])
+
+            return rv
+
+
+    class SleepyEyeAnimation(SleepyEyeOverlay):
+        timeline = (
+            (0.00, 0.00),
+            (0.45, 0.00),
+            (1.25, 0.15),
+            (1.75, 0.15),
+            (2.15, 0.00),
+            (2.50, 0.00),
+            (4.25, 0.82),
+            (5.35, 2.00),
+        )
+
+        def __init__(self, **kwargs):
+            super(SleepyEyeAnimation, self).__init__(0.0, **kwargs)
+
+        def opening_at(self, st):
+            previous_t, previous_opening = self.timeline[0]
+
+            for next_t, next_opening in self.timeline[1:]:
+                if st <= next_t:
+                    span = max(next_t - previous_t, 0.001)
+                    progress = (st - previous_t) / span
+                    eased = progress * progress * (3.0 - (2.0 * progress))
+                    return previous_opening + ((next_opening - previous_opening) * eased)
+
+                previous_t, previous_opening = next_t, next_opening
+
+            return self.timeline[-1][1]
+
+        def render(self, width, height, st, at):
+            self.opening = self.opening_at(st)
+            renpy.redraw(self, 0.0)
+            return super(SleepyEyeAnimation, self).render(width, height, st, at)
+
+
+screen sleepy_eye_overlay(opening=0.0):
+    zorder 1100
+    add SleepyEyeOverlay(opening)
+
+
+screen sleepy_eye_animation():
+    zorder 1100
+    add SleepyEyeAnimation()
+
+
 screen dev_skip_jump_button(label_text, jump_label, setup_actions=[]):
     textbutton label_text:
         action setup_actions + [
@@ -2530,31 +2615,15 @@ label dev_test_clav:
     return
 
 
-# ─── Chapter 2 restricted-area warning ───────────────────────
-# Quick cinematic warning card immediately before the restricted sign reveal.
+# ─── Chapter 2 road time-skip card ───────────────────────────
 screen ch2_travel_bar():
     modal True
-    add Solid("#050507")
+    add Solid("#000000")
 
-    vbox:
+    text "MANY HOURS LATER":
+        style "story_card_text"
         xalign 0.5
         yalign 0.5
-        spacing 12
-
-        text "SIGNAL LOST":
-            size 24
-            color "#777777"
-            xalign 0.5
-        text "RESTRICTED AREA AHEAD":
-            size 44
-            color "#d8d8d8"
-            bold True
-            xalign 0.5
-            outlines [(2, "#000000", 0, 0)]
-        text "TURN BACK IMMEDIATELY":
-            size 20
-            color "#8a2222"
-            xalign 0.5
 
     timer 1.8 action Return()
 

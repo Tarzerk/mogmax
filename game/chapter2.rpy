@@ -63,6 +63,11 @@ transform projection_breathe:
         repeat
 
 
+transform sleepy_focus:
+    blur 32.0
+    linear 3.4 blur 0.0
+
+
 label chapter2_start:
     # Fade out the mirror theme carried in from Chapter 1 so the new chapter's
     # ambient bed can take over cleanly.
@@ -98,18 +103,18 @@ label chapter2_road:
 
     menu:
         "Clav drives like this is normal."
-        "Ask where you're going.":
+        "Where are we going?":
             p "Where are we going?"
             c "West."
             p "That is not an answer."
             c "It's a direction."
-        "Ask if this is legal.":
+        "Is this legal?":
             p "Is this legal?"
             c "Most important things aren't."
             p "That made me feel worse."
             c "Good. You're listening."
-        "Sit in silence like a man.":
-            narrator "You sit in silence like a man."
+        "Sit in silence.":
+            narrator "You sit in silence."
             pause 0.4
             p "...Are we there yet?"
             c "No."
@@ -119,15 +124,25 @@ label chapter2_road:
     c "You had school yesterday. Look what it did for you."
     p "Honestly... valid."
     pause 0.5
-    call screen ch2_travel_bar
+    scene bg black with fade
+    pause 0.35
+    show expression Text("MANY HOURS LATER", style="story_card_text") as text at truecenter with dissolve
+    pause 1.8
+    hide text with dissolve
 
     # ── SCENE 3 — THE SIGN ──
 label chapter2_restricted_sign:
-    scene bg ch2_sign with fade
+    scene bg black
+    show bg ch2_sign at sleepy_focus
+    show screen sleepy_eye_animation
     play music "audio/base_ambient.mp3" fadeout 1.5 fadein 1.5 volume persistent.vol_bed
+    pause 5.5
+    hide screen sleepy_eye_animation
+    pause 0.35
+    p "[[yawn] where are we?"
     narrator "The car stops. The camera pans to a sign staked in the dirt."
     narrator "{b}⚠ RESTRICTED AREA — USE OF DEADLY FORCE AUTHORIZED ⚠{/b}"
-    p "I think we should not be going here."
+    p "Yoo... I think we aren't supposed to be here...."
     narrator "Clav smirks. Says nothing."
 
 label chapter2_gate:
@@ -406,27 +421,27 @@ label chapter2_training_montage:
 
     # ── HOW A MOG BATTLE WORKS ──
 label chapter2_kai_tutorial:
-    narrator "Across the gym, two trainees square off. No fists. No words. One of them sets his jaw and stands a half-inch taller."
-    narrator "The other one's shoulders fold. He looks at the floor. The whole room knows exactly who won."
+    narrator "At the center of the gym, a training bot waits on the mat. Its faceplate glows awake as you step into the ring."
     show clav stern at clav_body
-    c "That's a Mog Battle. Everything you built in here becomes a move."
-    c "Yap is free pressure. Mog Stare hits hard. Galaxy Brain exposes weakness. Ratio Rush overwhelms. Power Nap restores Confidence."
-    c "Rotate the kit to build your Mog Meter. When they swing, parry with W or dodge with S. An early parry still becomes a block."
+    c "This is where all of it becomes pressure."
+    c "Frame. Aura. Timing."
+    c "The system will show you the rest."
     hide clav
 
-    narrator "A man in a black training shirt steps onto the mat. The name patch says COACH KAI. His posture says the patch was unnecessary."
-    narrator "A timing line switches on between you. Kai raises one hand: green attacks can be parried, red attacks must be dodged."
+    narrator "A timing line switches on between you and the bot. It lowers into a ready stance."
     $ start_mog_battle("kai_tutorial")
     $ kai_tutorial_result = renpy.call_screen("mog_battle_screen")
-    narrator "Kai taps RESTORE. Your Aura returns to {color=#69ff9a}100 / 100{/color}."
+    narrator "The bot stops. A clean green light scans across its faceplate."
+    narrator "It resets your Aura to {color=#69ff9a}100 / 100{/color}, then takes one step back."
 
     # ── THE GRADUATION SPAR ──
 label chapter2_kai_graduation:
     show clav smirk at clav_body
-    c "That was instruction. This one is yours."
+    c "Tutorial's over."
+    c "Same bot."
     c "No answer lights. No help."
     hide clav
-    narrator "Coach Kai stays on the mat. Every hint switches off."
+    narrator "The bot's guidance display goes dark. The room gets quiet enough to hear the mat under your shoes."
     $ start_mog_battle("kai_graduation")
     $ kai_graduation_result = renpy.call_screen("mog_battle_screen")
     narrator "It's close. It is not clean. But when it's over, you're the one still standing up straight with {color=#69ff9a}[kai_graduation_result['aura_kept']] AURA{/color}."
@@ -434,7 +449,10 @@ label chapter2_kai_graduation:
     show clav smirk at clav_body
     c "Adequate."
     hide clav
+    narrator "The bot powers down with a soft mechanical sigh. Across the gym, the lights start shutting off row by row."
+    narrator "Clav is already walking toward the exit."
     stop music fadeout 1.5
+    scene bg black with fade
     pause 0.6
 
 
