@@ -98,11 +98,16 @@ init 2 python:
         "brayden": {
             "dmg": 17, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.18,
             "patterns": (
-                ({"w": 0.75}, {"w": 0.58}),
-                ({"w": 0.75}, {"w": 0.58}, {"w": 0.85, "heavy": True}),
-                ({"w": 0.95, "red": True, "heavy": True},),
+                # slow · slow · FAST
+                ({"w": 0.9}, {"w": 0.9}, {"w": 0.45}),
+                # fast ×4, then a red heavy you MUST dodge
+                ({"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.9, "red": True, "heavy": True}),
+                # zig-zag juke into a heavy finisher
+                ({"w": 0.8, "windup": "zigzag"}, {"w": 0.55}, {"w": 0.85, "heavy": True}),
+                ({"w": 0.95, "red": True, "heavy": True, "windup": "zigzag"},),
                 ({"w": 0.8, "drain": True}, {"w": 0.62}),
-                ({"w": 1.0, "heavy": True}, {"w": 0.55}, {"w": 0.55}, {"w": 1.0, "heavy": True}),
+                # HEAVY bookends around a fast middle
+                ({"w": 1.0, "heavy": True}, {"w": 0.5}, {"w": 0.5}, {"w": 1.0, "heavy": True}),
             ),
         },
         # Clav: fast AND a little unfair — "late" hits flash the tell only a
@@ -112,16 +117,23 @@ init 2 python:
             "dmg": 18, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.12,
             "patterns": (
                 ({"w": 0.65}, {"w": 0.55}, {"w": 0.55}),
+                # spin, spin, then full speed
+                ({"w": 0.85, "windup": "spin"}, {"w": 0.45}, {"w": 0.9, "heavy": True}),
+                # two reds back to back — dodge, dodge
+                ({"w": 0.6, "red": True}, {"w": 0.45, "red": True}),
                 ({"w": 0.7, "late": True}, {"w": 0.55}, {"w": 0.9, "heavy": True}),
-                ({"w": 0.95, "red": True, "heavy": True}, {"w": 0.55}),
                 ({"w": 0.7, "drain": True}, {"w": 0.55, "feint": True}),
             ),
             "phase2": {
                 "dmg": 21, "feint": 0.25,
                 "patterns": (
-                    ({"w": 0.58}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.95, "heavy": True}),
+                    # fast ×4 into a spinning heavy
+                    ({"w": 0.58}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.95, "heavy": True, "windup": "spin"}),
                     ({"w": 0.62, "notell": True}, {"w": 0.5}, {"w": 0.8, "red": True, "heavy": True}),
-                    ({"w": 0.55, "late": True}, {"w": 0.5, "feint": True}, {"w": 0.9, "heavy": True}),
+                    # spin into fast-fast, capped by a heavy
+                    ({"w": 0.85, "windup": "spin"}, {"w": 0.45}, {"w": 0.45}, {"w": 0.9, "heavy": True}),
+                    # dodge · dodge · then a parryable heavy — switch stance fast
+                    ({"w": 0.55, "red": True}, {"w": 0.45, "red": True}, {"w": 0.75, "heavy": True}),
                     ({"w": 0.62, "drain": True}, {"w": 0.5}, {"w": 0.5, "late": True}),
                 ),
             },
@@ -785,8 +797,8 @@ init 2 python:
         S["queue"] = pattern
         S["queue_idx"] = 0
         S["counter"] = 0
-        S["message"] = "%s attacks! W = parry · S = dodge%s" % (
-            name, " · %d-HIT COMBO!" % len(pattern) if len(pattern) > 1 else "")
+        # Deliberately does NOT announce the combo length — read the rhythm.
+        S["message"] = "%s attacks! W = parry · S = dodge" % name
         S["phase"] = "enemy_intro"
         renpy.restart_interaction()
 
@@ -921,8 +933,10 @@ init 2 python:
         elif result == "pdodge":
             S["def_pose"] = "dodge"
             _mogx_announce("PERFECT DODGE 💨✨", "purp")
+            # Whoosh + a light chime only — the "super effective" smack reads
+            # as taking a hit, which is exactly wrong for a clean dodge.
             _mogx_sfx("whoosh")
-            _mogx_sfx("perfect", "battle_impact")
+            _mogx_sfx("step", "battle_impact")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "purp")
         elif result == "dodge":
@@ -962,8 +976,6 @@ init 2 python:
             return
         S["queue_idx"] += 1
         if S["queue_idx"] < len(S["queue"]):
-            S["message"] = "COMBO %d/%d // Reset. Read the next impact." % (
-                S["queue_idx"] + 1, len(S["queue"]))
             _mogx_start_hit()
         else:
             _mogx_finish_enemy_turn()
@@ -1333,6 +1345,24 @@ transform mogx_enemy_windup_clav:
     xoffset 0 yoffset 0 zoom 1.0
     easein 0.55 xoffset 10 yoffset -6 zoom 0.985
 
+# Zig-zag windup: jukes side to side before committing.
+transform mogx_enemy_windup_zigzag:
+    xoffset 0 yoffset 0 zoom 1.0
+    block:
+        linear 0.09 xoffset -26
+        linear 0.09 xoffset 26
+        repeat 3
+    easein 0.14 xoffset 30 yoffset -16 zoom 1.05
+
+# Spin windup: two full spins, then winds up to full speed.
+transform mogx_enemy_windup_spin:
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
+    linear 0.26 rotate 360
+    rotate 0
+    linear 0.26 rotate 360
+    rotate 0
+    easein 0.20 xoffset 26 yoffset -14 zoom 1.14
+
 # The dive: leaves the windup pose and lands on the player's AVATAR (not the
 # HUD) exactly 0.30s later — the lunge is the parry/dodge timing cue.
 transform mogx_enemy_lunge:
@@ -1455,7 +1485,8 @@ screen mog_battle_screen():
     elif phase == "enemy_cringe":
         timer 0.9 action Function(_mogx_apply_enemy_cringe)
     elif phase == "defense_result":
-        timer 0.72 action Function(_mogx_hit_resolved)
+        # Mid-combo the next hit chains fast; only the last hit breathes.
+        timer (0.30 if S["queue_idx"] + 1 < len(S["queue"]) else 0.72) action Function(_mogx_hit_resolved)
     elif phase == "guided_result":
         timer 0.75 action Function(_mogx_guided_done)
     elif phase in ("enemy_result", "break_result"):
@@ -1507,6 +1538,8 @@ screen mog_battle_screen():
         # Only the character art travels; name and EGO bar stay anchored.
         $ hit_heavy = S["hit"] is not None and S["hit"].get("heavy")
         $ lunge_lead = 0.38 if hit_heavy else 0.30
+        # Per-hit windup style ("zigzag"/"spin"), else the enemy's default.
+        $ windup_style = (S["hit"].get("windup") if S["hit"] else None) or {"brayden": "brayden", "clav": "clav"}.get(S["battle_id"], "lean")
         fixed:
             xysize (360, 210)
             if phase in ("defense_result", "guided_result") and S["def_pose"] == "parry":
@@ -1517,9 +1550,13 @@ screen mog_battle_screen():
                 at mogx_enemy_lunge
             elif phase == "guided_frozen":
                 at mogx_enemy_contact
-            elif phase in ("defense", "enemy_cringe") and S["battle_id"] == "brayden":
+            elif phase in ("defense", "enemy_cringe") and windup_style == "zigzag":
+                at mogx_enemy_windup_zigzag
+            elif phase in ("defense", "enemy_cringe") and windup_style == "spin":
+                at mogx_enemy_windup_spin
+            elif phase in ("defense", "enemy_cringe") and windup_style == "brayden":
                 at mogx_enemy_windup_brayden
-            elif phase in ("defense", "enemy_cringe") and S["battle_id"] == "clav":
+            elif phase in ("defense", "enemy_cringe") and windup_style == "clav":
                 at mogx_enemy_windup_clav
             elif phase in ("defense", "enemy_cringe"):
                 at mogx_enemy_windup
