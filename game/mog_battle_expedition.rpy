@@ -200,7 +200,9 @@ init 2 python:
         {"do": "dlg", "text": "Chaos lesson: {b}4 · RATIO RUSH{/b} 🤡 — hammer {b}J{/b} and {b}K{/b}, {b}alternating{/b}, fast as you can. Every press is a hit. Get {b}8+ hits{/b} to pass (that also {b}Embarrasses{/b} your opponent)."},
         {"do": "teach", "skill": "jester",
          "fail": "Not enough hits — need {b}8+{/b}. Alternate faster, don't double-tap the same key. Run it back."},
-        {"do": "dlg", "text": "Recovery: {b}5 · POWER NAP{/b} 😴 — restores Confidence and {b}cures 😬 CRINGE{/b} (bosses WILL cringe you, and you can't dodge it). Time the bar — land the {b}green or gold{/b}."},
+        {"do": "dlg", "text": "Next one you need to {b}feel{/b}, not hear about. Hold still — this is a {b}CRINGE{/b}."},
+        {"do": "cringe_hit"},
+        {"do": "dlg", "text": "That. 😬 You're {b}CRINGED{/b}: every attack {b}-35%{/b} and you {b}leak 1⚡ every turn{/b} — and look at your Confidence. It does NOT wear off; bosses WILL do this to you and you {b}can't dodge it{/b}. The cure: {b}5 · POWER NAP{/b} 😴 — time the bar into the {b}green or gold{/b} to heal up AND clear it."},
         {"do": "teach", "skill": "sleep",
          "fail": "Restless sleep — you missed the zone. Watch the marker, SPACE in the green. Again."},
         {"do": "dlg", "text": "Last one. I'm filling your {b}👑 MOG METER{/b}. Press {b}6 · MOGMAX{/b}: the room goes dark and you {b}DRAW THE M{/b} — hit the five circles in order as they light. You pass with {b}4 of 5{/b}."},
@@ -439,11 +441,11 @@ init 2 python:
         S["aura"] = max(0, S["aura"] - skill["cost"])
         if skill_id not in ("yap", "mogmax"):
             S["pending_cooldown"] = skill_id
-        # Cringe weakens the very next attack (Power Nap excluded), then clears.
+        # Cringe weakens EVERY attack while active (Power Nap excluded) and
+        # only Power Nap clears it — see the per-turn Aura leak in end_round.
         S["var_mult"] = 1.0
         if S["cringe"] and skill_id != "sleep":
             S["var_mult"] = 0.65
-            S["cringe"] = False
             _mogx_float("player", "😬 -35%", "red")
         S["last_grade"] = None
         S["qte_elapsed"] = 0.0
@@ -820,7 +822,7 @@ init 2 python:
             return
         S["cringe"] = True
         _mogx_float("player", "😬", "red")
-        _mogx_announce("CRINGED 😬 UNDODGEABLE — NAP IT OFF", "red")
+        _mogx_announce("CRINGED 😬 — LEAKING AURA. NAP IT OFF", "red")
         _mogx_sfx("miss")
         S["phase"] = "enemy_result"
         renpy.restart_interaction()
@@ -1006,6 +1008,10 @@ init 2 python:
             return
         S["cooldown"] = S["pending_cooldown"]
         S["pending_cooldown"] = None
+        # Cringe leaks Aura every turn until it's napped off.
+        if S["cringe"] and S["aura"] > 0:
+            S["aura"] -= 1
+            _mogx_float("aura", "😬 -1⚡", "red")
         S["round"] += 1
         S["stats"]["turns"] += 1
         S["selected"] = None
@@ -1132,6 +1138,17 @@ init 2 python:
             S["phase"] = "player"
             S["message"] = "LESSON // Use %s %s." % (
                 MOGX_SKILLS[skill]["name"], MOGX_SKILLS[skill]["icon"])
+        elif kind == "cringe_hit":
+            # Scripted: Kai cringes you and drops your Confidence so the
+            # Power Nap lesson has something real to heal and cure.
+            S["cringe"] = True
+            S["php"] = min(S["php"], 40)
+            _mogx_float("player", "😬", "red")
+            _mogx_flash("player")
+            _mogx_sfx("hurt")
+            _mogx_announce("CRINGED 😬", "red")
+            S["message"] = "Kai posts your L in the group chat. CRINGE applied."
+            S["phase"] = "tut_beat"
         elif kind == "guided":
             S["tut_reps"] = 0
             _mogx_tut_guided_rep()
@@ -1179,6 +1196,13 @@ init 2 python:
             _mogx_float("aura", "+1⚡", "purp")
         S["phase"] = "guided_result"
         renpy.restart_interaction()
+
+    def _mogx_tut_beat_done():
+        S = mog_battle
+        if S["phase"] != "tut_beat":
+            return
+        S["tut_idx"] += 1
+        _mogx_tut_run()
 
     def _mogx_guided_done():
         S = mog_battle
@@ -1489,6 +1513,8 @@ screen mog_battle_screen():
         timer (0.30 if S["queue_idx"] + 1 < len(S["queue"]) else 0.72) action Function(_mogx_hit_resolved)
     elif phase == "guided_result":
         timer 0.75 action Function(_mogx_guided_done)
+    elif phase == "tut_beat":
+        timer 1.2 action Function(_mogx_tut_beat_done)
     elif phase in ("enemy_result", "break_result"):
         timer 0.85 action Function(_mogx_end_round)
 
@@ -1637,7 +1663,7 @@ screen mog_battle_screen():
         text ("%d%%" % S["mog"]):
             xpos 340 xanchor 1.0 ypos 287 size 10 color ("#ffd75e" if S["mog"] >= 100 else "#98a3b8") bold True
         if S["cringe"]:
-            text "😬 CRINGE — nap it off":
+            text "😬 CRINGE — leaking ⚡ every turn, nap it off":
                 xpos 0 ypos 306 size 13 color "#ff5d6c" bold True
 
     # ── Announcer ───────────────────────────────────────────────────
@@ -1662,46 +1688,49 @@ screen mog_battle_screen():
     text S["message"]:
         xalign 0.5 ypos 548 xmaximum 1130 text_align 0.5 size 14 color "#d7dceb" bold True
 
-    # ── Skill deck ──────────────────────────────────────────────────
-    hbox:
-        xpos 50 ypos 586 spacing 10
-        for skill_id in MOGX_SKILL_ORDER:
-            $ skill = MOGX_SKILLS[skill_id]
-            $ locked = _mogx_skill_lock(skill_id)
-            $ mog_ready = skill_id == "mogmax" and S["mog"] >= 100 and locked is None
-            button:
-                xysize (188, 118)
-                if mog_ready:
-                    background Solid("#3a2f10")
-                    at mogx_mog_ready_pulse
-                else:
-                    background Solid("#111827e8")
-                hover_background Solid(skill["color"] + "2d")
-                insensitive_background Solid("#0c111bd9")
-                sensitive locked is None
-                action Function(_mogx_choose, skill_id)
-                tooltip skill["desc"]
-                padding (10, 8)
-                fixed:
-                    text skill["key"]:
-                        xpos 2 ypos 0 size 10 color "#778197" bold True
-                    if locked is not None and locked != "WAIT":
-                        text skill["icon"] xalign 0.5 ypos 4 size 30 at Transform(alpha=0.3)
+    # ── Skill deck (hidden while defending — the W/S buttons take its
+    #    place in the bottom bar so the UI stays focused) ─────────────
+    $ defending = phase in ("defense", "guided_frozen", "defense_result", "guided_result", "enemy_intro", "enemy_heal", "enemy_cringe") and S["hit"] is not None
+    if not defending:
+        hbox:
+            xpos 50 ypos 586 spacing 10
+            for skill_id in MOGX_SKILL_ORDER:
+                $ skill = MOGX_SKILLS[skill_id]
+                $ locked = _mogx_skill_lock(skill_id)
+                $ mog_ready = skill_id == "mogmax" and S["mog"] >= 100 and locked is None
+                button:
+                    xysize (188, 118)
+                    if mog_ready:
+                        background Solid("#3a2f10")
+                        at mogx_mog_ready_pulse
                     else:
-                        text skill["icon"] xalign 0.5 ypos 4 size 30
-                    text skill["name"]:
-                        xalign 0.5 ypos 48 size 14 color ("#f7f8fa" if locked is None else "#606879") bold True
-                    text skill["kind"].upper():
-                        xalign 0.5 ypos 68 size 9 color "#8791a5" bold True
-                    if skill_id == "mogmax":
-                        text ("READY!" if mog_ready else (locked if locked not in (None, "WAIT") else "%d%%" % S["mog"])):
-                            xalign 0.5 ypos 88 size 11 color ("#ffd75e" if mog_ready else "#5c6473") bold True
-                    elif locked not in (None, "WAIT"):
-                        text locked:
-                            xalign 0.5 ypos 88 size 10 color "#ff9d6c" bold True
-                    else:
-                        text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
-                            xalign 0.5 ypos 86 size 12 color "#ffd75e"
+                        background Solid("#111827e8")
+                    hover_background Solid(skill["color"] + "2d")
+                    insensitive_background Solid("#0c111bd9")
+                    sensitive locked is None
+                    action Function(_mogx_choose, skill_id)
+                    tooltip skill["desc"]
+                    padding (10, 8)
+                    fixed:
+                        text skill["key"]:
+                            xpos 2 ypos 0 size 10 color "#778197" bold True
+                        if locked is not None and locked != "WAIT":
+                            text skill["icon"] xalign 0.5 ypos 4 size 30 at Transform(alpha=0.3)
+                        else:
+                            text skill["icon"] xalign 0.5 ypos 4 size 30
+                        text skill["name"]:
+                            xalign 0.5 ypos 48 size 14 color ("#f7f8fa" if locked is None else "#606879") bold True
+                        text skill["kind"].upper():
+                            xalign 0.5 ypos 68 size 9 color "#8791a5" bold True
+                        if skill_id == "mogmax":
+                            text ("READY!" if mog_ready else (locked if locked not in (None, "WAIT") else "%d%%" % S["mog"])):
+                                xalign 0.5 ypos 88 size 11 color ("#ffd75e" if mog_ready else "#5c6473") bold True
+                        elif locked not in (None, "WAIT"):
+                            text locked:
+                                xalign 0.5 ypos 88 size 10 color "#ff9d6c" bold True
+                        else:
+                            text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
+                                xalign 0.5 ypos 86 size 12 color "#ffd75e"
 
     # Skill hover description.
     $ deck_tt = GetTooltip()
@@ -1754,12 +1783,13 @@ screen mogx_defense_buttons(S):
     $ focus = S["def_focus"]
     if is_red and S["phase"] != "defense_result":
         text "🔴 RED — DODGE ONLY":
-            xalign 0.5 ypos 398 size 17 color "#ff5d6c" bold True
+            xalign 0.5 ypos 516 size 18 color "#ff5d6c" bold True
             outlines [(2, "#000000c0", 0, 1)]
+    # The two defense buttons live where the skill deck normally sits.
     hbox:
-        xalign 0.5 ypos 434 spacing 28
+        xalign 0.5 ypos 588 spacing 32
         button:
-            xysize (215, 66)
+            xysize (300, 110)
             background Solid("#0d1422e0" if focus == "dodge" else "#6db1ff22")
             hover_background Solid("#6db1ff50")
             sensitive focus != "dodge"
@@ -1767,14 +1797,14 @@ screen mogx_defense_buttons(S):
             if focus == "parry":
                 at mogx_freeze_pulse
             hbox:
-                xalign 0.5 yalign 0.5 spacing 10
+                xalign 0.5 yalign 0.5 spacing 14
                 frame:
-                    xysize (38, 38) padding (0, 0)
+                    xysize (52, 52) padding (0, 0)
                     background Solid("#2a2438" if focus == "parry" else "#1b2236")
-                    text "W" xalign 0.5 yalign 0.5 size 17 bold True color ("#ffb347" if focus == "parry" else "#ffffff")
-                text "🛡️ PARRY" yalign 0.5 size 15 bold True color ("#525b6e" if focus == "dodge" else "#ffffff")
+                    text "W" xalign 0.5 yalign 0.5 size 24 bold True color ("#ffb347" if focus == "parry" else "#ffffff")
+                text "🛡️ PARRY" yalign 0.5 size 20 bold True color ("#525b6e" if focus == "dodge" else "#ffffff")
         button:
-            xysize (215, 66)
+            xysize (300, 110)
             background Solid("#0d1422e0" if focus == "parry" else "#c07bff22")
             hover_background Solid("#c07bff50")
             sensitive focus != "parry"
@@ -1782,12 +1812,12 @@ screen mogx_defense_buttons(S):
             if focus == "dodge":
                 at mogx_freeze_pulse
             hbox:
-                xalign 0.5 yalign 0.5 spacing 10
+                xalign 0.5 yalign 0.5 spacing 14
                 frame:
-                    xysize (38, 38) padding (0, 0)
+                    xysize (52, 52) padding (0, 0)
                     background Solid("#2a2438" if focus == "dodge" else "#1b2236")
-                    text "S" xalign 0.5 yalign 0.5 size 17 bold True color ("#ffb347" if focus == "dodge" else "#ffffff")
-                text "💨 DODGE" yalign 0.5 size 15 bold True color ("#525b6e" if focus == "parry" else "#ffffff")
+                    text "S" xalign 0.5 yalign 0.5 size 24 bold True color ("#ffb347" if focus == "dodge" else "#ffffff")
+                text "💨 DODGE" yalign 0.5 size 20 bold True color ("#525b6e" if focus == "parry" else "#ffffff")
 
 
 screen mogx_freeze_hint(S):
@@ -2086,7 +2116,7 @@ screen mogx_help_overlay():
             text "RULES OF THE HALLWAY" size 12 color "#ffd75e" bold True
             text "• Used skills go {b}⏳ on timeout{/b} for one turn — rotate your kit." size 13 color "#aab4c5"
             text "• The {b}👑 Mog Meter{/b} fills from parries and landed hits — and drains when you get hit or flub a minigame." size 13 color "#aab4c5"
-            text "• Enemies heal (deny by bursting or BREAKing them), throw undodgeable 😬 CRINGE, and some hits YOINK your ⚡." size 13 color "#aab4c5"
+            text "• Enemies heal (deny by bursting or BREAKing them), and some hits YOINK your ⚡. Undodgeable 😬 CRINGE weakens every attack AND leaks 1⚡ per turn until you nap it off." size 13 color "#aab4c5"
             null height 6
             textbutton "CLOSE":
                 xalign 0.5 xysize (200, 46)
