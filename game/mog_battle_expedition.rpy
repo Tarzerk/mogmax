@@ -82,9 +82,15 @@ init 2 python:
             "dmg": 5, "heals": 0, "heal_amt": 0, "cringes": 0, "feint": 0.0,
             "patterns": (({"w": 1.25},), ({"w": 1.25}, {"w": 1.0})),
         },
+        # "heavy" hits do 1.7x damage, dive bigger/slower, and land with the
+        # heavy punch sound. Their longer windup IS the tell.
         "kai_graduation": {
-            "dmg": 9, "heals": 1, "heal_amt": 15, "cringes": 1, "feint": 0.0,
-            "patterns": (({"w": 1.15},), ({"w": 1.15}, {"w": 0.9})),
+            "dmg": 12, "heals": 1, "heal_amt": 15, "cringes": 1, "feint": 0.0,
+            "patterns": (
+                ({"w": 1.15},),
+                ({"w": 1.15}, {"w": 0.9}),
+                ({"w": 1.05}, {"w": 1.35, "heavy": True}),
+            ),
         },
         # Brayden: fast but FAIR — every combo has a fixed, learnable rhythm
         # (short-short, short-short-LONG, etc). No dirty tells. His windup is
@@ -93,9 +99,10 @@ init 2 python:
             "dmg": 17, "heals": 1, "heal_amt": 30, "cringes": 2, "feint": 0.18,
             "patterns": (
                 ({"w": 0.75}, {"w": 0.58}),
-                ({"w": 0.75}, {"w": 0.58}, {"w": 0.85}),
-                ({"w": 0.9, "red": True},),
+                ({"w": 0.75}, {"w": 0.58}, {"w": 0.85, "heavy": True}),
+                ({"w": 0.95, "red": True, "heavy": True},),
                 ({"w": 0.8, "drain": True}, {"w": 0.62}),
+                ({"w": 1.0, "heavy": True}, {"w": 0.55}, {"w": 0.55}, {"w": 1.0, "heavy": True}),
             ),
         },
         # Clav: fast AND a little unfair — "late" hits flash the tell only a
@@ -105,16 +112,16 @@ init 2 python:
             "dmg": 18, "heals": 2, "heal_amt": 35, "cringes": 3, "feint": 0.12,
             "patterns": (
                 ({"w": 0.65}, {"w": 0.55}, {"w": 0.55}),
-                ({"w": 0.7, "late": True}, {"w": 0.55}),
-                ({"w": 0.9, "red": True}, {"w": 0.55}),
+                ({"w": 0.7, "late": True}, {"w": 0.55}, {"w": 0.9, "heavy": True}),
+                ({"w": 0.95, "red": True, "heavy": True}, {"w": 0.55}),
                 ({"w": 0.7, "drain": True}, {"w": 0.55, "feint": True}),
             ),
             "phase2": {
                 "dmg": 21, "feint": 0.25,
                 "patterns": (
-                    ({"w": 0.58}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}),
-                    ({"w": 0.62, "notell": True}, {"w": 0.5}, {"w": 0.78, "red": True}),
-                    ({"w": 0.55, "late": True}, {"w": 0.5, "feint": True}, {"w": 0.5}),
+                    ({"w": 0.58}, {"w": 0.5}, {"w": 0.5}, {"w": 0.5}, {"w": 0.95, "heavy": True}),
+                    ({"w": 0.62, "notell": True}, {"w": 0.5}, {"w": 0.8, "red": True, "heavy": True}),
+                    ({"w": 0.55, "late": True}, {"w": 0.5, "feint": True}, {"w": 0.9, "heavy": True}),
                     ({"w": 0.62, "drain": True}, {"w": 0.5}, {"w": 0.5, "late": True}),
                 ),
             },
@@ -204,9 +211,12 @@ init 2 python:
         "hit":     ("audio/battle_aura_beam.mp3", 0.5),
         "bighit":  ("audio/mogging_short.mp3", 0.8),
         "perfect": ("audio/battle_super_effective.mp3", 0.75),
-        "parry":   ("audio/parry_block.mp3", 0.95),
-        "hurt":    ("audio/punch_impact.mp3", 0.9),
-        "whoosh":  ("audio/whoosh_dodge.mp3", 0.85),
+        # Lists = variants; each play picks one at random so combos don't
+        # sound like a stuck sample.
+        "parry":   [("audio/parry_block.mp3", 0.95), ("audio/parry_block2.mp3", 0.95), ("audio/parry_block3.mp3", 0.95)],
+        "hurt":    [("audio/punch_impact.mp3", 0.9), ("audio/punch_impact2.mp3", 0.9)],
+        "hurt_heavy": ("audio/punch_heavy.mp3", 1.0),
+        "whoosh":  [("audio/whoosh_dodge.mp3", 0.85), ("audio/whoosh_dodge2.mp3", 0.85), ("audio/whoosh_dodge3.mp3", 0.85)],
         "heal":    ("audio/battle_health_recharge.mp3", 0.8),
         "mog":     ("audio/mogging_short.mp3", 1.0),
         "miss":    ("audio/mew_reject.mp3", 0.55),
@@ -221,7 +231,10 @@ init 2 python:
     }
 
     def _mogx_sfx(name, channel="battle_sfx"):
-        path, vol = MOGX_SFX[name]
+        entry = MOGX_SFX[name]
+        if isinstance(entry, list):
+            entry = renpy.random.choice(entry)
+        path, vol = entry
         _mogx_audio(path, vol, channel)
 
     # ------------------------------------------------------------------
@@ -361,7 +374,7 @@ init 2 python:
             S["ehp"] += healed
             _mogx_float("enemy", "+%d EGO 😏" % healed, "green")
 
-    def _mogx_damage_player(amount):
+    def _mogx_damage_player(amount, heavy=False):
         S = mog_battle
         amount = max(0, int(round(amount)))
         if S["tutorial"]:
@@ -369,9 +382,9 @@ init 2 python:
         S["php"] = max(0, S["php"] - amount)
         S["stats"]["hits_taken"] += 1
         _mogx_gain_mog(-6)
-        _mogx_float("player", "-%d" % amount, "red")
+        _mogx_float("player", ("💥 -%d" % amount) if heavy else ("-%d" % amount), "red")
         _mogx_flash("player")
-        _mogx_sfx("hurt")
+        _mogx_sfx("hurt_heavy" if heavy else "hurt")
         if S["php"] <= S["pmax"] * 0.25:
             _mogx_audio("audio/battle_low_health.mp3", 0.55, "battle_warning")
         return amount
@@ -876,6 +889,8 @@ init 2 python:
         hit = S["hit"]
         S["def_result"] = result
         dmg = S.get("rep_dmg_override") or S["edmg"]
+        if hit.get("heavy"):
+            dmg = int(round(dmg * 1.7))
         if S["embarrassed"]:
             dmg = int(round(dmg * 0.6))
 
@@ -917,10 +932,10 @@ init 2 python:
         elif result == "failparry":
             S["def_pose"] = "hit"
             _mogx_announce("CAN'T PARRY THAT ❌", "red")
-            _mogx_damage_player(dmg)
+            _mogx_damage_player(dmg, heavy=hit.get("heavy"))
         else:  # hit
             S["def_pose"] = "hit"
-            _mogx_damage_player(dmg)
+            _mogx_damage_player(dmg, heavy=hit.get("heavy"))
             if hit.get("drain") and S["aura"] > 0:
                 stolen = min(2, S["aura"])
                 S["aura"] -= stolen
@@ -1326,6 +1341,13 @@ transform mogx_enemy_lunge:
     pause 0.14
     easeout 0.28 xoffset 0 yoffset 0 zoom 1.0
 
+# Heavy dive: slower and bigger — the weight of the swing is readable.
+transform mogx_enemy_lunge_heavy:
+    xoffset 42 yoffset -20 zoom 1.05
+    easein 0.38 xoffset -710 yoffset 165 zoom 1.48
+    pause 0.16
+    easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
+
 # Frozen-time lesson: held at the moment of contact.
 transform mogx_enemy_contact:
     xoffset -710 yoffset 165 zoom 1.32
@@ -1483,11 +1505,15 @@ screen mog_battle_screen():
     fixed:
         xpos 800 ypos 76 xysize (360, 330)
         # Only the character art travels; name and EGO bar stay anchored.
+        $ hit_heavy = S["hit"] is not None and S["hit"].get("heavy")
+        $ lunge_lead = 0.38 if hit_heavy else 0.30
         fixed:
             xysize (360, 210)
             if phase in ("defense_result", "guided_result") and S["def_pose"] == "parry":
                 at mogx_enemy_parried
-            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - 0.30:
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead and hit_heavy:
+                at mogx_enemy_lunge_heavy
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - lunge_lead:
                 at mogx_enemy_lunge
             elif phase == "guided_frozen":
                 at mogx_enemy_contact
@@ -2014,6 +2040,7 @@ screen mogx_help_overlay():
             text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +2⚡ (+3⚡ perfect), heals a little, and counters." size 13 color "#aab4c5"
             text "• {b}S = DODGE{/b} — big window. A last-second {b}PERFECT DODGE{/b} earns +1⚡; a regular dodge earns nothing." size 13 color "#aab4c5"
             text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
+            text "• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning." size 13 color "#aab4c5"
             text "YOUR SKILLS (keys 1-6)" size 12 color "#ffd75e" bold True
             text "• {b}1 Yap 🗣️{/b} — free jab, +1⚡.  {b}2 Mog Stare 😎{/b} (4⚡) — strike while the fast marker is in the gold." size 13 color "#aab4c5"
             text "• {b}3 Galaxy Brain 🧠{/b} (2⚡) — vocab quiz; correct = big damage +1⚡ back." size 13 color "#aab4c5"
