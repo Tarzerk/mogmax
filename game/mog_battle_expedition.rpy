@@ -1334,10 +1334,17 @@ transform mogx_player_dodge:
     easeout 0.10 xoffset -80 alpha 0.3
     easein 0.22 xoffset 0 alpha 1.0
 
+# Parry: the player shoves INTO the attack (up-right, toward the enemy).
 transform mogx_player_parry:
-    zoom 1.0
-    easeout 0.09 zoom 1.07
-    easein 0.18 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0
+    easeout 0.10 xoffset 48 yoffset -26 zoom 1.07
+    ease 0.24 xoffset 0 yoffset 0 zoom 1.0
+
+# ...and the enemy is knocked off the contact point, rocking back past home.
+transform mogx_enemy_parried:
+    xoffset -710 yoffset 165 zoom 1.32
+    easeout 0.24 xoffset 85 yoffset -45 zoom 1.02 rotate 9
+    ease 0.22 xoffset 0 yoffset 0 zoom 1.0 rotate 0
 
 transform mogx_impact_flash:
     alpha 0.85
@@ -1460,7 +1467,9 @@ screen mog_battle_screen():
         # Only the character art travels; name and EGO bar stay anchored.
         fixed:
             xysize (360, 210)
-            if phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - 0.30:
+            if phase in ("defense_result", "guided_result") and S["def_pose"] == "parry":
+                at mogx_enemy_parried
+            elif phase in ("defense", "defense_result") and S["hit_elapsed"] >= S["impact_at"] - 0.30:
                 at mogx_enemy_lunge
             elif phase == "guided_frozen":
                 at mogx_enemy_contact
@@ -1474,8 +1483,11 @@ screen mog_battle_screen():
             # inactive) so toggling it never restarts the motion transforms.
             $ tell_on = phase in ("defense", "guided_frozen") and S["alert_on"]
             $ tell_color = "#ff5d6c" if (S["hit"] and S["hit"].get("red")) else "#ffd75e"
-            add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(322, 216), matrixcolor=ColorizeMatrix(Color(tell_color), Color(tell_color))):
-                xalign 0.5 ypos -8 alpha (0.7 if tell_on else 0.0)
+            # Two-layer glow: a wide soft halo plus a tight bright rim.
+            add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(348, 234), matrixcolor=ColorizeMatrix(Color(tell_color), Color(tell_color))):
+                xalign 0.5 ypos -17 alpha (0.5 if tell_on else 0.0)
+            add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(324, 218), matrixcolor=ColorizeMatrix(Color(tell_color), Color(tell_color))):
+                xalign 0.5 ypos -9 alpha (0.95 if tell_on else 0.0)
             add Transform(enemy_asset, crop=enemy_crop, fit="contain", xysize=(300, 200)) xalign 0.5 ypos 0
         text config["enemy_name"]:
             xpos 20 ypos 202 size 20 color "#f7f8fa" bold True
