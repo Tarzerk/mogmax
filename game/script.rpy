@@ -140,7 +140,7 @@ transform eugene_mog_impact:
     linear 0.05 xoffset 8 yoffset 4
     easeout 0.12 xoffset 0 yoffset 0 zoom 1.0
 
-# Mogbender gate guards — art is a wide sprite on a large mostly
+# Gigamaxxing gate guards — art is a wide sprite on a large mostly
 # transparent canvas, so each needs its own zoom/anchor rather than clav_body's.
 # The character sits at the canvas centre, so xoffset (not xalign) is what
 # actually separates the two figures on screen. Soldier holds the left; the
@@ -166,7 +166,7 @@ default took_chad_pill = False
 # Set during the story; read by later chapters for branching.
 default brayden_threatened = False
 default helped_eugene = False
-# The Eugene choice is now mog-vs-lift (Mogbender). Both outcomes are recorded
+# The Eugene choice is now mog-vs-lift (Gigamaxxing). Both outcomes are recorded
 # so the finale can read them (2×2 with the final choice).
 default mogged_eugene = False
 default critical_choice_active = False
@@ -313,7 +313,7 @@ transform clav_projection:
     yalign 1.0
     yoffset 25
 
-# Mogbender gate guards — shown one at a time in the base-entrance scene.
+# Gigamaxxing gate guards — shown one at a time in the base-entrance scene.
 image soldier = "images/characters/soldier/soldier.png"
 image captain = "images/characters/captain/captain.png"
 

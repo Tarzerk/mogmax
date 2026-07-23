@@ -25,7 +25,7 @@ init python:
     # skip menu) shows no chapter line at all.
     _CREDITS_CHAPTER_TITLES = {
         1: "Chapter 1 — Chopped",
-        2: "Chapter 2 — The Mogbender",
+        2: "Chapter 2 — Gigamaxxing",
     }
 
     def build_credits_body(from_chapter=0):
