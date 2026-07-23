@@ -1584,8 +1584,6 @@ screen mog_battle_screen():
     $ header = "%s  //  %s" % (config.get("title", "MOG BATTLE"), config["enemy_name"])
     text header:
         xpos 26 ypos 20 size 13 color "#aab4c5" bold True
-    text ("ROUND %d" % S["round"]):
-        xpos 1130 xanchor 1.0 ypos 20 size 13 color "#aab4c5" bold True
     textbutton "❓ HOW TO PLAY":
         xpos 1254 xanchor 1.0 ypos 12 padding (10, 6)
         background Solid("#111827c0") hover_background Solid("#1c2740")
@@ -1721,9 +1719,9 @@ screen mog_battle_screen():
             color f["color"] outlines [(2, "#000000b0", 0, 1)]
             at Transform(alpha=f_alpha)
 
-    # ── Message band ────────────────────────────────────────────────
+    # ── Message band (top center, under the header) ─────────────────
     text S["message"]:
-        xalign 0.5 ypos 548 xmaximum 1130 text_align 0.5 size 14 color "#d7dceb" bold True
+        xalign 0.5 ypos 52 xmaximum 1000 text_align 0.5 size 15 color "#d7dceb" bold True
 
     # ── Skill deck (hidden while defending — the W/S buttons take its
     #    place in the bottom bar so the UI stays focused) ─────────────
@@ -1769,11 +1767,11 @@ screen mog_battle_screen():
                             text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
                                 xalign 0.5 ypos 86 size 12 color "#ffd75e"
 
-    # Skill hover description.
+    # Skill hover description — sits on the free line just above the deck.
     $ deck_tt = GetTooltip()
     if deck_tt and phase == "player":
         text deck_tt:
-            xalign 0.5 ypos 706 yanchor 1.0 size 12 color "#aab4c5" text_align 0.5 xmaximum 900
+            xalign 0.5 ypos 550 size 13 color "#aab4c5" text_align 0.5 xmaximum 1000
 
     # ── Defense buttons (prototype-style, bottom center) ────────────
     if phase in ("defense", "guided_frozen", "defense_result") and S["hit"] is not None:
