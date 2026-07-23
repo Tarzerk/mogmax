@@ -506,7 +506,7 @@ label chapter2_return:
 
     pause 0.6
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
-    show screen cinematic_note("{i}\"Your phone buzzes. The class group chat — two hundred people who learned your name today.\"{/i}")
+    show screen cinematic_note("{i}\"Your phone buzzes. The class group chat, blowing up.\"{/i}")
     pause 0.25
     show screen cinematic_caption("{i}FRIDAY @ MY PLACE - 9PM\nOPEN INVITE\nEVERYBODY PULL UP{/i}", "Class Group Chat")
     pause 3.4
