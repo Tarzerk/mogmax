@@ -74,6 +74,7 @@ label chapter2_start:
     hide text with dissolve
 
     # ── SCENE 1 — THE PICKUP ──
+label chapter2_pickup:
     scene bg ch2_bedroom with fade
     # Bright stock bedroom -> tint dark for the pre-dawn feel (same trick as
     # the desert night return).
@@ -90,6 +91,7 @@ label chapter2_start:
     pause 0.6
 
     # ── SCENE 2 — THE ROAD ──
+label chapter2_road:
     scene bg ch2_road with fade
     play music "audio/desert_ambient.mp3" fadein 1.5 volume persistent.vol_bed
     narrator "At first there are streetlights. Then fewer streetlights. Then the road becomes one long dark line under the headlights."
@@ -120,12 +122,15 @@ label chapter2_start:
     call screen ch2_travel_bar
 
     # ── SCENE 3 — THE SIGN ──
+label chapter2_restricted_sign:
     scene bg ch2_sign with fade
     play music "audio/base_ambient.mp3" fadeout 1.5 fadein 1.5 volume persistent.vol_bed
     narrator "The car stops. The camera pans to a sign staked in the dirt."
     narrator "{b}⚠ RESTRICTED AREA — USE OF DEADLY FORCE AUTHORIZED ⚠{/b}"
     p "I think we should not be going here."
     narrator "Clav smirks. Says nothing."
+
+label chapter2_gate:
     scene bg ch2_gate with fade
     narrator "The car rolls up to the gate. A chain-link fence. A STOP sign. Two soldiers."
     show soldier at soldier_left with dissolve
@@ -172,6 +177,7 @@ label chapter2_base:
     hide text with dissolve
 
     # ── SCENE 5 — THE REVEAL ──
+label chapter2_lab_reveal:
     scene bg ch2_lab with fade
     show clav thinking at clav_body
     c "Most people think Area 51 is about aliens. Advanced weapons. Classified tech."
@@ -189,6 +195,7 @@ label chapter2_base:
     pause 0.6
 
     # ── SCENE 6 — FIRST CONTACT ──
+label chapter2_gigachad_hall:
     scene bg ch2_labhall with fade
     narrator "The lab narrows into a service hall. Glass cabinets on one side. Pipes and sealed doors on the other."
     show gigachad standing at gigachad_file with dissolve
@@ -371,6 +378,7 @@ label chapter2_training:
     $ acne_training_score = renpy.call_screen("acne_pop_minigame")
     $ aura += 100
 
+label chapter2_training_montage:
     narrator "The scan turns green: {color=#69e4ad}CLEAR SKIN. +100 AURA.{/color}"
     if acne_mistakes == 0:
         show clav thinking at clav_body
@@ -397,6 +405,7 @@ label chapter2_training:
     narrator "By the time the last restraint unlocks, your jaw aches in a muscle you didn't know existed. The sensor on your wrist keeps returning the same verdict: {color=#88ff88}AURA: RISING.{/color}"
 
     # ── HOW A MOG BATTLE WORKS ──
+label chapter2_kai_tutorial:
     narrator "Across the gym, two trainees square off. No fists. No words. One of them sets his jaw and stands a half-inch taller."
     narrator "The other one's shoulders fold. He looks at the floor. The whole room knows exactly who won."
     show clav stern at clav_body
@@ -412,6 +421,7 @@ label chapter2_training:
     narrator "Kai taps RESTORE. Your Aura returns to {color=#69ff9a}100 / 100{/color}."
 
     # ── THE GRADUATION SPAR ──
+label chapter2_kai_graduation:
     show clav smirk at clav_body
     c "That was instruction. This one is yours."
     c "No answer lights. No help."
@@ -502,6 +512,7 @@ label chapter2_return:
     hide clav with dissolve
     narrator "You catch your reflection in the side mirror and sit up without deciding to."
 
+label chapter2_invite:
     # Let the invitation breathe in silence before the song takes over. Once
     # Pound Cake starts, the credits still land on its first major beat at 0:11.
     stop music fadeout 0.4
@@ -538,3 +549,30 @@ label chapter2_return:
     $ persistent.chapter2_complete = True
     $ credits_from_chapter = 2
     jump roll_credits
+
+
+label dev_ch2_training_montage:
+    scene bg ch2_gym with fade
+    play music "audio/training_montage.mp3" fadeout 1.5 fadein 1.0 volume persistent.vol_music
+    jump chapter2_training_montage
+
+
+label dev_ch2_kai_tutorial:
+    scene bg ch2_gym with fade
+    play music "audio/training_montage.mp3" fadeout 1.5 fadein 1.0 volume persistent.vol_music
+    jump chapter2_kai_tutorial
+
+
+label dev_ch2_kai_graduation:
+    scene bg ch2_gym with fade
+    play music "audio/training_montage.mp3" fadeout 1.5 fadein 1.0 volume persistent.vol_music
+    jump chapter2_kai_graduation
+
+
+label dev_ch2_invite:
+    $ set_cinematic_dialogue(True)
+    $ _rollback = False
+    scene bg ch2_road with fade
+    show expression Solid("#0a1430cc") as night_tint
+    window hide
+    jump chapter2_invite
