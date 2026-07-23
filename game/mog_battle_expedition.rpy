@@ -188,7 +188,7 @@ init 2 python:
          "attack": {"w": 1.4, "red": True}, "rep_dmg": 4,
          "mid": "One. Again.",
          "fail": "Too slow — press {b}S{/b} as the swing lands. One more time."},
-        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+2⚡{/b}, heal a little, and {b}counterattack{/b}. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
+        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+1⚡{/b} per parry ({b}+1 more{/b} for parrying a whole combo), heal a little, and {b}counterattack{/b}. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
         {"do": "guided", "kind": "parry", "reps": 2,
          "mid": "That's the parry window — tighter than the dodge, better rewards. Again."},
         {"do": "dlg", "text": "Now in real time. Watch the swing, press {b}W{/b} at impact. {b}Land 2 parries.{/b}"},
@@ -208,7 +208,7 @@ init 2 python:
          "fail": "Not enough hits — need {b}8+{/b}. Alternate faster, don't double-tap the same key. Run it back."},
         {"do": "dlg", "text": "Next one you need to {b}feel{/b}, not hear about. Hold still — this is a {b}CRINGE{/b}."},
         {"do": "cringe_hit"},
-        {"do": "dlg", "text": "That. 😬 You're {b}CRINGED{/b}: every attack {b}-35%{/b} and you {b}leak 1⚡ every turn{/b} — and look at your Confidence. It does NOT wear off; bosses WILL do this to you and you {b}can't dodge it{/b}. The cure: {b}5 · POWER NAP{/b} 😴 — time the bar into the {b}green or gold{/b} to heal up AND clear it."},
+        {"do": "dlg", "text": "That. 😬 You're {b}CRINGED{/b}: every attack {b}-35%{/b} and you {b}leak 1⚡ every turn{/b} — and look at your Confidence. It hangs on for {b}three turns{/b}, bosses WILL do this to you, and you {b}can't dodge it{/b}. The fast cure: {b}5 · POWER NAP{/b} 😴 — time the bar into the {b}green or gold{/b} to heal up AND clear it now."},
         {"do": "teach", "skill": "sleep",
          "fail": "Restless sleep — you missed the zone. Watch the marker, SPACE in the green. Again."},
         {"do": "dlg", "text": "Last one. I'm filling your {b}👑 MOG METER{/b}. Press {b}6 · MOGMAX{/b}: the room goes dark and you {b}DRAW THE M{/b} — hit the five circles in order as they light. You pass with {b}4 of 5{/b}."},
@@ -291,7 +291,8 @@ init 2 python:
             "last_grade": None,
             # Enemy attack execution
             "queue": [], "queue_idx": 0, "hit": None,
-            "turn_hits": 0, "turn_pdodges": 0,
+            "turn_hits": 0, "turn_pdodges": 0, "turn_parries": 0,
+            "cringe_turns": 0,
             "hit_elapsed": 0.0, "impact_at": 0.0, "alert_at": 0.0,
             "alert_on": False, "alert_played": False,
             "def_result": None, "def_lock": 0.0, "def_pose": None,
@@ -665,6 +666,7 @@ init 2 python:
         _mogx_heal_player(heal)
         cured = S["cringe"]
         S["cringe"] = False
+        S["cringe_turns"] = 0
         if grade == "perfect":
             _mogx_announce("QUALITY REM 💤", "green")
         elif cured:
@@ -808,6 +810,7 @@ init 2 python:
         S["counter"] = 0
         S["turn_hits"] = 0
         S["turn_pdodges"] = 0
+        S["turn_parries"] = 0
         # Deliberately does NOT announce the combo length — read the rhythm.
         S["message"] = "%s attacks! W = parry · S = dodge" % name
         S["phase"] = "enemy_intro"
@@ -830,6 +833,7 @@ init 2 python:
         if S["phase"] != "enemy_cringe":
             return
         S["cringe"] = True
+        S["cringe_turns"] = 0
         _mogx_float("player", "😬", "red")
         _mogx_announce("CRINGED 😬 — LEAKING AURA. NAP IT OFF", "red")
         _mogx_sfx("miss")
@@ -921,23 +925,25 @@ init 2 python:
         if result == "perfect":
             S["stats"]["parries"] += 1
             S["stats"]["perfect_parries"] += 1
+            S["turn_parries"] += 1
             S["def_pose"] = "parry"
             _mogx_announce("PERFECT PARRY!", "gold")
             _mogx_sfx("parry")
             _mogx_sfx("perfect", "battle_impact")
-            _mogx_gain_aura(3)
-            _mogx_float("aura", "+3⚡", "gold")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "gold")
             if S["php"] < S["pmax"]:
                 _mogx_heal_player(8)
             _mogx_gain_mog(34)
             S["counter"] += 8
         elif result == "parry":
             S["stats"]["parries"] += 1
+            S["turn_parries"] += 1
             S["def_pose"] = "parry"
             _mogx_announce("PARRY!", "blue")
             _mogx_sfx("parry")
-            _mogx_gain_aura(2)
-            _mogx_float("aura", "+2⚡", "blue")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "blue")
             if S["php"] < S["pmax"]:
                 _mogx_heal_player(4)
             _mogx_gain_mog(12)
@@ -995,10 +1001,14 @@ init 2 python:
     def _mogx_finish_enemy_turn():
         S = mog_battle
         S["embarrassed"] = False
-        # Perfect-dodging EVERY hit of the string banks +1 Aura.
+        # End-of-string bonuses: perfect-dodging EVERY hit banks +1 Aura;
+        # parrying EVERY hit banks +1 on top of the per-parry gains.
         if S["turn_hits"] > 0 and S["turn_pdodges"] == S["turn_hits"]:
             _mogx_gain_aura(1)
             _mogx_float("aura", "FLAWLESS 💨 +1⚡", "purp")
+        elif S["turn_hits"] > 0 and S["turn_parries"] == S["turn_hits"]:
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "FULL PARRY 🛡️ +1⚡", "gold")
         if S["counter"] > 0 and S["php"] > 0 and S["ehp"] > 0:
             _mogx_announce("COUNTER!", "gold")
             _mogx_damage_enemy(S["counter"], "gold")
@@ -1022,10 +1032,17 @@ init 2 python:
             return
         S["cooldown"] = S["pending_cooldown"]
         S["pending_cooldown"] = None
-        # Cringe leaks Aura every turn until it's napped off.
-        if S["cringe"] and S["aura"] > 0:
-            S["aura"] -= 1
-            _mogx_float("aura", "😬 -1⚡", "red")
+        # Cringe leaks Aura each turn, but fades on its own after 3 turns so
+        # a broke player can't get locked out of ever affording the nap.
+        if S["cringe"]:
+            if S["aura"] > 0:
+                S["aura"] -= 1
+                _mogx_float("aura", "😬 -1⚡", "red")
+            S["cringe_turns"] += 1
+            if S["cringe_turns"] >= 3:
+                S["cringe"] = False
+                S["cringe_turns"] = 0
+                _mogx_float("player", "😮‍💨 cringe faded", "green")
         S["round"] += 1
         S["stats"]["turns"] += 1
         S["selected"] = None
@@ -1156,6 +1173,7 @@ init 2 python:
             # Scripted: Kai cringes you and drops your Confidence so the
             # Power Nap lesson has something real to heal and cure.
             S["cringe"] = True
+            S["cringe_turns"] = 0
             S["php"] = min(S["php"], 40)
             _mogx_float("player", "😬", "red")
             _mogx_flash("player")
@@ -1200,8 +1218,8 @@ init 2 python:
             S["def_pose"] = "parry"
             _mogx_announce("PARRY!", "blue")
             _mogx_sfx("parry")
-            _mogx_gain_aura(2)
-            _mogx_float("aura", "+2⚡", "blue")
+            _mogx_gain_aura(1)
+            _mogx_float("aura", "+1⚡", "blue")
         else:
             S["def_pose"] = "dodge"
             _mogx_announce("DODGED 💨", "purp")
@@ -1362,30 +1380,33 @@ label battle_kai_graduation:
 # ----------------------------------------------------------------------
 # Transforms
 # ----------------------------------------------------------------------
+# Every enemy-state transform opens with a FULL reset (xoffset/yoffset/zoom/
+# rotate) — Ren'Py carries unset properties over when transforms swap, which
+# left interrupted spins stuck mid-rotation (upside-down enemies).
 transform mogx_enemy_idle:
-    yoffset 0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     ease 1.2 yoffset -6
     ease 1.2 yoffset 0
     repeat
 
 transform mogx_enemy_windup:
-    xoffset 0 yoffset 0 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     easein 0.45 xoffset 42 yoffset -20 zoom 1.05
 
 # Brayden coils DOWN then springs up — a quicker, bouncier tell than Kai's.
 transform mogx_enemy_windup_brayden:
-    xoffset 0 yoffset 0 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     easein 0.16 yoffset 16 zoom 1.09
     easein 0.20 xoffset 30 yoffset -28 zoom 1.05
 
 # Clav barely telegraphs: a slow, subtle coil — read the glow, not the body.
 transform mogx_enemy_windup_clav:
-    xoffset 0 yoffset 0 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     easein 0.55 xoffset 10 yoffset -6 zoom 0.985
 
 # Zig-zag windup: jukes side to side before committing.
 transform mogx_enemy_windup_zigzag:
-    xoffset 0 yoffset 0 zoom 1.0
+    xoffset 0 yoffset 0 zoom 1.0 rotate 0
     block:
         linear 0.09 xoffset -26
         linear 0.09 xoffset 26
@@ -1404,14 +1425,14 @@ transform mogx_enemy_windup_spin:
 # The dive: leaves the windup pose and rams the player's AVATAR head-on
 # exactly 0.30s later — the lunge is the parry/dodge timing cue.
 transform mogx_enemy_lunge:
-    xoffset 42 yoffset -20 zoom 1.05
+    xoffset 42 yoffset -20 zoom 1.05 rotate 0
     easein 0.30 xoffset -795 yoffset 0 zoom 1.32
     pause 0.14
     easeout 0.28 xoffset 0 yoffset 0 zoom 1.0
 
 # Heavy dive: slower and bigger — the weight of the swing is readable.
 transform mogx_enemy_lunge_heavy:
-    xoffset 42 yoffset -20 zoom 1.05
+    xoffset 42 yoffset -20 zoom 1.05 rotate 0
     easein 0.38 xoffset -795 yoffset 0 zoom 1.48
     pause 0.16
     easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
@@ -1419,14 +1440,14 @@ transform mogx_enemy_lunge_heavy:
 # Slow ram (~): drifts across the arena — defend when it ARRIVES, not when
 # it starts moving.
 transform mogx_enemy_lunge_slow:
-    xoffset 42 yoffset -20 zoom 1.05
+    xoffset 42 yoffset -20 zoom 1.05 rotate 0
     easein 0.60 xoffset -795 yoffset 0 zoom 1.36
     pause 0.14
     easeout 0.30 xoffset 0 yoffset 0 zoom 1.0
 
 # Frozen-time lesson: held at the moment of contact.
 transform mogx_enemy_contact:
-    xoffset -795 yoffset 0 zoom 1.32
+    xoffset -795 yoffset 0 zoom 1.32 rotate 0
 
 # Whole player box (avatar + bars) rattles when a hit connects.
 transform mogx_box_shake:
@@ -1458,7 +1479,7 @@ transform mogx_player_parry:
 
 # ...and the enemy is knocked off the contact point, rocking back past home.
 transform mogx_enemy_parried:
-    xoffset -795 yoffset 0 zoom 1.32
+    xoffset -795 yoffset 0 zoom 1.32 rotate 0
     easeout 0.24 xoffset 85 yoffset -45 zoom 1.02 rotate 9
     ease 0.22 xoffset 0 yoffset 0 zoom 1.0 rotate 0
 
@@ -1688,7 +1709,7 @@ screen mog_battle_screen():
         text ("%d%%" % S["mog"]):
             xpos 340 xanchor 1.0 ypos 287 size 10 color ("#ffd75e" if S["mog"] >= 100 else "#98a3b8") bold True
         if S["cringe"]:
-            text "😬 CRINGE — leaking ⚡ every turn, nap it off":
+            text ("😬 CRINGE (%d turns left) — leaking ⚡, nap it off" % max(1, 3 - S["cringe_turns"])):
                 xpos 0 ypos 306 size 13 color "#ff5d6c" bold True
 
     # ── Announcer ───────────────────────────────────────────────────
@@ -2129,7 +2150,7 @@ screen mogx_help_overlay():
             spacing 8
             text "❓ How to play" size 26 color "#f7f8fa" bold True
             text "DEFENSE (their turn)" size 12 color "#ffd75e" bold True
-            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +2⚡ (+3⚡ perfect), heals a little, and counters." size 13 color "#aab4c5"
+            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit, +1⚡ per parry (+1 more for parrying a whole string), heals a little, and counters." size 13 color "#aab4c5"
             text "• {b}S = DODGE{/b} — avoids the hit. Perfect-dodge {b}every hit{/b} of an attack string (last-second timing) to bank +1⚡; ordinary dodges earn nothing." size 13 color "#aab4c5"
             text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
             text "• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning." size 13 color "#aab4c5"
@@ -2141,7 +2162,7 @@ screen mogx_help_overlay():
             text "RULES OF THE HALLWAY" size 12 color "#ffd75e" bold True
             text "• Used skills go {b}⏳ on timeout{/b} for one turn — rotate your kit." size 13 color "#aab4c5"
             text "• The {b}👑 Mog Meter{/b} fills from parries and landed hits — and drains when you get hit or flub a minigame." size 13 color "#aab4c5"
-            text "• Enemies heal (deny by bursting or BREAKing them), and some hits YOINK your ⚡. Undodgeable 😬 CRINGE weakens every attack AND leaks 1⚡ per turn until you nap it off." size 13 color "#aab4c5"
+            text "• Enemies heal (deny by bursting or BREAKing them), and some hits YOINK your ⚡. Undodgeable 😬 CRINGE weakens every attack AND leaks 1⚡ per turn — lasts 3 turns, or nap it off early." size 13 color "#aab4c5"
             null height 6
             textbutton "CLOSE":
                 xalign 0.5 xysize (200, 46)
