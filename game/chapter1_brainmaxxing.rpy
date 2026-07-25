@@ -456,7 +456,7 @@ label pass_class_scene:
     # opening has room to build without competing with the BRAINMOGGED sting.
     $ set_cinematic_dialogue(True)
     scene bg hallway with fade
-    show clav smirk at clav_body
+    show clav smirk at clav_cinematic
     play music "audio/mirror_scene.mp3" noloop fadein 1.5 volume persistent.vol_music
 
     $ _wait_until_music_pos(2.0)
@@ -469,7 +469,7 @@ label pass_class_scene:
     show screen cinematic_caption("Was kind of hoping for a \"good job.\"", "[povname]")
 
     $ _wait_until_music_pos(13.0)
-    show clav stern at clav_body
+    show clav stern at clav_cinematic
     show screen cinematic_caption("You haven't changed.", "Clav")
 
     $ _wait_until_music_pos(16.5)
@@ -482,14 +482,14 @@ label pass_class_scene:
     show screen cinematic_caption("You were trying to get smarter.", "Clav")
 
     $ _wait_until_music_pos(28.0)
-    show clav smirk at clav_body
+    show clav smirk at clav_cinematic
     show screen cinematic_caption("That's progress.", "Clav")
 
     $ _wait_until_music_pos(31.0)
     show screen cinematic_caption("Try not to make passing a personality.", "Clav")
 
     $ _wait_until_music_pos(34.5)
-    show clav stern at clav_body
+    show clav stern at clav_cinematic
     show screen cinematic_caption("Don't confuse a step for the summit.", "Clav")
 
     $ _wait_until_music_pos(38.0)
@@ -591,10 +591,10 @@ label mirror_scene:
     hide screen cinematic_caption
     show bg shattered_mirror at kb_zoom
     $ _wait_until_music_pos(73.6)
-    show screen cinematic_caption("{i}{size=34}So. Average me.{/size}{/i}")
+    show screen cinematic_caption("{i}{size=34}So. Average me...{/size}{/i}")
 
     $ _wait_until_music_pos(77.0)
-    show screen cinematic_caption("{i}{size=34}You got time to be looking down?{/size}{/i}")
+    show screen cinematic_caption("{i}{size=34}Do I have time to feel sorry for myself?{/size}{/i}")
 
     # ══ The lift — turn to hope (1:13–1:35) ══
     $ _wait_until_music_pos(81.0)
@@ -603,10 +603,10 @@ label mirror_scene:
     show screen cinematic_caption("{b}{size=38}I can change.{/size}{/b}")
 
     $ _wait_until_music_pos(85.0)
-    show screen cinematic_caption("{b}{size=34}I'm done being someone the room forgets.{/size}{/b}")
+    show screen cinematic_caption("{b}{size=34}I'm done being someone everyone forgets.{/size}{/b}")
 
     $ _wait_until_music_pos(89.0)
-    show screen cinematic_caption("{b}{size=38}I'll do it until I can.{/size}{/b}")
+    show screen cinematic_caption("{b}{size=38}I'll keep trying until I succeed.{/size}{/b}")
 
     $ _wait_until_music_pos(92.0)
     show screen cinematic_caption("{b}{size=38}No more looking down.{/size}{/b}")

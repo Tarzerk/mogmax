@@ -33,16 +33,22 @@
 - Do not promote a QA candidate to the real page until the user explicitly says it is approved for release.
 - After approval, build once from the exact approved release commit and promote the same artifacts to GitHub and the real itch.io page. Do not rebuild from a different commit between QA approval and production.
 - Tag the approved release commit as `v<version>`, for example `v2.1.0`. Pushing a `v*` tag runs `.github/workflows/build.yml`, which builds Windows/Linux, macOS, and web packages and publishes the matching GitHub Release.
-- Wait for the `Build distributables` workflow to finish successfully before uploading to itch.io. Use the `MOGMAX-<version>-web.zip` asset and verify that it contains `index.html` at the ZIP root.
-- For reliable HTML5 uploads, extract the web ZIP and push the extracted folder with itch.io's Butler uploader:
-  `butler push /path/to/MOGMAX-<version>-web tarzerk/mogmax-testing:html5 --userversion <version>`
-- For the real page, promote the same tested folder and channel name:
-  `butler push /path/to/MOGMAX-<version>-web tarzerk/mogmax:html5 --userversion <version>`
-- The browser uploader can fail on this roughly 164 MB build. Prefer Butler for release uploads.
+- Windows and Mac ZIPs are the primary itch.io releases. The HTML5 build is substantially slower and should remain hidden unless the user explicitly asks to restore browser play.
+- Build platform-specific desktop ZIPs from the approved commit:
+  `/Users/tarzerk/builds/renpy-8.5.3-sdk/renpy.sh /Users/tarzerk/builds/renpy-8.5.3-sdk/launcher distribute /path/to/mogmax --package win --package mac`
+- Upload the exact desktop ZIPs to the testing page with Butler:
+  `butler push /path/to/MOGMAX-<version>-win.zip tarzerk/mogmax-testing:windows --userversion <version>`
+  `butler push /path/to/MOGMAX-<version>-mac.zip tarzerk/mogmax-testing:osx --userversion <version>`
+- After QA approval, promote the same ZIPs to the real page:
+  `butler push /path/to/MOGMAX-<version>-win.zip tarzerk/mogmax:windows --userversion <version>`
+  `butler push /path/to/MOGMAX-<version>-mac.zip tarzerk/mogmax:osx --userversion <version>`
+- Keep both itch projects set to `Downloadable`. Mark the Windows channel for Windows, mark the macOS channel for macOS, and hide the `html5` and other superseded web uploads.
+- Prefer Butler for release uploads. Large builds are less reliable through the browser uploader.
 - The real page is:
   `https://tarzerk.itch.io/mogmax`
-- On both itch pages, mark only the newest web ZIP as `This file will be played in the browser`; hide or remove superseded browser builds so itch does not launch an old file.
-- Keep the embed at 1280x720, mobile friendly, with the fullscreen button enabled.
+- Do not edit either itch page's description during a build-only release update unless the user specifically requests copy changes.
+- Keep the itch download instructions current. Include the Windows unzip/run steps and the macOS Gatekeeper path: click `Done`, open `System Settings > Privacy & Security`, click `Open Anyway`, then confirm `Open`. Link to Apple's official override guide and remind players to bypass the warning only for a copy downloaded from the official MOGMAX itch page.
+- Optional mobile instructions may explain that the third-party Renpy Pocket app can import the Windows ZIP on supported iPhone, iPad, and Android devices. Link its official Apple App Store and Google Play listings, warn that compatibility and performance may vary, and never present this as a native mobile build or mark the itch uploads for iOS or Android.
 - Do not change the real page's black/red theme during a release unless the user asks. The old Gigachad banner was intentionally removed.
 - Keep the real itch.io page set to `Draft` and hidden from the public until the user explicitly approves publishing it. Uploading a build is not permission to switch the page to `Public`.
 - After release, merge the release branch back into `main` if it contains version or release fixes that are not already there.
