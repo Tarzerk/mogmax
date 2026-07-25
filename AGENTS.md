@@ -47,6 +47,7 @@
 - The real page is:
   `https://tarzerk.itch.io/mogmax`
 - Do not edit either itch page's description during a build-only release update unless the user specifically requests copy changes.
+- Keep the itch download instructions current. Include the Windows unzip/run steps and the macOS Gatekeeper path: click `Done`, open `System Settings > Privacy & Security`, click `Open Anyway`, then confirm `Open`. Link to Apple's official override guide and remind players to bypass the warning only for a copy downloaded from the official MOGMAX itch page.
 - Do not change the real page's black/red theme during a release unless the user asks. The old Gigachad banner was intentionally removed.
 - Keep the real itch.io page set to `Draft` and hidden from the public until the user explicitly approves publishing it. Uploading a build is not permission to switch the page to `Public`.
 - After release, merge the release branch back into `main` if it contains version or release fixes that are not already there.
