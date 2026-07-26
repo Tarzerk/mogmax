@@ -12,67 +12,67 @@ init 2 python:
 
     MOGX_SKILLS = {
         "yap": {
-            "key": "1", "name": "YAP", "icon": "🗣️", "cost": 0,
-            "kind": "basic", "color": "#6db1ff",
-            "desc": "Free instant jab. Small damage, builds +1 Aura.",
+            "key": "1", "name": _("YAP"), "icon": "🗣️", "cost": 0,
+            "kind": "basic", "kind_label": _("BASIC"), "color": "#6db1ff",
+            "desc": _("Free instant jab. Small damage, builds +1 Aura."),
         },
         "looks": {
-            "key": "2", "name": "MOG STARE", "icon": "😎", "cost": 4,
-            "kind": "looksmaxx", "color": "#ffd75e",
-            "desc": "The marker whips back and forth — STRIKE it in the gold. Miss = you blink.",
+            "key": "2", "name": _("MOG STARE"), "icon": "😎", "cost": 4,
+            "kind": "looksmaxx", "kind_label": _("LOOKSMAXX"), "color": "#ffd75e",
+            "desc": _("The marker whips back and forth — STRIKE it in the gold. Miss = you blink."),
         },
         "brain": {
-            "key": "3", "name": "GALAXY BRAIN", "icon": "🧠", "cost": 2,
-            "kind": "brainmaxx", "color": "#c07bff",
-            "desc": "Vocab quiz, 9 seconds. Correct = big damage + 1 Aura refund.",
+            "key": "3", "name": _("GALAXY BRAIN"), "icon": "🧠", "cost": 2,
+            "kind": "brainmaxx", "kind_label": _("BRAINMAXX"), "color": "#c07bff",
+            "desc": _("Vocab quiz, 9 seconds. Correct = big damage + 1 Aura refund."),
         },
         "jester": {
-            "key": "4", "name": "RATIO RUSH", "icon": "🤡", "cost": 5,
-            "kind": "jestermaxx", "color": "#f15bb5",
-            "desc": "Alternate J and K, fast. 8+ hits Embarrasses them. Full bar = MAX RATIO.",
+            "key": "4", "name": _("RATIO RUSH"), "icon": "🤡", "cost": 5,
+            "kind": "jestermaxx", "kind_label": _("JESTERMAXX"), "color": "#f15bb5",
+            "desc": _("Alternate J and K, fast. 8+ hits Embarrasses them. Full bar = MAX RATIO."),
         },
         "sleep": {
-            "key": "5", "name": "POWER NAP", "icon": "😴", "cost": 3,
-            "kind": "sleepmaxx", "color": "#5eff9d",
-            "desc": "Heal Confidence and cure CRINGE. Perfect timing refunds +1⚡.",
+            "key": "5", "name": _("POWER NAP"), "icon": "😴", "cost": 3,
+            "kind": "sleepmaxx", "kind_label": _("SLEEPMAXX"), "color": "#5eff9d",
+            "desc": _("Heal Confidence and cure CRINGE. Perfect timing refunds +1⚡."),
         },
         "mogmax": {
-            "key": "6", "name": "MOGMAX", "icon": "👑", "cost": 0,
-            "kind": "ultimate", "color": "#ffd75e",
-            "desc": "Full Mog Meter only. Draw the M. 4 of 5 circles = BREAK.",
+            "key": "6", "name": _("MOGMAX"), "icon": "👑", "cost": 0,
+            "kind": "ultimate", "kind_label": _("ULTIMATE"), "color": "#ffd75e",
+            "desc": _("Full Mog Meter only. Draw the M. 4 of 5 circles = BREAK."),
         },
     }
 
     # Grade-school vocab bank for Galaxy Brain (from the prototype).
     MOGX_WORDS = (
-        ("RELUCTANT", "unwilling; hesitant to do something"),
-        ("ABUNDANT", "existing in large amounts; plentiful"),
-        ("FRAGILE", "easily broken or damaged"),
-        ("GENUINE", "real; truly what it seems to be"),
-        ("OBSTACLE", "something that blocks your way"),
-        ("PREDICT", "to say what will happen before it does"),
-        ("VACANT", "empty; not being used"),
-        ("WEARY", "very tired"),
-        ("BRISK", "quick and full of energy"),
-        ("CAUTIOUS", "careful to avoid danger"),
-        ("EAGER", "excited and ready to do something"),
-        ("FEEBLE", "very weak"),
-        ("GLOOMY", "dark, sad, or without hope"),
-        ("HASTY", "done too quickly, without thinking"),
-        ("IMMENSE", "extremely large; huge"),
-        ("JUBILANT", "extremely happy and celebrating"),
-        ("LOYAL", "always supporting someone; faithful"),
-        ("MIMIC", "to copy how someone acts or speaks"),
-        ("NIMBLE", "quick and light in movement"),
-        ("TIMID", "shy and easily frightened"),
-        ("URGENT", "needing attention right away"),
-        ("VIVID", "very bright and clear"),
-        ("WANDER", "to move around without a plan"),
-        ("DROWSY", "sleepy; almost falling asleep"),
-        ("SOAR", "to fly high in the air"),
-        ("GRUMBLE", "to complain in a low, unhappy voice"),
-        ("SLY", "sneaky and clever"),
-        ("DAZZLE", "to amaze someone with brightness or skill"),
+        (_("RELUCTANT"), _("unwilling; hesitant to do something")),
+        (_("ABUNDANT"), _("existing in large amounts; plentiful")),
+        (_("FRAGILE"), _("easily broken or damaged")),
+        (_("GENUINE"), _("real; truly what it seems to be")),
+        (_("OBSTACLE"), _("something that blocks your way")),
+        (_("PREDICT"), _("to say what will happen before it does")),
+        (_("VACANT"), _("empty; not being used")),
+        (_("WEARY"), _("very tired")),
+        (_("BRISK"), _("quick and full of energy")),
+        (_("CAUTIOUS"), _("careful to avoid danger")),
+        (_("EAGER"), _("excited and ready to do something")),
+        (_("FEEBLE"), _("very weak")),
+        (_("GLOOMY"), _("dark, sad, or without hope")),
+        (_("HASTY"), _("done too quickly, without thinking")),
+        (_("IMMENSE"), _("extremely large; huge")),
+        (_("JUBILANT"), _("extremely happy and celebrating")),
+        (_("LOYAL"), _("always supporting someone; faithful")),
+        (_("MIMIC"), _("to copy how someone acts or speaks")),
+        (_("NIMBLE"), _("quick and light in movement")),
+        (_("TIMID"), _("shy and easily frightened")),
+        (_("URGENT"), _("needing attention right away")),
+        (_("VIVID"), _("very bright and clear")),
+        (_("WANDER"), _("to move around without a plan")),
+        (_("DROWSY"), _("sleepy; almost falling asleep")),
+        (_("SOAR"), _("to fly high in the air")),
+        (_("GRUMBLE"), _("to complain in a low, unhappy voice")),
+        (_("SLY"), _("sneaky and clever")),
+        (_("DAZZLE"), _("to amaze someone with brightness or skill")),
     )
 
     # Enemy kits. Attack "w" is the windup in seconds; impact lands at w
@@ -172,50 +172,65 @@ init 2 python:
         "green": "#5eff9d", "purp": "#c07bff",
     }
 
+    MOGX_BATTLE_LABELS = {
+        "kai_tutorial": _("KAI TUTORIAL"),
+        "kai_graduation": _("KAI GRADUATION"),
+        "brayden": _("BRAYDEN"),
+        "clav": _("CLAV"),
+    }
+
+    MOGX_GRADE_LABELS = {
+        "perfect": _("PERFECT"),
+        "good": _("GOOD"),
+        "miss": _("MISS"),
+        "correct": _("CORRECT"),
+        "wrong": _("WRONG"),
+    }
+
     # ------------------------------------------------------------------
     # Tutorial script. Kinds: dlg / teach / guided / real / free.
     # ------------------------------------------------------------------
     MOGX_TUT = (
-        {"do": "dlg", "text": "Locker room. Just us and the timing line. Before you mog anyone in these halls, you learn the {b}fundamentals{/b}."},
-        {"do": "dlg", "text": "{b}ATTACKING:{/b} every skill is its own minigame — quizzes, stare-downs, mash-offs. But {b}1 · YAP{/b} 🗣️ is the freebie: instant jab, small damage, builds {b}+1⚡ Aura{/b}. Try it on me."},
+        {"do": "dlg", "text": _("Locker room. Just us and the timing line. Before you mog anyone in these halls, you learn the {b}fundamentals{/b}.")},
+        {"do": "dlg", "text": _("{b}ATTACKING:{/b} every skill is its own minigame — quizzes, stare-downs, mash-offs. But {b}1 · YAP{/b} 🗣️ is the freebie: instant jab, small damage, builds {b}+1⚡ Aura{/b}. Try it on me.")},
         {"do": "teach", "skill": "yap"},
-        {"do": "dlg", "text": "See the {b}⚡ bolts{/b} under your Confidence? Yap jabs and parries fill them, skills spend them. {b}Aura is everything.{/b}"},
-        {"do": "dlg", "text": "{b}DEFENSE:{/b} when I attack, I {b}glow{/b} — {color=#ff5d6c}{b}RED{/b}{/color} or {color=#ffd75e}{b}YELLOW{/b}{/color} — and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW."},
+        {"do": "dlg", "text": _("See the {b}⚡ bolts{/b} under your Confidence? Yap jabs and parries fill them, skills spend them. {b}Aura is everything.{/b}")},
+        {"do": "dlg", "text": _("{b}DEFENSE:{/b} when I attack, I {b}glow{/b} — {color=#ff5d6c}{b}RED{/b}{/color} or {color=#ffd75e}{b}YELLOW{/b}{/color} — and the hit lands a beat later. Easiest escape first: press {b}S{/b} to {b}DODGE{/b}. For your first two, I'll {b}freeze time{/b} at the exact moment — just press when I say NOW.")},
         {"do": "guided", "kind": "dodge", "reps": 2,
-         "mid": "THAT moment. Feel it. One more frozen rep."},
-        {"do": "dlg", "text": "Real time now — no freeze. Watch the dive, press {b}S{/b} near impact. Dodges earn nothing by themselves — but take {b}zero hits{/b} from an attack and you bank {b}+1⚡ UNTOUCHED{/b}. {b}Dodge 2 swings.{/b}"},
+         "mid": _("THAT moment. Feel it. One more frozen rep.")},
+        {"do": "dlg", "text": _("Real time now — no freeze. Watch the dive, press {b}S{/b} near impact. Dodges earn nothing by themselves — but take {b}zero hits{/b} from an attack and you bank {b}+1⚡ UNTOUCHED{/b}. {b}Dodge 2 swings.{/b}")},
         {"do": "real", "kind": "dodge", "reps": 2,
          "attack": {"w": 1.4, "red": True}, "rep_dmg": 4,
-         "mid": "One. Again.",
-         "fail": "Too slow — press {b}S{/b} as the swing lands. One more time."},
-        {"do": "dlg", "text": "Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+1⚡{/b}, heal {b}+5{/b}, feed the {b}Mog Meter{/b}, and {b}counterattack{/b}. There are no half-parries — you land it or you don't. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps."},
+         "mid": _("One. Again."),
+         "fail": _("Too slow — press {b}S{/b} as the swing lands. One more time.")},
+        {"do": "dlg", "text": _("Dodging keeps you safe — but {b}PARRYING{/b} pays. Press {b}W{/b} with {i}tight{/i} timing at impact: you take nothing, gain {b}+1⚡{/b}, heal {b}+5{/b}, feed the {b}Mog Meter{/b}, and {b}counterattack{/b}. There are no half-parries — you land it or you don't. One rule: a {color=#ff5d6c}{b}RED glow{/b}{/color} can NEVER be parried — only dodged. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Two frozen reps.")},
         {"do": "guided", "kind": "parry", "reps": 2,
-         "mid": "That's the parry window — tighter than the dodge, better rewards. Again."},
-        {"do": "dlg", "text": "Now in real time. Watch the swing, press {b}W{/b} at impact. {b}Land 2 parries.{/b}"},
+         "mid": _("That's the parry window — tighter than the dodge, better rewards. Again.")},
+        {"do": "dlg", "text": _("Now in real time. Watch the swing, press {b}W{/b} at impact. {b}Land 2 parries.{/b}")},
         {"do": "real", "kind": "parry", "reps": 2,
          "attack": {"w": 1.4}, "rep_dmg": 4,
-         "mid": "One. Again.",
-         "fail": "Almost. Watch for the {color=#ffd75e}{b}yellow glow{/b}{/color}, then {b}W{/b} {i}right as the swing lands{/i} — not when the glow appears. Again."},
-        {"do": "dlg", "text": "CLEAN. 🔥 Parries also {b}restore Confidence{/b} and fill your {b}👑 MOG METER{/b} — landed attacks fill it too, and getting hit or flubbing a minigame {b}drains{/b} it. Full meter lights up {b}6 · MOGMAX{/b}."},
-        {"do": "dlg", "text": "BRAIN TIME: press {b}3 · GALAXY BRAIN{/b} 🧠 — it quizzes you with a {b}vocab word{/b}. Answer right for a big-brain blast {b}+ a ⚡ refund{/b}. I'll spot you the Aura."},
+         "mid": _("One. Again."),
+         "fail": _("Almost. Watch for the {color=#ffd75e}{b}yellow glow{/b}{/color}, then {b}W{/b} {i}right as the swing lands{/i} — not when the glow appears. Again.")},
+        {"do": "dlg", "text": _("CLEAN. 🔥 Parries also {b}restore Confidence{/b} and fill your {b}👑 MOG METER{/b} — landed attacks fill it too, and getting hit or flubbing a minigame {b}drains{/b} it. Full meter lights up {b}6 · MOGMAX{/b}.")},
+        {"do": "dlg", "text": _("BRAIN TIME: press {b}3 · GALAXY BRAIN{/b} 🧠 — it quizzes you with a {b}vocab word{/b}. Answer right for a big-brain blast {b}+ a ⚡ refund{/b}. I'll spot you the Aura.")},
         {"do": "teach", "skill": "brain",
-         "fail": "Wrong one. No stress — new word, {b}run it back{/b}. You proceed when you get one right."},
-        {"do": "dlg", "text": "Now the stare-down: {b}2 · MOG STARE{/b} 😎 — the marker {b}whips back and forth{/b}. Press {b}SPACE{/b} or the {b}STRIKE{/b} button while it's in the {b}gold{/b}. Green still counts. Anywhere else — you blink. This is called {b}holding frame{/b}."},
+         "fail": _("Wrong one. No stress — new word, {b}run it back{/b}. You proceed when you get one right.")},
+        {"do": "dlg", "text": _("Now the stare-down: {b}2 · MOG STARE{/b} 😎 — the marker {b}whips back and forth{/b}. Press {b}SPACE{/b} or the {b}STRIKE{/b} button while it's in the {b}gold{/b}. Green still counts. Anywhere else — you blink. This is called {b}holding frame{/b}.")},
         {"do": "teach", "skill": "looks",
-         "fail": "You {b}blinked{/b}. Watch the rhythm of the marker and strike inside the {b}green or gold{/b}. Again."},
-        {"do": "dlg", "text": "Chaos lesson: {b}4 · RATIO RUSH{/b} 🤡 — hammer {b}J{/b} and {b}K{/b}, {b}alternating{/b}, fast as you can. Every press is a hit. Get {b}8+ hits{/b} to pass (that also {b}Embarrasses{/b} your opponent)."},
+         "fail": _("You {b}blinked{/b}. Watch the rhythm of the marker and strike inside the {b}green or gold{/b}. Again.")},
+        {"do": "dlg", "text": _("Chaos lesson: {b}4 · RATIO RUSH{/b} 🤡 — hammer {b}J{/b} and {b}K{/b}, {b}alternating{/b}, fast as you can. Every press is a hit. Get {b}8+ hits{/b} to pass (that also {b}Embarrasses{/b} your opponent).")},
         {"do": "teach", "skill": "jester",
-         "fail": "Not enough hits — need {b}8+{/b}. Alternate faster, don't double-tap the same key. Run it back."},
-        {"do": "dlg", "text": "Next one you need to {b}feel{/b}, not hear about. Hold still — this is a {b}CRINGE{/b}."},
+         "fail": _("Not enough hits — need {b}8+{/b}. Alternate faster, don't double-tap the same key. Run it back.")},
+        {"do": "dlg", "text": _("Next one you need to {b}feel{/b}, not hear about. Hold still — this is a {b}CRINGE{/b}.")},
         {"do": "cringe_hit"},
-        {"do": "dlg", "text": "That. 😬 You're {b}CRINGED{/b}: every attack {b}-35%{/b} and you {b}leak 1⚡ every turn{/b} — and look at your Confidence. It hangs on for {b}three turns{/b}, bosses WILL do this to you, and you {b}can't dodge it{/b}. The fast cure: {b}5 · POWER NAP{/b} 😴 — time the bar into the {b}green or gold{/b} to heal up AND clear it now."},
+        {"do": "dlg", "text": _("That. 😬 You're {b}CRINGED{/b}: every attack {b}-35%{/b} and you {b}leak 1⚡ every turn{/b} — and look at your Confidence. It hangs on for {b}three turns{/b}, bosses WILL do this to you, and you {b}can't dodge it{/b}. The fast cure: {b}5 · POWER NAP{/b} 😴 — time the bar into the {b}green or gold{/b} to heal up AND clear it now.")},
         {"do": "teach", "skill": "sleep",
-         "fail": "Restless sleep — you missed the zone. Watch the marker, SPACE in the green. Again."},
-        {"do": "dlg", "text": "Last one. I'm filling your {b}👑 MOG METER{/b}. Press {b}6 · MOGMAX{/b}: the room goes dark and you {b}DRAW THE M{/b} — hit the five circles in order as they light. You pass with {b}4 of 5{/b}."},
+         "fail": _("Restless sleep — you missed the zone. Watch the marker, SPACE in the green. Again.")},
+        {"do": "dlg", "text": _("Last one. I'm filling your {b}👑 MOG METER{/b}. Press {b}6 · MOGMAX{/b}: the room goes dark and you {b}DRAW THE M{/b} — hit the five circles in order as they light. You pass with {b}4 of 5{/b}.")},
         {"do": "teach", "skill": "mogmax",
-         "fail": "Sloppy M. Click each circle {b}as it glows{/b}, 1 through 5. I'll refill the meter — again."},
-        {"do": "dlg", "text": "FULL KIT TOURED. 📈 One last rule: a used skill goes {b}⏳ ON TIMEOUT{/b} for a turn — no spamming. Rotate your kit. (Yap is always available.)"},
-        {"do": "dlg", "text": "Final check. I fight back now — gently. {b}Finish me.{/b}"},
+         "fail": _("Sloppy M. Click each circle {b}as it glows{/b}, 1 through 5. I'll refill the meter — again.")},
+        {"do": "dlg", "text": _("FULL KIT TOURED. 📈 One last rule: a used skill goes {b}⏳ ON TIMEOUT{/b} for a turn — no spamming. Rotate your kit. (Yap is always available.)")},
+        {"do": "dlg", "text": _("Final check. I fight back now — gently. {b}Finish me.{/b}")},
         {"do": "free"},
     )
 
@@ -287,7 +302,7 @@ init 2 python:
             # Flow
             "phase": "player", "round": 1,
             "selected": None, "allowed": None, "result_delay": 0.85,
-            "message": "YOUR TURN // Rotate the kit, build the Mog Meter.",
+            "message": _("YOUR TURN // Rotate the kit, build the Mog Meter."),
             "last_grade": None,
             # Enemy attack execution
             "queue": [], "queue_idx": 0, "hit": None,
@@ -318,7 +333,7 @@ init 2 python:
         if mog_battle["tutorial"]:
             _mogx_tut_run()
         else:
-            mog_battle["message"] = "YOUR TURN // Spend Aura, rotate skills, build MOGMAX."
+            mog_battle["message"] = _("YOUR TURN // Spend Aura, rotate skills, build MOGMAX.")
         _mogx_sfx("click")
         renpy.restart_interaction()
 
@@ -374,7 +389,7 @@ init 2 python:
         S["mog"] = max(0, min(100, S["mog"] + n))
         if was < 100 and S["mog"] >= 100 and not S["mog_full_announced"]:
             S["mog_full_announced"] = True
-            _mogx_announce("MOG METER FULL 👑", "gold")
+            _mogx_announce(_("MOG METER FULL 👑"), "gold")
             _mogx_sfx("mog")
         if S["mog"] < 100:
             S["mog_full_announced"] = False
@@ -394,7 +409,7 @@ init 2 python:
         healed = min(amount, S["emax"] - S["ehp"])
         if healed > 0:
             S["ehp"] += healed
-            _mogx_float("enemy", "+%d EGO 😏" % healed, "green")
+            _mogx_float("enemy", __("+%d EGO 😏") % healed, "green")
 
     def _mogx_damage_player(amount, heavy=False):
         S = mog_battle
@@ -427,17 +442,17 @@ init 2 python:
         S = mog_battle
         skill = MOGX_SKILLS[skill_id]
         if S["phase"] != "player":
-            return "WAIT"
+            return _("WAIT")
         if S["allowed"] is not None and skill_id not in S["allowed"]:
-            return "LOCKED"
+            return _("LOCKED")
         if skill_id == "mogmax":
             if S["mog"] < 100:
-                return "METER %d%%" % S["mog"]
+                return __("METER %d%%") % S["mog"]
             return None
         if S["cooldown"] == skill_id:
-            return "⏳ TIMEOUT"
+            return _("⏳ TIMEOUT")
         if S["aura"] < skill["cost"]:
-            return "NEED %d⚡" % skill["cost"]
+            return __("NEED %d⚡") % skill["cost"]
         return None
 
     def _mogx_choose(skill_id):
@@ -464,17 +479,17 @@ init 2 python:
             _mogx_resolve_yap()
         elif skill_id == "looks":
             S["phase"] = "hold"
-            S["message"] = "MOG STARE 😎 // Strike while the marker is in the gold."
+            S["message"] = _("MOG STARE 😎 // Strike while the marker is in the gold.")
         elif skill_id == "brain":
             _mogx_quiz_start()
         elif skill_id == "jester":
             S["phase"] = "mash"
             S["mash_count"] = 0
             S["mash_last"] = None
-            S["message"] = "RATIO RUSH 🤡 // Tap the glowing key. Alternate J and K, fast!"
+            S["message"] = _("RATIO RUSH 🤡 // Tap the glowing key. Alternate J and K, fast!")
         elif skill_id == "sleep":
             S["phase"] = "nap"
-            S["message"] = "POWER NAP 😴 // SPACE at the sweet spot."
+            S["message"] = _("POWER NAP 😴 // SPACE at the sweet spot.")
         elif skill_id == "mogmax":
             S["mog"] = 0
             S["phase"] = "mogmax"
@@ -482,8 +497,8 @@ init 2 python:
             S["osu_hits"] = 0
             S["osu_clock"] = 0.0
             S["osu_results"] = []
-            S["message"] = "DRAW THE M // Hit each circle as it glows, 1 through 5."
-            _mogx_announce("👑 M O G M A X 👑", "gold")
+            S["message"] = _("DRAW THE M // Hit each circle as it glows, 1 through 5.")
+            _mogx_announce(_("👑 M O G M A X 👑"), "gold")
             _mogx_sfx("mog")
         renpy.restart_interaction()
 
@@ -508,7 +523,7 @@ init 2 python:
         _mogx_gain_aura(1)
         _mogx_float("aura", "+1⚡", "gold")
         S["last_grade"] = "good"
-        S["message"] = "Yap lands. +1⚡ Aura."
+        S["message"] = _("Yap lands. +1⚡ Aura.")
         _mogx_after_attack(True, 0)
 
     def _mogx_hold_press():
@@ -528,19 +543,19 @@ init 2 python:
         S = mog_battle
         S["last_grade"] = grade
         if grade == "miss":
-            _mogx_announce("YOU BLINKED ❌", "red")
+            _mogx_announce(_("YOU BLINKED ❌"), "red")
             _mogx_sfx("miss")
-            _mogx_float("enemy", "MISS", "blue")
+            _mogx_float("enemy", _("MISS"), "blue")
             _mogx_gain_mog(-5)
             _mogx_enemy_smirk()
-            S["message"] = "Sloppy stare. Nothing lands — and their Ego grows."
+            S["message"] = _("Sloppy stare. Nothing lands — and their Ego grows.")
             _mogx_after_attack(False, 0)
             return
         perfects = 0
         if grade == "perfect":
             base = 32
             perfects = 1
-            _mogx_announce("FRAME HELD 😎", "gold")
+            _mogx_announce(_("FRAME HELD 😎"), "gold")
             _mogx_sfx("perfect", "battle_impact")
         else:
             base = 24
@@ -548,7 +563,7 @@ init 2 python:
         # before the enemy turn starts.
         _mogx_damage_enemy(base * S["var_mult"], big=True)
         S["result_delay"] = 1.4
-        S["message"] = "%s MOG STARE." % grade.upper()
+        S["message"] = __("%s MOG STARE.") % __(MOGX_GRADE_LABELS[grade])
         _mogx_after_attack(True, perfects)
 
     def _mogx_quiz_start():
@@ -567,7 +582,7 @@ init 2 python:
         }
         S["qte_elapsed"] = 0.0
         S["phase"] = "quiz"
-        S["message"] = "GALAXY BRAIN 🧠 // Answer before the bar runs out. Keys 1-4."
+        S["message"] = _("GALAXY BRAIN 🧠 // Answer before the bar runs out. Keys 1-4.")
 
     def _mogx_quiz_pick(idx):
         S = mog_battle
@@ -590,18 +605,18 @@ init 2 python:
         S["quiz"] = None
         S["last_grade"] = "correct" if ok else "wrong"
         if ok:
-            _mogx_announce("GALAXY BRAIN 📈 ACTUALLY SMART", "purp")
+            _mogx_announce(_("GALAXY BRAIN 📈 ACTUALLY SMART"), "purp")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "purp")
             _mogx_damage_enemy(20 * S["var_mult"], "purp")
-            S["message"] = "Galaxy Brain // correct."
+            S["message"] = _("Galaxy Brain // correct.")
             _mogx_after_attack(True, 1)
         else:
             # Wrong answer: no damage at all — the enemy feeds on your L.
-            _mogx_announce("NOT COOKING 📉", "blue")
+            _mogx_announce(_("NOT COOKING 📉"), "blue")
             _mogx_gain_mog(-5)
             _mogx_enemy_smirk()
-            S["message"] = "Galaxy Brain // wrong. Their Ego grows."
+            S["message"] = _("Galaxy Brain // wrong. Their Ego grows.")
             _mogx_after_attack(False, 0)
 
     def _mogx_mash_press(key):
@@ -627,13 +642,13 @@ init 2 python:
         if count > 0:
             _mogx_damage_enemy(dmg, "purp")
         else:
-            _mogx_float("enemy", "crickets…", "blue")
+            _mogx_float("enemy", _("crickets…"), "blue")
             _mogx_sfx("miss")
             _mogx_enemy_smirk()
         if count >= MOGX_MASH_FULL:
-            _mogx_announce("MAX RATIO 💥 %d HITS" % count, "gold")
+            _mogx_announce(__("MAX RATIO 💥 %d HITS") % count, "gold")
         elif count >= 8:
-            _mogx_announce("RATIO'D 📉 %d HITS" % count, "purp")
+            _mogx_announce(__("RATIO'D 📉 %d HITS") % count, "purp")
         if count < 8:
             _mogx_gain_mog(-5)
             if count > 0:
@@ -641,7 +656,8 @@ init 2 python:
         if count >= 8 and S["ehp"] > 0:
             S["embarrassed"] = True
             _mogx_sfx("buff")
-        S["message"] = "Ratio Rush // %d hits%s." % (count, " — they're EMBARRASSED 🫣" if count >= 8 and S["ehp"] > 0 else "")
+        embarrassed_text = __(" — they're EMBARRASSED 🫣") if count >= 8 and S["ehp"] > 0 else ""
+        S["message"] = __("Ratio Rush // %d hits%s.") % (count, embarrassed_text)
         if perfects:
             _mogx_sfx("perfect")
         _mogx_after_attack(count > 0, perfects)
@@ -671,12 +687,13 @@ init 2 python:
         S["cringe"] = False
         S["cringe_turns"] = 0
         if grade == "perfect":
-            _mogx_announce("QUALITY REM 💤", "green")
+            _mogx_announce(_("QUALITY REM 💤"), "green")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "green")
         elif cured:
-            _mogx_announce("STATUS CURED 😌", "green")
-        S["message"] = "Power Nap // +%d Confidence%s." % (heal, ", CRINGE cured" if cured else "")
+            _mogx_announce(_("STATUS CURED 😌"), "green")
+        cured_text = __(", CRINGE cured") if cured else ""
+        S["message"] = __("Power Nap // +%d Confidence%s.") % (heal, cured_text)
         if cured:
             _mogx_sfx("buff")
         _mogx_after_attack(True, 0, feeds_meter=False)
@@ -712,27 +729,27 @@ init 2 python:
         perfects = 0
         if hits > 0:
             _mogx_damage_enemy(hits * 9, "gold", big=True)
-            _mogx_float("enemy", "CRIT ×%d!" % hits, "red")
+            _mogx_float("enemy", __("CRIT ×%d!") % hits, "red")
         else:
-            _mogx_float("enemy", "WHIFF", "blue")
+            _mogx_float("enemy", _("WHIFF"), "blue")
             _mogx_sfx("miss")
             _mogx_enemy_smirk()
         if hits == 5:
             perfects = 1
-            _mogx_announce("FULL COMBO M! 👑", "gold")
+            _mogx_announce(_("FULL COMBO M! 👑"), "gold")
             _mogx_sfx("perfect")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "gold")
         if S["ehp"] > 0:
             if hits >= 4:
                 S["stunned"] = True
-                _mogx_announce("BROKEN 💫", "purp")
+                _mogx_announce(_("BROKEN 💫"), "purp")
                 _mogx_sfx("buff")
-                S["message"] = "MOGMAX // %d of 5 — they are BROKEN 💫 and lose their turn." % hits
+                S["message"] = __("MOGMAX // %d of 5 — they are BROKEN 💫 and lose their turn.") % hits
             else:
-                S["message"] = "MOGMAX // %d of 5 — not clean enough, no break." % hits
+                S["message"] = __("MOGMAX // %d of 5 — not clean enough, no break.") % hits
         else:
-            S["message"] = "MOGMAX // %d of 5." % hits
+            S["message"] = __("MOGMAX // %d of 5.") % hits
         S["stats"]["perfects"] += perfects
         S["phase"] = "mogmax_impact"
         _mogx_audio("audio/battle_super_effective.mp3", 0.85, "battle_impact")
@@ -762,8 +779,8 @@ init 2 python:
 
         if S["stunned"]:
             S["stunned"] = False
-            S["message"] = "%s is BROKEN 💫 — they can't move!" % name
-            _mogx_announce("💫 TOO BROKEN TO ATTACK", "purp")
+            S["message"] = __("%s is BROKEN 💫 — they can't move!") % __(name)
+            _mogx_announce(_("💫 TOO BROKEN TO ATTACK"), "purp")
             S["phase"] = "break_result"
             renpy.restart_interaction()
             return
@@ -776,7 +793,7 @@ init 2 python:
             S["feint"] = p2["feint"]
             S["patterns"] = [list(p) for p in p2["patterns"]]
             S["last_pat"] = None
-            _mogx_announce("FINAL FORM 👑🔥", "red")
+            _mogx_announce(_("FINAL FORM 👑🔥"), "red")
             _mogx_sfx("alert_red")
 
         # Heal intent: limited charges, only when hurt, never twice in a row.
@@ -784,7 +801,7 @@ init 2 python:
                 and S["last_action"] != "heal" and renpy.random.random() < 0.75):
             S["heals_left"] -= 1
             S["last_action"] = "heal"
-            S["message"] = "%s takes a recovery turn! 🥤 Burst or BREAK them to deny heals." % name
+            S["message"] = __("%s takes a recovery turn! 🥤 Burst or BREAK them to deny heals.") % __(name)
             S["phase"] = "enemy_heal"
             renpy.restart_interaction()
             return
@@ -794,7 +811,7 @@ init 2 python:
                 and S["last_action"] != "cringe" and renpy.random.random() < 0.45):
             S["cringes_left"] -= 1
             S["last_action"] = "cringe"
-            S["message"] = "%s is posting your L online… 📱" % name
+            S["message"] = __("%s is posting your L online… 📱") % __(name)
             S["phase"] = "enemy_cringe"
             renpy.restart_interaction()
             return
@@ -820,7 +837,7 @@ init 2 python:
         S["turn_parries"] = 0
         S["turn_took_hit"] = False
         # Deliberately does NOT announce the combo length — read the rhythm.
-        S["message"] = "%s attacks! W = parry · S = dodge" % name
+        S["message"] = __("%s attacks! W = parry · S = dodge") % __(name)
         S["phase"] = "enemy_intro"
         renpy.restart_interaction()
 
@@ -831,7 +848,7 @@ init 2 python:
         healed = min(S["heal_amt"], S["emax"] - S["ehp"])
         S["ehp"] += healed
         _mogx_float("enemy", "+%d" % healed, "green")
-        _mogx_announce("🥤 %s RECOVERS" % S["config"]["enemy_name"].upper(), "green")
+        _mogx_announce(__("🥤 %s RECOVERS") % __(S["config"]["enemy_name"]).upper(), "green")
         _mogx_sfx("heal")
         S["phase"] = "enemy_result"
         renpy.restart_interaction()
@@ -843,7 +860,7 @@ init 2 python:
         S["cringe"] = True
         S["cringe_turns"] = 0
         _mogx_float("player", "😬", "red")
-        _mogx_announce("CRINGED 😬 — LEAKING AURA. NAP IT OFF", "red")
+        _mogx_announce(_("CRINGED 😬 — LEAKING AURA. NAP IT OFF"), "red")
         _mogx_sfx("miss")
         S["phase"] = "enemy_result"
         renpy.restart_interaction()
@@ -880,9 +897,9 @@ init 2 python:
                 _mogx_guided_success()
             else:
                 if S["guided_kind"] == "parry":
-                    _mogx_float("player", "W to parry this one!", "blue")
+                    _mogx_float("player", _("W to parry this one!"), "blue")
                 else:
-                    _mogx_float("player", "that one's a DODGE — S!", "blue")
+                    _mogx_float("player", _("that one's a DODGE — S!"), "blue")
             return
         if S["phase"] != "defense" or S["def_result"] is not None:
             return
@@ -890,7 +907,7 @@ init 2 python:
         # otherwise an early press would resolve through the normal pipeline
         # and end the round mid-tutorial (soft-locking the lesson).
         if S["guided_kind"]:
-            _mogx_float("player", "wait for the freeze ❄️", "blue")
+            _mogx_float("player", _("wait for the freeze ❄️"), "blue")
             return
         if S["def_lock"] > 0:
             return
@@ -907,14 +924,14 @@ init 2 python:
                 else:
                     _mogx_apply_defense("parry")
             elif dt < MOGX_PARRY_WIN[0]:
-                _mogx_float("player", "too early!", "blue")
+                _mogx_float("player", _("too early!"), "blue")
                 _mogx_sfx("miss")
                 S["def_lock"] = 0.38
         else:
             if in_dodge:
                 _mogx_apply_defense("pdodge" if in_perfect else "dodge")
             elif dt < MOGX_DODGE_WIN[0]:
-                _mogx_float("player", "too early!", "blue")
+                _mogx_float("player", _("too early!"), "blue")
                 _mogx_sfx("miss")
                 S["def_lock"] = 0.30
 
@@ -935,7 +952,7 @@ init 2 python:
             S["stats"]["parries"] += 1
             S["turn_parries"] += 1
             S["def_pose"] = "parry"
-            _mogx_announce("PARRY!", "gold")
+            _mogx_announce(_("PARRY!"), "gold")
             _mogx_sfx("parry")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "gold")
@@ -946,7 +963,7 @@ init 2 python:
         elif result == "pdodge":
             S["def_pose"] = "dodge"
             S["turn_pdodges"] += 1
-            _mogx_announce("PERFECT DODGE 💨✨", "purp")
+            _mogx_announce(_("PERFECT DODGE 💨✨"), "purp")
             # Whoosh + a light chime only — the "super effective" smack reads
             # as taking a hit, which is exactly wrong for a clean dodge.
             # Aura pays out only for a FLAWLESS string (see finish_enemy_turn).
@@ -954,12 +971,12 @@ init 2 python:
             _mogx_sfx("step", "battle_impact")
         elif result == "dodge":
             S["def_pose"] = "dodge"
-            _mogx_announce("DODGED 💨", "purp")
+            _mogx_announce(_("DODGED 💨"), "purp")
             _mogx_sfx("whoosh")
         elif result == "failparry":
             S["def_pose"] = "hit"
             S["turn_took_hit"] = True
-            _mogx_announce("CAN'T PARRY THAT ❌", "red")
+            _mogx_announce(_("CAN'T PARRY THAT ❌"), "red")
             _mogx_damage_player(dmg, heavy=hit.get("heavy"))
         else:  # hit
             S["def_pose"] = "hit"
@@ -968,8 +985,8 @@ init 2 python:
             if hit.get("drain") and S["aura"] > 0:
                 stolen = min(2, S["aura"])
                 S["aura"] -= stolen
-                _mogx_float("aura", "-%d⚡ YOINKED" % stolen, "red")
-                _mogx_announce("AURA YOINKED ⚡", "red")
+                _mogx_float("aura", __("-%d⚡ YOINKED") % stolen, "red")
+                _mogx_announce(_("AURA YOINKED ⚡"), "red")
         S["phase"] = "defense_result"
         renpy.restart_interaction()
 
@@ -1002,9 +1019,9 @@ init 2 python:
         # dodges — and bank +1 Aura.
         if S["turn_hits"] > 0 and not S["turn_took_hit"]:
             _mogx_gain_aura(1)
-            _mogx_float("aura", "UNTOUCHED ✨ +1⚡", "purp")
+            _mogx_float("aura", _("UNTOUCHED ✨ +1⚡"), "purp")
         if S["counter"] > 0 and S["php"] > 0 and S["ehp"] > 0:
-            _mogx_announce("COUNTER!", "gold")
+            _mogx_announce(_("COUNTER!"), "gold")
             _mogx_damage_enemy(S["counter"], "gold")
             S["counter"] = 0
         S["phase"] = "enemy_result"
@@ -1036,13 +1053,13 @@ init 2 python:
             if S["cringe_turns"] >= 3:
                 S["cringe"] = False
                 S["cringe_turns"] = 0
-                _mogx_float("player", "😮‍💨 cringe faded", "green")
+                _mogx_float("player", _("😮‍💨 cringe faded"), "green")
         S["round"] += 1
         S["stats"]["turns"] += 1
         S["selected"] = None
         S["def_pose"] = None
         S["phase"] = "player"
-        S["message"] = "YOUR TURN // Spend Aura, rotate skills, build MOGMAX."
+        S["message"] = _("YOUR TURN // Spend Aura, rotate skills, build MOGMAX.")
         renpy.restart_interaction()
 
     # ------------------------------------------------------------------
@@ -1161,8 +1178,8 @@ init 2 python:
                 S["mog"] = 100
             S["allowed"] = [skill]
             S["phase"] = "player"
-            S["message"] = "LESSON // Use %s %s." % (
-                MOGX_SKILLS[skill]["name"], MOGX_SKILLS[skill]["icon"])
+            S["message"] = __("LESSON // Use %s %s.") % (
+                __(MOGX_SKILLS[skill]["name"]), MOGX_SKILLS[skill]["icon"])
         elif kind == "cringe_hit":
             # Scripted: Kai cringes you and drops your Confidence so the
             # Power Nap lesson has something real to heal and cure.
@@ -1172,8 +1189,8 @@ init 2 python:
             _mogx_float("player", "😬", "red")
             _mogx_flash("player")
             _mogx_sfx("hurt")
-            _mogx_announce("CRINGED 😬", "red")
-            S["message"] = "Kai posts your L in the group chat. CRINGE applied."
+            _mogx_announce(_("CRINGED 😬"), "red")
+            S["message"] = _("Kai posts your L in the group chat. CRINGE applied.")
             S["phase"] = "tut_beat"
         elif kind == "guided":
             S["tut_reps"] = 0
@@ -1189,7 +1206,7 @@ init 2 python:
             S["cooldown"] = None
             S["pending_cooldown"] = None
             S["phase"] = "player"
-            S["message"] = "FINAL CHECK // Full kit, live. Finish the spar."
+            S["message"] = _("FINAL CHECK // Full kit, live. Finish the spar.")
         renpy.restart_interaction()
 
     def _mogx_tut_guided_rep():
@@ -1198,8 +1215,8 @@ init 2 python:
         kind = step["kind"]
         S["queue"] = [{"w": 1.35, "red": kind == "dodge"}]
         S["queue_idx"] = 0
-        S["message"] = ("FROZEN REP // I'll stop time at the exact %s moment."
-                        % ("dodge" if kind == "dodge" else "parry"))
+        defense_name = __("dodge") if kind == "dodge" else __("parry")
+        S["message"] = __("FROZEN REP // I'll stop time at the exact %s moment.") % defense_name
         _mogx_start_hit(guided=kind)
 
     def _mogx_guided_success():
@@ -1210,13 +1227,13 @@ init 2 python:
         if kind == "parry":
             S["stats"]["parries"] += 1
             S["def_pose"] = "parry"
-            _mogx_announce("PARRY!", "blue")
+            _mogx_announce(_("PARRY!"), "blue")
             _mogx_sfx("parry")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "blue")
         else:
             S["def_pose"] = "dodge"
-            _mogx_announce("DODGED 💨", "purp")
+            _mogx_announce(_("DODGED 💨"), "purp")
             _mogx_sfx("whoosh")
             _mogx_gain_aura(1)
             _mogx_float("aura", "+1⚡", "purp")
@@ -1250,9 +1267,9 @@ init 2 python:
         S["counter"] = S.get("counter", 0)
         S["queue"] = [dict(step["attack"])]
         S["queue_idx"] = 0
-        S["message"] = ("LIVE REP %d of %d // %s"
-                       % (S["tut_reps"] + 1, step["reps"],
-                          "press S near impact" if step["kind"] == "dodge" else "press W at impact"))
+        defense_instruction = __("press S near impact") if step["kind"] == "dodge" else __("press W at impact")
+        S["message"] = __("LIVE REP %d of %d // %s") % (
+            S["tut_reps"] + 1, step["reps"], defense_instruction)
         _mogx_start_hit(focus=step["kind"])
 
     def _mogx_tut_real_resolved():
@@ -1272,7 +1289,7 @@ init 2 python:
             else:
                 # Fire any queued counter from the parry reps before moving on.
                 if S["counter"] > 0 and S["ehp"] > 0:
-                    _mogx_announce("COUNTER!", "gold")
+                    _mogx_announce(_("COUNTER!"), "gold")
                     _mogx_damage_enemy(S["counter"], "gold")
                     S["counter"] = 0
                 S["tut_idx"] += 1
@@ -1314,12 +1331,12 @@ init 2 python:
     # ------------------------------------------------------------------
     def _mogx_grade(stats):
         if stats["hits_taken"] == 0:
-            return ("💎 GIGAMOGGER — flawless", "#ffd75e")
+            return (_("💎 GIGAMOGGER — flawless"), "#ffd75e")
         if stats["hits_taken"] <= 2 and stats["parries"] >= 2:
-            return ("🔥 CERTIFIED MOGGER", "#ffd75e")
+            return (_("🔥 CERTIFIED MOGGER"), "#ffd75e")
         if stats["hits_taken"] <= 5:
-            return ("😐 KINDA MID (still won tho)", "#6db1ff")
-        return ("🧍 NPC BEHAVIOR — practice your parries", "#ff5d6c")
+            return (_("😐 KINDA MID (still won tho)"), "#6db1ff")
+        return (_("🧍 NPC BEHAVIOR — practice your parries"), "#ff5d6c")
 
     def _mogx_finish(outcome):
         global mog_battle_aura_kept, mog_battle_last_result
@@ -1341,13 +1358,13 @@ init 2 python:
         mog_battle_aura_kept = result["aura_kept"]
         mog_battle_last_result = result
         if outcome == "loss":
-            S["message"] = "Your Confidence hit zero. Shake it off — every mogger gets ratio'd sometimes."
+            S["message"] = _("Your Confidence hit zero. Shake it off — every mogger gets ratio'd sometimes.")
             _mogx_audio("audio/battle_low_health.mp3", 0.5)
         elif outcome == "tutorial":
-            S["message"] = "Full kit confirmed. The hallway awaits."
+            S["message"] = _("Full kit confirmed. The hallway awaits.")
             _mogx_sfx("win")
         else:
-            S["message"] = "%s breaks eye contact first." % S["config"]["enemy_name"].title()
+            S["message"] = __("%s breaks eye contact first.") % __(S["config"]["enemy_name"]).title()
             _mogx_sfx("win")
         renpy.restart_interaction()
 
@@ -1585,11 +1602,11 @@ screen mog_battle_screen():
     add Solid("#030712e8")
 
     # Header.
-    $ header = "%s  //  %s" % (config.get("title", "MOG BATTLE"), config["enemy_name"])
+    $ header = "%s  //  %s" % (__(config.get("title", _("MOG BATTLE"))), __(config["enemy_name"]))
     text header:
         xpos 26 ypos 20 size 13 color "#aab4c5" bold True
         outlines mogx_text_outlines
-    textbutton "❓ HOW TO PLAY":
+    textbutton _("❓ HOW TO PLAY"):
         xpos 1254 xanchor 1.0 ypos 12 padding (10, 6)
         background Solid("#111827c0") hover_background Solid("#1c2740")
         text_size 11 text_color "#d7dceb" text_bold True
@@ -1644,11 +1661,11 @@ screen mog_battle_screen():
         text config["enemy_name"]:
             xpos 20 ypos 202 size 20 color "#f7f8fa" bold True
             outlines mogx_text_outlines
-        $ etitle = ("PHASE 2" if S["in_phase2"] else "PHASE 1")
-        text ("%s  //  %s" % (etitle, S["battle_id"].replace("_", " ").upper())):
+        $ etitle = (__("PHASE 2") if S["in_phase2"] else __("PHASE 1"))
+        text ("%s  //  %s" % (etitle, __(MOGX_BATTLE_LABELS[S["battle_id"]]))):
             xpos 20 ypos 229 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
-        text "EGO":
+        text _("EGO"):
             xpos 20 ypos 252 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
         text ("%d/%d" % (S["ehp"], S["emax"])):
@@ -1656,7 +1673,7 @@ screen mog_battle_screen():
             outlines mogx_text_outlines
         add Solid("#222b3b") xpos 20 ypos 270 xysize (300, 9)
         add Solid("#ffb84d") xpos 20 ypos 270 xysize (int(300 * S["ehp"] / float(S["emax"])), 9)
-        $ estatus = ("💫 BROKEN  " if S["stunned"] else "") + ("🫣 EMBARRASSED" if S["embarrassed"] else "")
+        $ estatus = (__("💫 BROKEN  ") if S["stunned"] else "") + (__("🫣 EMBARRASSED") if S["embarrassed"] else "")
         if estatus:
             text estatus:
                 xpos 20 ypos 288 size 14 color "#c07bff" bold True
@@ -1680,14 +1697,14 @@ screen mog_battle_screen():
             elif S["flash"] == "player":
                 at mogx_player_hit
             add Transform("images/minigames/acne_face.png", crop=(500, 40, 1050, 1050), fit="contain", xysize=(280, 176)) xpos 26 ypos 0
-        text "YOU":
+        text _("YOU"):
             xpos 26 ypos 176 size 20 color "#f7f8fa" bold True
             outlines mogx_text_outlines
-        text "ASPIRING MOGGER":
+        text _("ASPIRING MOGGER"):
             xpos 26 ypos 202 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
 
-        text "CONFIDENCE":
+        text _("CONFIDENCE"):
             xpos 0 ypos 226 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
         text ("%d/%d" % (S["php"], S["pmax"])):
@@ -1696,7 +1713,7 @@ screen mog_battle_screen():
         add Solid("#222b3b") xpos 0 ypos 244 xysize (340, 9)
         add Solid(_mogx_hp_color(S["php"], S["pmax"])) xpos 0 ypos 244 xysize (int(340 * S["php"] / float(S["pmax"])), 9)
 
-        text "⚡ AURA":
+        text _("⚡ AURA"):
             xpos 0 ypos 262 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
         for pip in range(MOGX_AURA_MAX):
@@ -1708,7 +1725,7 @@ screen mog_battle_screen():
             xpos 340 xanchor 1.0 ypos 262 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
 
-        text "👑 MOG":
+        text _("👑 MOG"):
             xpos 0 ypos 288 size 10 color "#98a3b8" bold True
             outlines mogx_text_outlines
         add Solid("#222b3b") xpos 86 ypos 291 xysize (214, 8)
@@ -1717,7 +1734,7 @@ screen mog_battle_screen():
             xpos 340 xanchor 1.0 ypos 287 size 10 color ("#ffd75e" if S["mog"] >= 100 else "#98a3b8") bold True
             outlines mogx_text_outlines
         if S["cringe"]:
-            text ("😬 CRINGE (%d turns left) — leaking ⚡, nap it off" % max(1, 3 - S["cringe_turns"])):
+            text (__("😬 CRINGE (%d turns left) — leaking ⚡, nap it off") % max(1, 3 - S["cringe_turns"])):
                 xpos 0 ypos 306 size 13 color "#ff5d6c" bold True
                 outlines mogx_text_outlines
 
@@ -1771,26 +1788,26 @@ screen mog_battle_screen():
                         text skill["key"]:
                             xpos 2 ypos 0 size 10 color "#778197" bold True
                             outlines mogx_text_outlines
-                        if locked is not None and locked != "WAIT":
+                        if locked is not None and locked != _("WAIT"):
                             text skill["icon"] xalign 0.5 ypos 4 size 30 outlines mogx_text_outlines at Transform(alpha=0.3)
                         else:
                             text skill["icon"] xalign 0.5 ypos 4 size 30 outlines mogx_text_outlines
                         text skill["name"]:
                             xalign 0.5 ypos 48 size 14 color ("#f7f8fa" if locked is None else "#606879") bold True
                             outlines mogx_text_outlines
-                        text skill["kind"].upper():
+                        text skill["kind_label"]:
                             xalign 0.5 ypos 68 size 9 color "#8791a5" bold True
                             outlines mogx_text_outlines
                         if skill_id == "mogmax":
-                            text ("READY!" if mog_ready else (locked if locked not in (None, "WAIT") else "%d%%" % S["mog"])):
+                            text (_("READY!") if mog_ready else (locked if locked not in (None, _("WAIT")) else "%d%%" % S["mog"])):
                                 xalign 0.5 ypos 88 size 11 color ("#ffd75e" if mog_ready else "#5c6473") bold True
                                 outlines mogx_text_outlines
-                        elif locked not in (None, "WAIT"):
+                        elif locked not in (None, _("WAIT")):
                             text locked:
                                 xalign 0.5 ypos 88 size 10 color "#ff9d6c" bold True
                                 outlines mogx_text_outlines
                         else:
-                            text ("FREE" if skill["cost"] == 0 else "⚡" * skill["cost"]):
+                            text (_("FREE") if skill["cost"] == 0 else "⚡" * skill["cost"]):
                                 xalign 0.5 ypos 86 size 12 color "#ffd75e"
                                 outlines mogx_text_outlines
 
@@ -1862,7 +1879,7 @@ screen mogx_defense_buttons(S):
                     xysize (52, 52) padding (0, 0)
                     background Solid("#2a2438" if focus == "parry" else "#1b2236")
                     text "W" xalign 0.5 yalign 0.5 size 24 bold True color ("#ffb347" if focus == "parry" else "#ffffff")
-                text "🛡️ PARRY" yalign 0.5 size 20 bold True color ("#525b6e" if focus == "dodge" else "#ffffff")
+                text _("🛡️ PARRY") yalign 0.5 size 20 bold True color ("#525b6e" if focus == "dodge" else "#ffffff")
         button:
             xysize (300, 110)
             background Solid("#0d1422e0" if focus == "parry" else "#c07bff22")
@@ -1877,7 +1894,7 @@ screen mogx_defense_buttons(S):
                     xysize (52, 52) padding (0, 0)
                     background Solid("#2a2438" if focus == "dodge" else "#1b2236")
                     text "S" xalign 0.5 yalign 0.5 size 24 bold True color ("#ffb347" if focus == "dodge" else "#ffffff")
-                text "💨 DODGE" yalign 0.5 size 20 bold True color ("#525b6e" if focus == "parry" else "#ffffff")
+                text _("💨 DODGE") yalign 0.5 size 20 bold True color ("#525b6e" if focus == "parry" else "#ffffff")
 
 
 screen mogx_freeze_hint(S):
@@ -1890,9 +1907,9 @@ screen mogx_freeze_hint(S):
         vbox:
             xalign 0.5 spacing 8
             if kind == "parry":
-                text "❄️ TIME FROZEN — press {color=#ffd75e}W{/color} NOW!" xalign 0.5 size 24 color "#f7f8fa" bold True
+                text _("❄️ TIME FROZEN — press {color=#ffd75e}W{/color} NOW!") xalign 0.5 size 24 color "#f7f8fa" bold True
             else:
-                text "❄️ TIME FROZEN — press {color=#ffd75e}S{/color} NOW!" xalign 0.5 size 24 color "#f7f8fa" bold True
+                text _("❄️ TIME FROZEN — press {color=#ffd75e}S{/color} NOW!") xalign 0.5 size 24 color "#f7f8fa" bold True
             # Mini WASD keyboard with the target key lit.
             vbox:
                 xalign 0.5 spacing 4
@@ -1914,7 +1931,8 @@ screen mogx_freeze_hint(S):
                     frame:
                         xysize (38, 38) padding (0, 0) background Solid("#1b2236")
                         text "D" xalign 0.5 yalign 0.5 size 15 bold True color "#778197"
-            text ("this is the exact %s moment" % ("parry" if kind == "parry" else "dodge")):
+            $ exact_defense_name = __("parry") if kind == "parry" else __("dodge")
+            text (__("this is the exact %s moment") % exact_defense_name):
                 xalign 0.5 size 11 color "#98a3b8"
 
 
@@ -1930,9 +1948,9 @@ screen mogx_hold_panel(S):
         padding (30, 22)
         vbox:
             xalign 0.5 spacing 13
-            text "😎 MOG STARE — HOLD FRAME":
+            text _("😎 MOG STARE — HOLD FRAME"):
                 xalign 0.5 size 22 color "#ffd75e" bold True
-            text "STRIKE WHILE THE MARKER IS IN THE GOLD":
+            text _("STRIKE WHILE THE MARKER IS IN THE GOLD"):
                 xalign 0.5 size 12 color "#aab4c5" bold True
             fixed:
                 xalign 0.5 xysize (540, 34)
@@ -1942,9 +1960,9 @@ screen mogx_hold_panel(S):
                 add Solid("#ffffff") xpos int(534 * min(p, 1.0)) xysize (6, 34)
             hbox:
                 xalign 0.5 spacing 18
-                text "green = GOOD" size 11 color "#5eff9d" bold True
-                text "gold = PERFECT" size 11 color "#ffd75e" bold True
-                text "anywhere else = ❌ BLINK" size 11 color "#ff5d6c" bold True
+                text _("green = GOOD") size 11 color "#5eff9d" bold True
+                text _("gold = PERFECT") size 11 color "#ffd75e" bold True
+                text _("anywhere else = ❌ BLINK") size 11 color "#ff5d6c" bold True
             button:
                 xalign 0.5 xysize (240, 54)
                 background Solid("#3a2f10") hover_background Solid("#57460f")
@@ -1953,8 +1971,8 @@ screen mogx_hold_panel(S):
                     xalign 0.5 yalign 0.5 spacing 10
                     frame:
                         xysize (70, 30) padding (0, 0) background Solid("#1b2236")
-                        text "SPACE" xalign 0.5 yalign 0.5 size 12 color "#ffd75e" bold True
-                    text "STRIKE 😎" yalign 0.5 size 16 color "#ffffff" bold True
+                        text _("SPACE") xalign 0.5 yalign 0.5 size 12 color "#ffd75e" bold True
+                    text _("STRIKE 😎") yalign 0.5 size 16 color "#ffffff" bold True
 
 
 screen mogx_quiz_panel(S):
@@ -1972,7 +1990,7 @@ screen mogx_quiz_panel(S):
                     xysize (588, 8)
                     add Solid("#263149") xysize (588, 8)
                     add Solid("#c07bff") xysize (max(1, int(588 * qleft)), 8)
-            text ("🧠 What does {color=#c07bff}{b}%s{/b}{/color} mean?" % quiz["word"]):
+            text (__("🧠 What does {color=#c07bff}{b}%s{/b}{/color} mean?") % __(quiz["word"])):
                 xalign 0.5 size 19 color "#f7f8fa"
             null height 2
             for qi, opt in enumerate(quiz["opts"]):
@@ -1992,7 +2010,7 @@ screen mogx_quiz_panel(S):
                         spacing 10 yalign 0.5
                         text str(qi + 1) size 14 color "#c07bff" bold True yalign 0.5
                         text opt size 14 color "#e8ecf8" yalign 0.5
-            text "PRESS 1-4 · ANSWER BEFORE THE BAR RUNS OUT":
+            text _("PRESS 1-4 · ANSWER BEFORE THE BAR RUNS OUT"):
                 xalign 0.5 size 10 color "#98a3b8" bold True
 
 
@@ -2006,7 +2024,7 @@ screen mogx_mash_panel(S):
         padding (26, 18)
         vbox:
             xalign 0.5 spacing 10
-            text "🤡 RATIO RUSH — ALTERNATE, FAST!":
+            text _("🤡 RATIO RUSH — ALTERNATE, FAST!"):
                 xalign 0.5 size 17 color "#f15bb5" bold True
             fixed:
                 xysize (468, 7)
@@ -2016,8 +2034,9 @@ screen mogx_mash_panel(S):
                 xysize (468, 28)
                 add Solid("#263149") ypos 2 xysize (468, 24)
                 add Solid("#ffd75e" if mfill >= 1.0 else "#5eff9d") ypos 2 xysize (max(1, int(468 * mfill)), 24)
-                text "FULL = MAX DMG" xpos 460 xanchor 1.0 yalign 0.5 size 9 color "#0d1422" bold True
-            text ("%d hits%s" % (S["mash_count"], " — MAX RATIO 💥" if S["mash_count"] >= MOGX_MASH_FULL else "")):
+                text _("FULL = MAX DMG") xpos 460 xanchor 1.0 yalign 0.5 size 9 color "#0d1422" bold True
+            $ max_ratio_text = __(" — MAX RATIO 💥") if S["mash_count"] >= MOGX_MASH_FULL else ""
+            text (__("%d hits%s") % (S["mash_count"], max_ratio_text)):
                 xalign 0.5 size 18 color "#ffffff" bold True
             hbox:
                 xalign 0.5 spacing 30
@@ -2049,7 +2068,7 @@ screen mogx_nap_panel(S):
         padding (30, 22)
         vbox:
             xalign 0.5 spacing 14
-            text "😴 POWER NAP — STRIKE AT THE SWEET SPOT":
+            text _("😴 POWER NAP — STRIKE AT THE SWEET SPOT"):
                 xalign 0.5 size 20 color "#5eff9d" bold True
             fixed:
                 xalign 0.5 xysize (540, 34)
@@ -2065,16 +2084,16 @@ screen mogx_nap_panel(S):
                     xalign 0.5 yalign 0.5 spacing 10
                     frame:
                         xysize (70, 30) padding (0, 0) background Solid("#1b2236")
-                        text "SPACE" xalign 0.5 yalign 0.5 size 12 color "#5eff9d" bold True
-                    text "STRIKE 😴" yalign 0.5 size 16 color "#ffffff" bold True
+                        text _("SPACE") xalign 0.5 yalign 0.5 size 12 color "#5eff9d" bold True
+                    text _("STRIKE 😴") yalign 0.5 size 16 color "#ffffff" bold True
 
 
 screen mogx_mogmax_panel(S):
     add Solid("#000000f2")
     if S["phase"] == "mogmax":
-        text "MOGMAX":
+        text _("MOGMAX"):
             xalign 0.5 ypos 74 size 58 color "#ffffff" bold True at mogx_mogmax_word
-        text "👑 DRAW THE M — HIT THE CIRCLES IN ORDER":
+        text _("👑 DRAW THE M — HIT THE CIRCLES IN ORDER"):
             xalign 0.5 ypos 148 size 14 color "#ffd75e" bold True
         # Connecting strokes of the M.
         add Solid("#ffffff30") xpos 458 ypos 360 xysize (190, 5) rotate -57
@@ -2093,7 +2112,7 @@ screen mogx_mogmax_panel(S):
                 action Function(_mogx_osu_press, index)
                 if active:
                     at mogx_mogmax_point
-                text (("OK" if node_hit else "NAH ❌") if done else str(index + 1)):
+                text ((_("OK") if node_hit else _("NAH ❌")) if done else str(index + 1)):
                     xalign 0.5 yalign 0.5 size (22 if not done or node_hit else 16) bold True
                     color ("#0d1422" if active or node_hit else "#ffffff")
         if S["osu_step"] < 5:
@@ -2102,15 +2121,15 @@ screen mogx_mogmax_panel(S):
                 xpos MOGX_OSU_POINTS[S["osu_step"]][0] xanchor 0.5
                 ypos (MOGX_OSU_POINTS[S["osu_step"]][1] + 56)
                 xysize (max(2, int(88 * ring)), 5)
-        text ("HITS %d / 5" % S["osu_hits"]):
+        text (__("HITS %d / 5") % S["osu_hits"]):
             xalign 0.5 ypos 580 size 18 color "#5eff9d" bold True
-        text "SPACE or click — each circle lasts under a second":
+        text _("SPACE or click — each circle lasts under a second"):
             xalign 0.5 ypos 612 size 12 color "#98a3b8"
     else:
         fixed at mogx_finisher_impact:
-            text "MOGMAX":
+            text _("MOGMAX"):
                 xalign 0.5 yalign 0.42 size 104 color "#ffffff" bold True outlines [(5, "#ff5d6c", 0, 0)]
-            text ("%d / 5  //  %s" % (S["osu_hits"], "BREAK 💫" if S["stunned"] else "IMPACT")):
+            text (__("%d / 5  //  %s") % (S["osu_hits"], __("BREAK 💫") if S["stunned"] else __("IMPACT"))):
                 xalign 0.5 yalign 0.62 size 26 color "#ffd75e" bold True
 
 
@@ -2141,7 +2160,7 @@ screen mogx_dialogue(S):
             frame:
                 xalign 1.0 padding (12, 7)
                 background Solid("#ffd75e")
-                text "TAP TO CONTINUE" size 11 color "#0d1422" bold True
+                text _("TAP TO CONTINUE") size 11 color "#0d1422" bold True
 
 
 # ----------------------------------------------------------------------
@@ -2162,23 +2181,23 @@ screen mogx_help_overlay():
         padding (32, 24)
         vbox:
             spacing 8
-            text "❓ How to play" size 26 color "#f7f8fa" bold True
-            text "DEFENSE (their turn)" size 12 color "#ffd75e" bold True
-            text "• {b}W = PARRY{/b} — tight timing at impact. Negates the hit: +1⚡, +5 Confidence, feeds the Mog Meter, and counters." size 13 color "#aab4c5"
-            text "• {b}S = DODGE{/b} — avoids the hit, earns nothing by itself. Take {b}zero hits{/b} across a whole attack — any mix of parries and dodges — and bank {b}+1⚡{/b}." size 13 color "#aab4c5"
-            text "• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings)." size 13 color "#aab4c5"
-            text "• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning." size 13 color "#aab4c5"
-            text "YOUR SKILLS (keys 1-6)" size 12 color "#ffd75e" bold True
-            text "• {b}1 Yap 🗣️{/b} — free jab, +1⚡.  {b}2 Mog Stare 😎{/b} (4⚡) — strike while the fast marker is in the gold." size 13 color "#aab4c5"
-            text "• {b}3 Galaxy Brain 🧠{/b} (2⚡) — vocab quiz; correct = big damage +1⚡ back." size 13 color "#aab4c5"
-            text "• {b}4 Ratio Rush 🤡{/b} (5⚡) — alternate J/K; 8+ hits Embarrasses them (-40% their damage)." size 13 color "#aab4c5"
-            text "• {b}5 Power Nap 😴{/b} (3⚡) — heal + cures 😬 CRINGE.  {b}6 MOGMAX 👑{/b} — full meter; draw the M; 4+ circles = BREAK." size 13 color "#aab4c5"
-            text "RULES OF THE HALLWAY" size 12 color "#ffd75e" bold True
-            text "• Used skills go {b}⏳ on timeout{/b} for one turn — rotate your kit." size 13 color "#aab4c5"
-            text "• The {b}👑 Mog Meter{/b} fills from parries and landed hits — and drains when you get hit or flub a minigame." size 13 color "#aab4c5"
-            text "• Enemies heal (deny by bursting or BREAKing them), and some hits YOINK your ⚡. Undodgeable 😬 CRINGE weakens every attack AND leaks 1⚡ per turn — lasts 3 turns, or nap it off early." size 13 color "#aab4c5"
+            text _("❓ How to play") size 26 color "#f7f8fa" bold True
+            text _("DEFENSE (their turn)") size 12 color "#ffd75e" bold True
+            text _("• {b}W = PARRY{/b} — tight timing at impact. Negates the hit: +1⚡, +5 Confidence, feeds the Mog Meter, and counters.") size 13 color "#aab4c5"
+            text _("• {b}S = DODGE{/b} — avoids the hit, earns nothing by itself. Take {b}zero hits{/b} across a whole attack — any mix of parries and dodges — and bank {b}+1⚡{/b}.") size 13 color "#aab4c5"
+            text _("• The enemy {b}glows{/b} before a hit: {color=#ff5d6c}{b}RED{/b}{/color} = can't be parried, dodge only. {color=#ffd75e}{b}YELLOW{/b}{/color} = parry or dodge. Watch for feints (delayed swings).") size 13 color "#aab4c5"
+            text _("• {b}💥 HEAVY swings{/b} wind up slower, dive bigger, and hit much harder — the deep windup is your warning.") size 13 color "#aab4c5"
+            text _("YOUR SKILLS (keys 1-6)") size 12 color "#ffd75e" bold True
+            text _("• {b}1 Yap 🗣️{/b} — free jab, +1⚡.  {b}2 Mog Stare 😎{/b} (4⚡) — strike while the fast marker is in the gold.") size 13 color "#aab4c5"
+            text _("• {b}3 Galaxy Brain 🧠{/b} (2⚡) — vocab quiz; correct = big damage +1⚡ back.") size 13 color "#aab4c5"
+            text _("• {b}4 Ratio Rush 🤡{/b} (5⚡) — alternate J/K; 8+ hits Embarrasses them (-40% their damage).") size 13 color "#aab4c5"
+            text _("• {b}5 Power Nap 😴{/b} (3⚡) — heal + cures 😬 CRINGE.  {b}6 MOGMAX 👑{/b} — full meter; draw the M; 4+ circles = BREAK.") size 13 color "#aab4c5"
+            text _("RULES OF THE HALLWAY") size 12 color "#ffd75e" bold True
+            text _("• Used skills go {b}⏳ on timeout{/b} for one turn — rotate your kit.") size 13 color "#aab4c5"
+            text _("• The {b}👑 Mog Meter{/b} fills from parries and landed hits — and drains when you get hit or flub a minigame.") size 13 color "#aab4c5"
+            text _("• Enemies heal (deny by bursting or BREAKing them), and some hits YOINK your ⚡. Undodgeable 😬 CRINGE weakens every attack AND leaks 1⚡ per turn — lasts 3 turns, or nap it off early.") size 13 color "#aab4c5"
             null height 6
-            textbutton "CLOSE":
+            textbutton _("CLOSE"):
                 xalign 0.5 xysize (200, 46)
                 background Solid("#1c2740") hover_background Solid("#26365c")
                 text_color "#ffffff" text_size 14 text_bold True
@@ -2198,7 +2217,7 @@ screen mogx_results(S):
         padding (38, 30)
         vbox:
             xalign 0.5 spacing 14
-            text ("RATIO'D 💀" if not won else "TRAINING COMPLETE 📈" if result["outcome"] == "tutorial" else "VICTORY 👑"):
+            text (_("RATIO'D 💀") if not won else _("TRAINING COMPLETE 📈") if result["outcome"] == "tutorial" else _("VICTORY 👑")):
                 xalign 0.5 size 38 italic True bold True
                 color ("#ff5d6c" if not won else "#ffd75e")
             text S["message"]:
@@ -2206,27 +2225,27 @@ screen mogx_results(S):
             hbox:
                 xalign 0.5 spacing 26
                 vbox:
-                    text "PARRIES" xalign 0.5 size 10 color "#8f9b95" bold True
+                    text _("PARRIES") xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["parries"]) xalign 0.5 size 26 color "#6db1ff" bold True
                 vbox:
-                    text "PERFECT STRIKES" xalign 0.5 size 10 color "#8f9b95" bold True
+                    text _("PERFECT STRIKES") xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["perfect_attacks"]) xalign 0.5 size 26 color "#5eff9d" bold True
                 vbox:
-                    text "HITS TAKEN" xalign 0.5 size 10 color "#8f9b95" bold True
+                    text _("HITS TAKEN") xalign 0.5 size 10 color "#8f9b95" bold True
                     text str(result["hits_taken"]) xalign 0.5 size 26 color "#ff5d6c" bold True
             if won and result["outcome"] == "win":
                 $ grade_text, grade_color = _mogx_grade(S["stats"])
-                text ("GRADE: %s" % grade_text):
+                text (__("GRADE: %s") % __(grade_text)):
                     xalign 0.5 size 16 color grade_color bold True
             null height 6
             if not won:
-                textbutton "🔄 RUN IT BACK":
+                textbutton _("🔄 RUN IT BACK"):
                     xalign 0.5 xysize (250, 54)
                     background Solid("#5c1a24") hover_background Solid("#7a2331")
                     text_color "#ffffff" text_size 16 text_bold True
                     action Function(_mogx_retry)
             else:
-                textbutton "CONTINUE":
+                textbutton _("CONTINUE"):
                     xalign 0.5 xysize (250, 54)
                     background Solid("#157a55") hover_background Solid("#20a775")
                     text_color "#ffffff" text_size 16 text_bold True

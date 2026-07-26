@@ -12,151 +12,151 @@ init python:
 
     MOG_MOVES = {
         "aura": {
-            "name": "Aura Blast",
+            "name": _("Aura Blast"),
             "mark": "A",
-            "description": "Pressure. Spends 3 Momentum for Giga damage.",
+            "description": _("Pressure. Spends 3 Momentum for Giga damage."),
             "color": "#a21d50",
             "verbal": True,
         },
         "frame": {
-            "name": "Hold Frame",
+            "name": _("Hold Frame"),
             "mark": "F",
-            "description": "Brace. Correct reads build Momentum.",
+            "description": _("Brace. Correct reads build Momentum."),
             "color": "#23a57c",
             "verbal": False,
         },
         "cringe": {
-            "name": "Cringe Check",
+            "name": _("Cringe Check"),
             "mark": "C",
-            "description": "Apply Cringe. Third stack detonates.",
+            "description": _("Apply Cringe. Third stack detonates."),
             "color": "#d45122",
             "verbal": True,
         },
         "mew": {
-            "name": "Mew",
+            "name": _("Mew"),
             "mark": "M",
-            "description": "Silence + heal. 2-round cooldown.",
+            "description": _("Silence + heal. 2-round cooldown."),
             "color": "#13a88a",
             "verbal": False,
         },
     }
 
     MOG_INTENTS = {
-        "ATTACK": {"mark": "!", "color": "#c84a35", "answer": "frame"},
-        "BLOCK": {"mark": "#", "color": "#3e8ec7", "answer": "cringe"},
-        "YAP": {"mark": ">", "color": "#b8752a", "answer": "mew"},
-        "ANALYZE": {"mark": "?", "color": "#9a65d1", "answer": None},
+        "ATTACK": {"label": _("ATTACK"), "mark": "!", "color": "#c84a35", "answer": "frame"},
+        "BLOCK": {"label": _("BLOCK"), "mark": "#", "color": "#3e8ec7", "answer": "cringe"},
+        "YAP": {"label": _("YAP"), "mark": ">", "color": "#b8752a", "answer": "mew"},
+        "ANALYZE": {"label": _("ANALYZE"), "mark": "?", "color": "#9a65d1", "answer": None},
     }
 
     MOG_VARIANTS = {
         "heavy": {
-            "label": "HEAVY",
-            "clue": "Shoulders square. Full commitment.",
+            "label": _("HEAVY"),
+            "clue": _("Shoulders square. Full commitment."),
             "color": "#e34d3c",
             "tells": (
-                "Both feet plant. One shoulder loads.",
-                "His fist tightens and his hips turn in.",
-                "He leans forward with his whole frame.",
+                _("Both feet plant. One shoulder loads."),
+                _("His fist tightens and his hips turn in."),
+                _("He leans forward with his whole frame."),
             ),
         },
         "pressure": {
-            "label": "PRESSURE",
-            "clue": "He crowds the pocket.",
+            "label": _("PRESSURE"),
+            "clue": _("He crowds the pocket."),
             "color": "#e87936",
             "tells": (
-                "He closes the distance without blinking.",
-                "Your space disappears one step at a time.",
-                "He crowds your stance and keeps advancing.",
+                _("He closes the distance without blinking."),
+                _("Your space disappears one step at a time."),
+                _("He crowds your stance and keeps advancing."),
             ),
         },
         "feint": {
-            "label": "FEINT",
-            "clue": "His weight stays on the back foot.",
+            "label": _("FEINT"),
+            "clue": _("His weight stays on the back foot."),
             "color": "#f0b84a",
             "tells": (
-                "His shoulder twitches, but his weight stays back.",
-                "The first motion is fast. His feet never commit.",
-                "He shows an opening and watches you react.",
+                _("His shoulder twitches, but his weight stays back."),
+                _("The first motion is fast. His feet never commit."),
+                _("He shows an opening and watches you react."),
             ),
         },
         "guard": {
-            "label": "GUARD",
-            "clue": "Elbows close. He is absorbing.",
+            "label": _("GUARD"),
+            "clue": _("Elbows close. He is absorbing."),
             "color": "#4c9ed4",
             "tells": (
-                "His elbows tuck and his chin disappears.",
-                "He closes every opening and waits.",
-                "His stance shrinks behind a sealed frame.",
+                _("His elbows tuck and his chin disappears."),
+                _("He closes every opening and waits."),
+                _("His stance shrinks behind a sealed frame."),
             ),
         },
         "counter": {
-            "label": "COUNTER",
-            "clue": "One hand waits for your swing.",
+            "label": _("COUNTER"),
+            "clue": _("One hand waits for your swing."),
             "color": "#8c74d8",
             "tells": (
-                "One hand hangs back, waiting for your swing.",
-                "He leaves bait open and tracks your shoulders.",
-                "His guard looks loose. His eyes do not.",
+                _("One hand hangs back, waiting for your swing."),
+                _("He leaves bait open and tracks your shoulders."),
+                _("His guard looks loose. His eyes do not."),
             ),
         },
         "rant": {
-            "label": "RANT",
-            "clue": "He inhales like a podcast started.",
+            "label": _("RANT"),
+            "clue": _("He inhales like a podcast started."),
             "color": "#d98935",
             "tells": (
-                "His chest fills like a podcast is starting.",
-                "He points at your jaw and takes a huge breath.",
-                "He is visibly preparing a twelve-step explanation.",
+                _("His chest fills like a podcast is starting."),
+                _("He points at your jaw and takes a huge breath."),
+                _("He is visibly preparing a twelve-step explanation."),
             ),
         },
         "bait": {
-            "label": "BAIT",
-            "clue": "The silence feels rehearsed.",
+            "label": _("BAIT"),
+            "clue": _("The silence feels rehearsed."),
             "color": "#c2669f",
             "tells": (
-                "He goes suspiciously quiet and watches your mouth.",
-                "The rant never starts. He studies your lips instead.",
-                "He pretends to inhale, then waits for silence.",
+                _("He goes suspiciously quiet and watches your mouth."),
+                _("The rant never starts. He studies your lips instead."),
+                _("He pretends to inhale, then waits for silence."),
             ),
         },
         "repeat": {
-            "label": "PATTERN READ",
-            "clue": "He has memorized your repetition.",
+            "label": _("PATTERN READ"),
+            "clue": _("He has memorized your repetition."),
             "color": "#a56cdb",
             "tells": (
-                "He mirrors your last move before you make it.",
-                "His eyes follow the pattern you keep repeating.",
-                "He mouths the name of your favorite move.",
+                _("He mirrors your last move before you make it."),
+                _("His eyes follow the pattern you keep repeating."),
+                _("He mouths the name of your favorite move."),
             ),
         },
     }
 
     MOG_CRINGE_LINES = (
-        "Negative canthal tilt.",
-        "Your mewing streak got interrupted.",
-        "That ramus is fighting for its life.",
-        "Bro got mogged by overhead lighting.",
-        "Your facial thirds filed a complaint.",
-        "The hunter eyes are in another save file.",
-        "Your side profile needs a patch note.",
-        "The jaw trainer requested a transfer.",
-        "Looksmaxxing status: maintenance required.",
-        "The PSL scale just blue-screened.",
-        "Your masseters are on airplane mode.",
-        "That buccal fat has tenure.",
-        "The mirror lowered its brightness.",
-        "Your gonial angle went nonverbal.",
-        "The symmetry filter clocked out.",
-        "Bro is softmaxxing involuntarily.",
-        "Your cheekbones missed the update.",
-        "The face card entered cooldown.",
-        "Mog rating: participation aura.",
-        "Your eye area needs a balance patch.",
-        "The front camera won the exchange.",
-        "Your phenotype got ratioed.",
-        "Bone structure has left the chat.",
-        "The canthal tilt is purely theoretical.",
-        "Your jawline is still buffering.",
+        _("Negative canthal tilt."),
+        _("Your mewing streak got interrupted."),
+        _("That ramus is fighting for its life."),
+        _("Bro got mogged by overhead lighting."),
+        _("Your facial thirds filed a complaint."),
+        _("The hunter eyes are in another save file."),
+        _("Your side profile needs a patch note."),
+        _("The jaw trainer requested a transfer."),
+        _("Looksmaxxing status: maintenance required."),
+        _("The PSL scale just blue-screened."),
+        _("Your masseters are on airplane mode."),
+        _("That buccal fat has tenure."),
+        _("The mirror lowered its brightness."),
+        _("Your gonial angle went nonverbal."),
+        _("The symmetry filter clocked out."),
+        _("Bro is softmaxxing involuntarily."),
+        _("Your cheekbones missed the update."),
+        _("The face card entered cooldown."),
+        _("Mog rating: participation aura."),
+        _("Your eye area needs a balance patch."),
+        _("The front camera won the exchange."),
+        _("Your phenotype got ratioed."),
+        _("Bone structure has left the chat."),
+        _("The canthal tilt is purely theoretical."),
+        _("Your jawline is still buffering."),
     )
 
     MOG_VARIANT_POOLS = {
@@ -191,27 +191,27 @@ init python:
             "forcedIntent": "ATTACK",
             "forcedVariant": "heavy",
             "allowedHint": "frame",
-            "coachLine": "I'm about to hit hard. Brace.",
+            "coachLine": _("I'm about to hit hard. Brace."),
         },
         {
             "forcedIntent": "BLOCK",
             "forcedVariant": "guard",
             "allowedHint": "cringe",
-            "coachLine": "I'm closing up. Say something permanent.",
+            "coachLine": _("I'm closing up. Say something permanent."),
         },
         {
             "forcedIntent": "YAP",
             "forcedVariant": "rant",
             "allowedHint": "mew",
-            "coachLine": "I'm about to talk. Seal the mouth.",
+            "coachLine": _("I'm about to talk. Seal the mouth."),
         },
     )
 
     MOG_BATTLE_CONFIGS = {
         "kai_tutorial": {
-            "title": "FIRST CONTACT",
-            "enemy_name": "TRAINING BOT",
-            "enemy_short": "BOT",
+            "title": _("FIRST CONTACT"),
+            "enemy_name": _("TRAINING BOT"),
+            "enemy_short": _("BOT"),
             "enemy_asset": "images/characters/kai/training_bot.png",
             "enemy_crop": (120, 50, 780, 960),
             "enemy_hp": 100,
@@ -232,12 +232,12 @@ init python:
             "counter_damage": 6,
             "bait_damage": 3,
             "bait_heal": 4,
-            "attack_names": ("PLATE SLAM", "Chest Bump", "Lift Different"),
+            "attack_names": (_("PLATE SLAM"), _("Chest Bump"), _("Lift Different")),
         },
         "kai_graduation": {
-            "title": "GRADUATION SPAR",
-            "enemy_name": "TRAINING BOT",
-            "enemy_short": "BOT",
+            "title": _("GRADUATION SPAR"),
+            "enemy_name": _("TRAINING BOT"),
+            "enemy_short": _("BOT"),
             "enemy_asset": "images/characters/kai/training_bot.png",
             "enemy_crop": (120, 50, 780, 960),
             "enemy_hp": 110,
@@ -258,11 +258,11 @@ init python:
             "counter_damage": 8,
             "bait_damage": 4,
             "bait_heal": 6,
-            "attack_names": ("PLATE SLAM", "Chest Bump", "Lift Different"),
+            "attack_names": (_("PLATE SLAM"), _("Chest Bump"), _("Lift Different")),
         },
         "brayden": {
-            "title": "HALLWAY TITLE MATCH",
-            "enemy_name": "BRAYDEN",
+            "title": _("HALLWAY TITLE MATCH"),
+            "enemy_name": _("BRAYDEN"),
             "enemy_short": "B",
             "enemy_asset": "images/characters/brayden/brayden smirk.png",
             "enemy_crop": (500, 0, 380, 520),
@@ -284,11 +284,11 @@ init python:
             "counter_damage": 20,
             "bait_damage": 12,
             "bait_heal": 12,
-            "attack_names": ("VARSITY CHECK", "Tray Drive", "Public Ratio"),
+            "attack_names": (_("VARSITY CHECK"), _("Tray Drive"), _("Public Ratio")),
         },
         "clav": {
-            "title": "FINAL EXAM",
-            "enemy_name": "CLAV",
+            "title": _("FINAL EXAM"),
+            "enemy_name": _("CLAV"),
             "enemy_short": "C",
             "enemy_asset": "images/characters/clav/clav stern.png",
             "enemy_crop": (470, 0, 340, 540),
@@ -310,7 +310,7 @@ init python:
             "counter_damage": 25,
             "bait_damage": 14,
             "bait_heal": 16,
-            "attack_names": ("MIRROR TEST", "Measured Disappointment", "Curriculum Correction"),
+            "attack_names": (_("MIRROR TEST"), _("Measured Disappointment"), _("Curriculum Correction")),
         },
     }
 
@@ -439,7 +439,7 @@ init python:
             "phase": "player",
             "selected_move": None,
             "previous_move": None,
-            "message": "Read the intent. Answer it.",
+            "message": _("Read the intent. Answer it."),
             "impact": None,
             "result": None,
         }
@@ -477,14 +477,14 @@ init python:
             _mog_play_cue("audio/battle_aura_beam.mp3", 0.85)
             if dealt and (intent == "YAP" or variant == "feint" or giga):
                 _mog_play_cue("audio/battle_super_effective.mp3", 0.65, "battle_impact")
-            giga_text = " GIGA MOMENTUM detonates." if giga else ""
+            giga_text = __(" GIGA MOMENTUM detonates.") if giga else ""
             if intent == "YAP":
-                return "Aura Blast catches him mid-inhale.%s (-%d)" % (giga_text, dealt)
+                return __("Aura Blast catches him mid-inhale.%s (-%d)") % (giga_text, dealt)
             if intent == "BLOCK":
-                return "Aura Blast folds against the block.%s (-%d)" % (giga_text, dealt)
+                return __("Aura Blast folds against the block.%s (-%d)") % (giga_text, dealt)
             if variant == "feint":
-                return "You call the feint and blast the opening.%s (-%d)" % (giga_text, dealt)
-            return "Aura Blast lands without discussion.%s (-%d)" % (giga_text, dealt)
+                return __("You call the feint and blast the opening.%s (-%d)") % (giga_text, dealt)
+            return __("Aura Blast lands without discussion.%s (-%d)") % (giga_text, dealt)
 
         if move == "frame":
             if intent == "ATTACK" and variant != "feint":
@@ -492,11 +492,11 @@ init python:
                 state["momentum"] = min(3, state["momentum"] + 1)
                 dealt = _mog_damage(state, "enemy", 6)
                 _mog_play_cue("audio/battle_block_scan.mp3", 0.8)
-                return "Perfect frame. The impact feeds Momentum %d/3. Riposte (-%d)" % (state["momentum"], dealt)
+                return __("Perfect frame. The impact feeds Momentum %d/3. Riposte (-%d)") % (state["momentum"], dealt)
             if variant == "feint":
                 state["off_balance"] = True
-                return "You brace early. He sees your weight commit."
-            return "You hold frame against a threat that never arrives."
+                return _("You brace early. He sees your weight commit.")
+            return _("You hold frame against a threat that never arrives.")
 
         if move == "cringe":
             cringe_line = renpy.random.choice(MOG_CRINGE_LINES)
@@ -507,10 +507,10 @@ init python:
             if state["cringe_stacks"] >= 3:
                 burst = _mog_damage(state, "enemy", 26)
                 state["cringe_stacks"] = 0
-                return "\"%s\" Third Cringe detonates. (-%d)" % (cringe_line, dealt + burst)
+                return __("\"%s\" Third Cringe detonates. (-%d)") % (__(cringe_line), dealt + burst)
             if intent == "BLOCK":
-                return "\"%s\" Bypasses guard. Cringe %d/3. (-%d)" % (cringe_line, state["cringe_stacks"], dealt)
-            return "\"%s\" Cringe %d/3. (-%d)" % (cringe_line, state["cringe_stacks"], dealt)
+                return __("\"%s\" Bypasses guard. Cringe %d/3. (-%d)") % (__(cringe_line), state["cringe_stacks"], dealt)
+            return __("\"%s\" Cringe %d/3. (-%d)") % (__(cringe_line), state["cringe_stacks"], dealt)
 
         if move == "mew":
             state["mewing"] = True
@@ -521,16 +521,16 @@ init python:
             if healed:
                 renpy.music.stop(channel="battle_warning", fadeout=0.15)
                 _mog_play_cue("audio/battle_health_recharge.mp3", 0.85)
-                return "You seal your mouth and recover composure. (+%d, cooldown 2)" % healed
-            return "You seal your mouth at maximum structural integrity."
+                return __("You seal your mouth and recover composure. (+%d, cooldown 2)") % healed
+            return _("You seal your mouth at maximum structural integrity.")
 
-        return "Nothing happens. This is recorded."
+        return _("Nothing happens. This is recorded.")
 
     def resolveEnemyTurn(state):
         config = state["config"]
         intent = state["intent"]["actual"]
         variant = state["intent"]["variant"]
-        enemy_name = config["enemy_name"].title()
+        enemy_name = __(config["enemy_name"]).title()
 
         if intent == "ATTACK":
             attack_name = renpy.random.choice(config["attack_names"])
@@ -538,31 +538,31 @@ init python:
                 amount = config["feint_damage"] if state["off_balance"] else 8
                 dealt = _mog_damage(state, "player", amount)
                 if state["off_balance"]:
-                    return "The feint pulls you out of frame, then snaps back. (-%d)" % dealt
-                return "The feint finds no commitment and only grazes you. (-%d)" % dealt
+                    return __("The feint pulls you out of frame, then snaps back. (-%d)") % dealt
+                return __("The feint finds no commitment and only grazes you. (-%d)") % dealt
 
             amount = 7 if state["guard"] else config["attack_damage"]
             if variant == "pressure" and not state["guard"]:
                 amount = max(1, amount - 5)
                 if state["momentum"]:
                     state["momentum"] -= 1
-                    momentum_text = " Momentum drops to %d/3." % state["momentum"]
+                    momentum_text = __(" Momentum drops to %d/3.") % state["momentum"]
                 else:
                     momentum_text = ""
             else:
                 momentum_text = ""
             dealt = _mog_damage(state, "player", amount)
             if state["guard"]:
-                return "%s hits the frame and loses most of its meaning. (-%d)" % (attack_name, dealt)
-            return "%s lands at full institutional force. (-%d)%s" % (attack_name, dealt, momentum_text)
+                return __("%s hits the frame and loses most of its meaning. (-%d)") % (__(attack_name), dealt)
+            return __("%s lands at full institutional force. (-%d)%s") % (__(attack_name), dealt, momentum_text)
 
         if intent == "BLOCK":
             if variant == "counter" and state["selected_move"] in ("aura", "cringe"):
                 dealt = _mog_damage(state, "player", config["counter_damage"])
-                return "%s catches the aggressive answer and sends it back. (-%d)" % (enemy_name, dealt)
+                return __("%s catches the aggressive answer and sends it back. (-%d)") % (enemy_name, dealt)
             if variant == "counter":
-                return "%s waits to counter a swing that never comes." % enemy_name
-            return "%s walls up and absorbs the exchange." % enemy_name
+                return __("%s waits to counter a swing that never comes.") % enemy_name
+            return __("%s walls up and absorbs the exchange.") % enemy_name
 
         if intent == "YAP":
             if variant == "bait":
@@ -570,24 +570,24 @@ init python:
                     healed = min(config["bait_heal"], state["enemy_max_hp"] - state["enemy_hp"])
                     state["enemy_hp"] += healed
                     dealt = _mog_damage(state, "player", config["bait_damage"])
-                    return "The silence was bait. Your Mew gives %s room to reset. (enemy +%d, you -%d)" % (enemy_name, healed, dealt)
+                    return __("The silence was bait. Your Mew gives %s room to reset. (enemy +%d, you -%d)") % (enemy_name, healed, dealt)
                 if state["selected_move"] == "aura":
-                    return "You refuse the rehearsed silence and blast the opening. The bait fails."
+                    return _("You refuse the rehearsed silence and blast the opening. The bait fails.")
                 dealt = _mog_damage(state, "player", max(6, config["yap_damage"] - 6))
-                return "The bait turns into a short jab at your composure. (-%d)" % dealt
+                return __("The bait turns into a short jab at your composure. (-%d)") % dealt
             if state["mewing"]:
-                return "The rant washes over your sealed silence and does nothing."
+                return _("The rant washes over your sealed silence and does nothing.")
             dealt = _mog_damage(state, "player", config["yap_damage"])
-            return "His training split becomes psychically painful. (-%d)" % dealt
+            return __("His training split becomes psychically painful. (-%d)") % dealt
 
         if intent == "ANALYZE":
             if state["adapt_target"] and state["selected_move"] == state["adapt_target"]:
                 adapt_damage = 18 if state["battle_id"] == "kai_graduation" else 23 if state["battle_id"] == "brayden" else 28
                 dealt = _mog_damage(state, "player", adapt_damage)
-                return "%s predicts the repetition before you finish it. (-%d)" % (enemy_name, dealt)
-            return "%s reads the old pattern, but you give a new answer." % enemy_name
+                return __("%s predicts the repetition before you finish it. (-%d)") % (enemy_name, dealt)
+            return __("%s reads the old pattern, but you give a new answer.") % enemy_name
 
-        return "The opponent does nothing with unusual confidence."
+        return _("The opponent does nothing with unusual confidence.")
 
     def checkEnd(state):
         if state["enemy_hp"] <= state["config"]["stop_at"]:
@@ -614,11 +614,11 @@ init python:
         mog_battle_last_result = result
         state["impact"] = None
         if outcome == "loss":
-            say(state, "Your frame collapses. The lesson remains available.")
+            say(state, _("Your frame collapses. The lesson remains available."))
         elif outcome == "tutorial":
-            say(state, "Three reads confirmed. Training protocol complete.")
+            say(state, _("Three reads confirmed. Training protocol complete."))
         else:
-            say(state, "%s breaks eye contact first." % state["config"]["enemy_name"].title())
+            say(state, __("%s breaks eye contact first.") % __(state["config"]["enemy_name"]).title())
 
     def _mog_phase_for_hp(state):
         ratio = state["enemy_hp"] / float(state["enemy_max_hp"])
@@ -641,17 +641,17 @@ init python:
 
         state["boss_phase"] = new_phase
         if state["battle_id"] == "kai_graduation":
-            return "PHASE 2 // Kai adds feints and counters. Read the specific tell."
+            return _("PHASE 2 // Kai adds feints and counters. Read the specific tell.")
         if state["battle_id"] == "brayden":
-            return "PHASE 2 // Brayden speeds up and adapts after two repeats."
+            return _("PHASE 2 // Brayden speeds up and adapts after two repeats.")
         if state["battle_id"] == "clav" and new_phase >= 3:
             state["locked_move"] = _mog_most_used_move(state)
             state["locked_rounds"] = 1 if state["locked_move"] else 0
-            move_name = MOG_MOVES[state["locked_move"]]["name"] if state["locked_move"] else "your favorite move"
-            return "FINAL PHASE // Clav bans %s for one turn." % move_name
+            move_name = MOG_MOVES[state["locked_move"]]["name"] if state["locked_move"] else _("your favorite move")
+            return __("FINAL PHASE // Clav bans %s for one turn.") % __(move_name)
         if state["battle_id"] == "clav":
-            return "PHASE 2 // Clav stops teaching and starts countering."
-        return "The opponent changes cadence."
+            return _("PHASE 2 // Clav stops teaching and starts countering.")
+        return _("The opponent changes cadence.")
 
     def _mog_end_round(state):
         outcome = checkEnd(state)
@@ -682,21 +682,21 @@ init python:
         if tutorial_step:
             say(state, tutorial_step["coachLine"])
         elif state["round"] == 4 and state["config"]["tutorial"]:
-            say(state, "No more hints. Read the icon. Answer it.")
+            say(state, _("No more hints. Read the icon. Answer it."))
         elif phase_message:
             say(state, phase_message)
         elif state["intent"]["actual"] == "ANALYZE" and state["adapt_target"]:
-            say(state, "PATTERN READ // Switch away from %s." % MOG_MOVES[state["adapt_target"]]["name"])
+            say(state, __("PATTERN READ // Switch away from %s.") % __(MOG_MOVES[state["adapt_target"]]["name"]))
         else:
-            say(state, "The next intent locks in.")
+            say(state, _("The next intent locks in."))
 
     def _mog_move_locked_reason(state, move):
         if state.get("sealed") and MOG_MOVES[move]["verbal"]:
-            return "SEALED"
+            return _("SEALED")
         if move == "mew" and state.get("mew_cooldown", 0):
-            return "COOLDOWN %d" % state["mew_cooldown"]
+            return __("COOLDOWN %d") % state["mew_cooldown"]
         if move == state.get("locked_move") and state.get("locked_rounds", 0):
-            return "BANNED BY CLAV"
+            return _("BANNED BY CLAV")
         return None
 
     def _mog_choose(move):
@@ -755,30 +755,30 @@ init python:
     def _mog_statuses(state, target):
         tags = []
         if target == "enemy" and state["cringe_stacks"]:
-            tags.append(("CRINGE x%d" % state["cringe_stacks"], "#d45122"))
+            tags.append((__("CRINGE x%d") % state["cringe_stacks"], "#d45122"))
         if target == "player":
-            tags.append(("MOMENTUM %d/3" % state["momentum"], "#f0b84a" if state["momentum"] < 3 else "#69e4ad"))
+            tags.append((__("MOMENTUM %d/3") % state["momentum"], "#f0b84a" if state["momentum"] < 3 else "#69e4ad"))
             if state["guard"]:
-                tags.append(("FRAMED UP", "#23a57c"))
+                tags.append((_("FRAMED UP"), "#23a57c"))
             if state["mewing"]:
-                tags.append(("MEWING", "#13a88a"))
+                tags.append((_("MEWING"), "#13a88a"))
             elif state["mew_cooldown"]:
-                tags.append(("MEW CD %d" % state["mew_cooldown"], "#68736e"))
+                tags.append((__("MEW CD %d") % state["mew_cooldown"], "#68736e"))
             if state["locked_move"]:
-                tags.append(("BANNED: %s" % MOG_MOVES[state["locked_move"]]["name"].upper(), "#9a65d1"))
+                tags.append((__("BANNED: %s") % __(MOG_MOVES[state["locked_move"]]["name"]).upper(), "#9a65d1"))
         return tags
 
     def _mog_move_description(state, move_id, locked_reason=None):
         if locked_reason:
             return locked_reason
         if move_id == "aura" and state["momentum"] >= 3:
-            return "GIGA READY // Spend 3 Momentum for +18."
+            return _("GIGA READY // Spend 3 Momentum for +18.")
         if move_id == "frame":
-            return "Counter committed attacks. Build Momentum."
+            return _("Counter committed attacks. Build Momentum.")
         if move_id == "cringe":
-            return "Cringe %d/3 // +2 vs guard. Third detonates." % state["cringe_stacks"]
+            return __("Cringe %d/3 // +2 vs guard. Third detonates.") % state["cringe_stacks"]
         if move_id == "mew":
-            return "Silence rants + heal. Bait punishes it."
+            return _("Silence rants + heal. Bait punishes it.")
         return MOG_MOVES[move_id]["description"]
 
 
@@ -869,7 +869,7 @@ screen mog_battle_legacy_screen():
         ypos 67
         xysize (1280, 3)
 
-    text ("ROUND %d" % state["round"]):
+    text (__("ROUND %d") % state["round"]):
         xpos 42
         yalign 0.048
         size 20
@@ -892,7 +892,7 @@ screen mog_battle_legacy_screen():
         padding (12, 7)
         at mog_turn_drop
 
-        text ("YOUR TURN - PICK A MOVE" if player_active else "ENEMY'S TURN" if enemy_active else "COMPLETE"):
+        text (_("YOUR TURN - PICK A MOVE") if player_active else _("ENEMY'S TURN") if enemy_active else _("COMPLETE")):
             xalign 0.5
             yalign 0.5
             size 20
@@ -907,7 +907,7 @@ screen mog_battle_legacy_screen():
         color "#8f9993"
         bold True
 
-    text ("PHASE %d" % state["boss_phase"]):
+    text (__("PHASE %d") % state["boss_phase"]):
         xpos 1074
         xanchor 1.0
         yalign 0.047
@@ -935,7 +935,7 @@ screen mog_battle_legacy_screen():
             color "#f1f2f1"
             bold True
 
-        text "OPPONENT // AURA":
+        text _("OPPONENT // AURA"):
             xpos 0
             ypos 29
             size 10
@@ -1001,7 +1001,7 @@ screen mog_battle_legacy_screen():
                     size 68
                     color "#d4d6d5"
                     bold True
-                text "TRAINER":
+                text _("TRAINER"):
                     xalign 0.5
                     ypos 153
                     size 11
@@ -1019,7 +1019,7 @@ screen mog_battle_legacy_screen():
             fixed:
                 add Solid(intent_data["color"]):
                     xysize (6, 90)
-                text ("TRAINING TELEGRAPH" if explicit_telegraph else "READ THE BODY"):
+                text (_("TRAINING TELEGRAPH") if explicit_telegraph else _("READ THE BODY")):
                     xpos 20
                     ypos 2
                     size 11
@@ -1032,7 +1032,7 @@ screen mog_battle_legacy_screen():
                         size 38
                         color intent_data["color"]
                         bold True
-                    text intent_name:
+                    text intent_data["label"]:
                         xpos 67
                         ypos 30
                         size 25
@@ -1051,14 +1051,14 @@ screen mog_battle_legacy_screen():
                         size 9
                         color "#c0c6c2"
                     if hint_move:
-                        text ("COACH READ: %s" % MOG_MOVES[hint_move]["name"].upper()):
+                        text (__("COACH READ: %s") % __(MOG_MOVES[hint_move]["name"]).upper()):
                             xpos 68
                             ypos 79
                             size 10
                             color "#69e4ad"
                             bold True
                     else:
-                        text "LEARN THE TELL // CHOOSE THE ANSWER":
+                        text _("LEARN THE TELL // CHOOSE THE ANSWER"):
                             xpos 68
                             ypos 79
                             size 9
@@ -1072,7 +1072,7 @@ screen mog_battle_legacy_screen():
                         size 16
                         color "#f2f4f3"
                         bold True
-                    text "NO ICON // INFER THE INTENT":
+                    text _("NO ICON // INFER THE INTENT"):
                         xpos 20
                         ypos 80
                         size 9
@@ -1092,7 +1092,7 @@ screen mog_battle_legacy_screen():
                 hbox:
                     xalign 0.5
                     spacing 8
-                    text "THEN:" size 13 color "#707773" bold True
+                    text _("THEN:") size 13 color "#707773" bold True
                     text state["next_intent"]["tell"]:
                         xmaximum 245
                         size 9
@@ -1130,21 +1130,21 @@ screen mog_battle_legacy_screen():
                 xpos 6
                 ypos 6
                 xysize (154, 128)
-            text "FACELESS":
+            text _("FACELESS"):
                 xpos 10
                 ypos 111
                 size 10
                 color "#d9d5ff"
                 bold True
 
-        text "YOU":
+        text _("YOU"):
             xpos 0
             ypos 140
             size 25
             color "#f1f2f1"
             bold True
 
-        text "PLAYER // AURA":
+        text _("PLAYER // AURA"):
             xpos 78
             ypos 151
             size 10
@@ -1258,7 +1258,7 @@ screen mog_battle_legacy_screen():
                             bold move_locked or (move_id == "aura" and state["momentum"] >= 3)
 
                     if hinted or state.get("selected_move") == move_id:
-                        text ("EXECUTING" if state.get("selected_move") == move_id else "COACH READ"):
+                        text (_("EXECUTING") if state.get("selected_move") == move_id else _("COACH READ")):
                             xpos 454
                             ypos 7
                             size 10
@@ -1278,7 +1278,7 @@ screen mog_battle_legacy_screen():
                 xalign 0.5
                 spacing 12
 
-                text ("FRAME BROKEN" if state["result"]["outcome"] == "loss" else "TRAINING COMPLETE" if state["result"]["outcome"] == "tutorial" else "MOG CONFIRMED"):
+                text (_("FRAME BROKEN") if state["result"]["outcome"] == "loss" else _("TRAINING COMPLETE") if state["result"]["outcome"] == "tutorial" else _("MOG CONFIRMED")):
                     xalign 0.5
                     size 38
                     color ("#d94d4d" if state["result"]["outcome"] == "loss" else "#69e4ad")
@@ -1291,7 +1291,7 @@ screen mog_battle_legacy_screen():
                     size 17
                     color "#cbd0cd"
 
-                text ("AURA KEPT: %d / %d" % (state["result"]["aura_kept"], state["player_max_hp"])):
+                text (__("AURA KEPT: %d / %d") % (state["result"]["aura_kept"], state["player_max_hp"])):
                     xalign 0.5
                     size 21
                     color "#f0f1f0"
@@ -1300,7 +1300,7 @@ screen mog_battle_legacy_screen():
                 null height 8
 
                 if state["result"]["outcome"] == "loss":
-                    textbutton "TRY AGAIN":
+                    textbutton _("TRY AGAIN"):
                         xalign 0.5
                         xysize (260, 56)
                         background Solid("#8d3636")
@@ -1310,7 +1310,7 @@ screen mog_battle_legacy_screen():
                         text_bold True
                         action Function(_mog_retry)
                 else:
-                    textbutton "CONTINUE":
+                    textbutton _("CONTINUE"):
                         xalign 0.5
                         xysize (260, 56)
                         background Solid("#19754f")

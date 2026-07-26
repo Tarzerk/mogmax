@@ -4,57 +4,67 @@
 
 init python:
     def _load_bee_movie_text():
-        try:
-            f = renpy.file("bee_movie.txt")
-            try:
-                data = f.read()
-            finally:
-                f.close()
-            if isinstance(data, bytes):
-                data = data.decode("utf-8", errors="replace")
-            # Escape Ren'Py text-tag special chars so the script renders plain.
-            data = data.replace("{", "{{").replace("[", "[[")
-            return data
-        except Exception as ex:
-            return "(bee_movie.txt missing: " + str(ex) + ")"
+        preferences = getattr(renpy.store, "_preferences", None)
+        language = getattr(preferences, "language", None)
+        candidates = ["bee_movie.txt"]
+        if language == "spanish":
+            candidates.insert(0, "tl/spanish/bee_movie.txt")
 
-    _BEE_TEXT = _load_bee_movie_text()
+        last_error = None
+        for candidate in candidates:
+            try:
+                f = renpy.file(candidate)
+                try:
+                    data = f.read()
+                finally:
+                    f.close()
+                if isinstance(data, bytes):
+                    data = data.decode("utf-8", errors="replace")
+                # Escape Ren'Py text-tag special chars so the script renders plain.
+                data = data.replace("{", "{{").replace("[", "[[")
+                return data
+            except Exception as ex:
+                last_error = ex
+
+        return __("(bee_movie.txt missing: %s)") % last_error
 
     # Chapter titles for the credits listing, keyed by the chapter the credits
     # were reached from. Unknown / 0 (e.g. opened from the main menu or the dev
     # skip menu) shows no chapter line at all.
     _CREDITS_CHAPTER_TITLES = {
-        1: "Chapter 1 — Chopped",
-        2: "Chapter 2 — The Mogbender",
+        1: _("Chapter 1 — Chopped"),
+        2: _("Chapter 2 — The Mogbender"),
     }
 
     def build_credits_body(from_chapter=0):
         title = _CREDITS_CHAPTER_TITLES.get(from_chapter)
+        if title:
+            title = renpy.translate_string(title)
         chapter_line = ("{size=36}" + title + "{/size}\n\n\n\n\n") if title else ""
 
         return (
         "\n\n\n\n\n\n"
-        "{size=90}MOGMAX{/size}\n"
-        "\n\n"
-        + chapter_line +
-        "{size=44}Developed by{/size}\n"
-        "\n"
-        "{size=72}{color=#9aa8ff}Tarzerk{/color}{/size}\n"
-        "{size=36}&{/size}\n"
-        "{size=72}{color=#ffb3d1}Cebolla{/color}{/size}\n"
-        "\n\n\n\n\n\n"
+        + renpy.translate_string(_("{size=90}MOGMAX{/size}\n"))
+        + "\n\n"
+        + chapter_line
+        + renpy.translate_string(_("{size=44}Developed by{/size}\n"))
+        + "\n"
+        + renpy.translate_string(_("{size=72}{color=#9aa8ff}Tarzerk{/color}{/size}\n"))
+        + renpy.translate_string(_("{size=36}&{/size}\n"))
+        + renpy.translate_string(_("{size=72}{color=#ffb3d1}Cebolla{/color}{/size}\n"))
+        + "\n\n\n\n\n\n"
 
         # ── Thank you (moved BEFORE the bee movie script) ──
-        "{size=44}Thank you for playing.{/size}\n"
-        "\n"
-        "{size=30}{color=#9aa8ff}Stay sigma.{/color}{/size}\n"
-        "\n\n\n\n\n\n"
+        + renpy.translate_string(_("{size=44}Thank you for playing.{/size}\n"))
+        + "\n"
+        + renpy.translate_string(_("{size=30}{color=#9aa8ff}Stay sigma.{/color}{/size}\n"))
+        + "\n\n\n\n\n\n"
 
         # ── Bee movie script ──
-        "{size=28}ok idk what else to put here so bee movie script goes here{/size}\n"
-        "\n\n\n"
-        + _BEE_TEXT +
-        "\n\n\n\n\n"
+        + renpy.translate_string(_("{size=28}ok idk what else to put here so bee movie script goes here{/size}\n"))
+        + "\n\n\n"
+        + _load_bee_movie_text()
+        + "\n\n\n\n\n"
         )
 
 
@@ -121,7 +131,7 @@ screen credits_screen():
         background Solid("#1a1a2add")
         padding (32, 14)
 
-        textbutton "[[ SKIP CREDITS ]]":
+        textbutton _("[[ SKIP CREDITS ]]"):
             action Return()
             text_size 26
             text_color "#dddddd"
