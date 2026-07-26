@@ -1824,7 +1824,7 @@ screen chapter_select():
 
         # Chapter 2 — locked until the complete Chopped/Brainmaxxing arc ends.
         if persistent.chapter1_complete:
-            textbutton _("Chapter 2 — The Mogbender"):
+            textbutton _("Chapter 2 — Gigamaxxing"):
                 action Confirm(
                     _("Start Chapter 2?\nThis will overwrite your current game progress."),
                     yes=Start("chapter2_start")
@@ -1837,7 +1837,7 @@ screen chapter_select():
             vbox:
                 xalign 0.5
                 spacing 2
-                text _("🔒  Chapter 2 — The Mogbender"):
+                text _("🔒  Chapter 2 — Gigamaxxing"):
                     size 32
                     color "#555555"
                     xalign 0.5
@@ -2370,7 +2370,7 @@ screen dev_chapter2_skip_menu():
                 color "#ff8888"
                 xalign 0.5
 
-            text _("The Mogbender"):
+            text _("Gigamaxxing"):
                 size 13
                 color "#777777"
                 xalign 0.5

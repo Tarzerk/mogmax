@@ -1082,10 +1082,6 @@ translate spanish chapter2_return_7d5e3441:
 
 translate spanish strings:
 
-    # game/chapter2.rpy:77
-    old "CHAPTER 2 — THE MOGBENDER"
-    new "CAPÍTULO 2 — THE MOGBENDER"
-
     # game/chapter2.rpy:104
     old "Clav drives like this is normal."
     new "Clav conduce como si esto fuera normal."
@@ -1137,3 +1133,8 @@ translate spanish strings:
     # game/chapter2.rpy:557
     old "{i}u aint invited{/i}"
     new "{i}tú no vienes{/i}"
+translate spanish strings:
+
+    # game/chapter2.rpy:77
+    old "CHAPTER 2 — GIGAMAXXING"
+    new "CAPÍTULO 2 — GIGAMAXXING"

@@ -840,25 +840,9 @@ translate spanish strings:
     old "{size=38}\"Chopped.\"{/size}\n{size=20}— tenth grade{/size}"
     new "{size=38}\"Chopped.\"{/size}\n{size=20}— décimo grado{/size}"
 
-    # game/chapter1_brainmaxxing.rpy:594
-    old "{i}{size=34}So. Average me.{/size}{/i}"
-    new "{i}{size=34}Así que... yo, una persona promedio.{/size}{/i}"
-
-    # game/chapter1_brainmaxxing.rpy:597
-    old "{i}{size=34}You got time to be looking down?{/size}{/i}"
-    new "{i}{size=34}¿De verdad tienes tiempo para mirar hacia abajo?{/size}{/i}"
-
     # game/chapter1_brainmaxxing.rpy:603
     old "{b}{size=38}I can change.{/size}{/b}"
     new "{b}{size=38}Puedo cambiar.{/size}{/b}"
-
-    # game/chapter1_brainmaxxing.rpy:606
-    old "{b}{size=34}I'm done being someone the room forgets.{/size}{/b}"
-    new "{b}{size=34}Ya no seré alguien a quien el salón olvida.{/size}{/b}"
-
-    # game/chapter1_brainmaxxing.rpy:609
-    old "{b}{size=38}I'll do it until I can.{/size}{/b}"
-    new "{b}{size=38}Lo haré hasta que pueda.{/size}{/b}"
 
     # game/chapter1_brainmaxxing.rpy:612
     old "{b}{size=38}No more looking down.{/size}{/b}"
@@ -904,3 +888,20 @@ translate spanish strings:
     # game/chapter1_brainmaxxing.rpy:685
     old "truly the most normie thing i've ever seen. library. now."
     new "de verdad, lo más normie que he visto. biblioteca. ahora."
+translate spanish strings:
+
+    # game/chapter1_brainmaxxing.rpy:594
+    old "{i}{size=34}So. Average me...{/size}{/i}"
+    new "{i}{size=34}Así que... yo, una persona promedio...{/size}{/i}"
+
+    # game/chapter1_brainmaxxing.rpy:597
+    old "{i}{size=34}Do I have time to feel sorry for myself?{/size}{/i}"
+    new "{i}{size=34}¿Tengo tiempo para sentir lástima por mí?{/size}{/i}"
+
+    # game/chapter1_brainmaxxing.rpy:606
+    old "{b}{size=34}I'm done being someone everyone forgets.{/size}{/b}"
+    new "{b}{size=34}Se acabó ser alguien a quien todos olvidan.{/size}{/b}"
+
+    # game/chapter1_brainmaxxing.rpy:609
+    old "{b}{size=38}I'll keep trying until I succeed.{/size}{/b}"
+    new "{b}{size=38}Seguiré intentándolo hasta lograrlo.{/size}{/b}"

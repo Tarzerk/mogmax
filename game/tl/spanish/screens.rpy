@@ -428,17 +428,9 @@ translate spanish strings:
     old "Start Chapter 1?\nThis will overwrite your current game progress."
     new "¿Iniciar el Capítulo 1?\nEsto sobrescribirá el progreso de tu partida actual."
 
-    # game/screens.rpy:1827
-    old "Chapter 2 — The Mogbender"
-    new "Capítulo 2 — El Mogbender"
-
     # game/screens.rpy:1828
     old "Start Chapter 2?\nThis will overwrite your current game progress."
     new "¿Iniciar el Capítulo 2?\nEsto sobrescribirá el progreso de tu partida actual."
-
-    # game/screens.rpy:1840
-    old "🔒  Chapter 2 — The Mogbender"
-    new "🔒  Capítulo 2 — El Mogbender"
 
     # game/screens.rpy:1844
     old "(Complete Chapter 1 to unlock)"
@@ -600,10 +592,6 @@ translate spanish strings:
     old "CHAPTER 2 SCENES"
     new "ESCENAS DEL CAPÍTULO 2"
 
-    # game/screens.rpy:2373
-    old "The Mogbender"
-    new "El Mogbender"
-
     # game/screens.rpy:2394
     old "ARRIVAL"
     new "LLEGADA"
@@ -759,3 +747,16 @@ translate spanish strings:
     # game/screens.rpy:2761
     old "[word]"
     new "[word]"
+translate spanish strings:
+
+    # game/screens.rpy:1827
+    old "Chapter 2 — Gigamaxxing"
+    new "Capítulo 2 — Gigamaxxing"
+
+    # game/screens.rpy:1840
+    old "🔒  Chapter 2 — Gigamaxxing"
+    new "🔒  Capítulo 2 — Gigamaxxing"
+
+    # game/screens.rpy:2373
+    old "Gigamaxxing"
+    new "Gigamaxxing"

@@ -1,4 +1,4 @@
-# MOGMAX — Chapter 2: The Mogbender
+# MOGMAX — Chapter 2: Gigamaxxing
 # Characters (c, b, p, eu, sol, cap, stranger, narrator) and the shared
 # brayden/gigachad/eugene image definitions live in script.rpy.
 
@@ -28,7 +28,7 @@ image bg scan_granted   = "#0a2a0a"
 
 
 # ═════════════════════════════════════════════════════════════
-# CHAPTER 2 — THE MOGBENDER
+# CHAPTER 2 — GIGAMAXXING
 # ═════════════════════════════════════════════════════════════
 
 transform projection_flicker:
@@ -74,7 +74,7 @@ label chapter2_start:
     stop music fadeout 2.0
     scene bg black with fade
     pause 0.4
-    show expression Text(_("CHAPTER 2 — THE MOGBENDER"), style="story_card_text", size=46) as text at truecenter with dissolve
+    show expression Text(_("CHAPTER 2 — GIGAMAXXING"), style="story_card_text", size=46) as text at truecenter with dissolve
     pause 2.0
     hide text with dissolve
 
@@ -524,7 +524,7 @@ label chapter2_return:
     play music "audio/desert_ambient.mp3" fadein 1.0 volume persistent.vol_bed
     narrator "Night. The desert unspools backward outside the window. You've been quiet a long time."
     p "So what was that, actually? All of it."
-    show clav smirk at clav_body with dissolve
+    show clav smirk at clav_cinematic with dissolve
     c "Proof. None of this started on your phone."
     c "You walked in an LTN. You're walking out a problem."
     hide clav with dissolve
