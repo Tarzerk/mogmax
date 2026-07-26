@@ -1,157 +1,249 @@
-# MOGMAX — Credits Roll
-# Screen-based scrolling credits with a visible skip button.
-# Reads game/bee_movie.txt for bonus filler material.
+# MOGMAX — Credits
+# Timed, chapter-specific credit cards. No scrolling and no filler text.
 
 init python:
-    def _load_bee_movie_text():
-        preferences = getattr(renpy.store, "_preferences", None)
-        language = getattr(preferences, "language", None)
-        candidates = ["bee_movie.txt"]
-        if language == "spanish":
-            candidates.insert(0, "tl/spanish/bee_movie.txt")
+    _CREDITS_TECH_CARDS = [
+        (
+            "list",
+            _("Engine & Interface"),
+            "",
+            _("Ren'Py — Tom \"PyTom\" Rothamel\nKOMIC GUI Kit — One Level Studio"),
+            4.5,
+        ),
+    ]
 
-        last_error = None
-        for candidate in candidates:
-            try:
-                f = renpy.file(candidate)
-                try:
-                    data = f.read()
-                finally:
-                    f.close()
-                if isinstance(data, bytes):
-                    data = data.decode("utf-8", errors="replace")
-                # Escape Ren'Py text-tag special chars so the script renders plain.
-                data = data.replace("{", "{{").replace("[", "[[")
-                return data
-            except Exception as ex:
-                last_error = ex
+    _CREDITS_CHAPTER_1_ASSETS = [
+        (
+            "list",
+            _("Background Photography"),
+            "",
+            _("Classroom — Diana ✨ (Pexels)\nBullying photo series — Mikhail Nilov (Pexels)\nHope — Aidan Roof (Pexels)\nHallway — Enrique Silva (Pexels)"),
+            5.5,
+        ),
+        (
+            "list",
+            _("Background Images"),
+            "",
+            _("Cafeteria — Archweb\nCity view — 晓春 胡 (Pexels)\nAdditional school and environment images — Pexels contributors"),
+            5.0,
+        ),
+    ]
 
-        return __("(bee_movie.txt missing: %s)") % last_error
+    _CREDITS_CHAPTER_2_ASSETS = [
+        (
+            "list",
+            _("Background Photography"),
+            "",
+            _("Bedroom — Edgard Motta (Pexels)\nCorridor — Peter Edlefsen Holmboe\nArea 51 gate — Pete Woodhead (Flickr)\nArea 51 warning sign — X51 (CC BY-SA 3.0)"),
+            5.5,
+        ),
+        (
+            "list",
+            _("Background Images"),
+            "",
+            _("Whiteboard — Karolina Grabowska / Kaboompics\nFacility environments — Wikimedia Commons contributors\nDesert and facility images — Pexels contributors"),
+            5.0,
+        ),
+    ]
 
-    # Chapter titles for the credits listing, keyed by the chapter the credits
-    # were reached from. Unknown / 0 (e.g. opened from the main menu or the dev
-    # skip menu) shows no chapter line at all.
-    _CREDITS_CHAPTER_TITLES = {
-        1: _("Chapter 1 — Chopped"),
-        2: _("Chapter 2 — Gigamaxxing"),
-    }
+    _CREDITS_CHAPTER_1_MUSIC = (
+        "list",
+        _("Featured Music"),
+        "",
+        _("“Soviet Connection — The Theme from Grand Theft Auto IV” — Michael Hunter\n“Wii Sports Title Theme” — Kazumi Totaka"),
+        6.5,
+    )
 
-    def build_credits_body(from_chapter=0):
-        title = _CREDITS_CHAPTER_TITLES.get(from_chapter)
-        if title:
-            title = renpy.translate_string(title)
-        chapter_line = ("{size=36}" + title + "{/size}\n\n\n\n\n") if title else ""
+    _CREDITS_CHAPTER_2_MUSIC = (
+        "list",
+        _("Featured Music"),
+        "",
+        _("“Scarface (Push It to the Limit)” — Paul Engemann\n“POUND CAKE” — THOT SQUAD"),
+        4.5,
+    )
 
-        return (
-        "\n\n\n\n\n\n"
-        + renpy.translate_string(_("{size=90}MOGMAX{/size}\n"))
-        + "\n\n"
-        + chapter_line
-        + renpy.translate_string(_("{size=44}Developed by{/size}\n"))
-        + "\n"
-        + renpy.translate_string(_("{size=72}{color=#9aa8ff}Tarzerk{/color}{/size}\n"))
-        + renpy.translate_string(_("{size=36}&{/size}\n"))
-        + renpy.translate_string(_("{size=72}{color=#ffb3d1}Cebolla{/color}{/size}\n"))
-        + "\n\n\n\n\n\n"
+    _CREDITS_END_CARDS = [
+        ("ending", "", _("Thank you for playing."), _("Stay sigma."), 4.5),
+    ]
 
-        # ── Thank you (moved BEFORE the bee movie script) ──
-        + renpy.translate_string(_("{size=44}Thank you for playing.{/size}\n"))
-        + "\n"
-        + renpy.translate_string(_("{size=30}{color=#9aa8ff}Stay sigma.{/color}{/size}\n"))
-        + "\n\n\n\n\n\n"
+    def build_credits_cards(from_chapter=0):
+        if from_chapter == 1:
+            cards = [
+                ("role", _("Developed by"), "Tarzerk", "", 3.5),
+                ("role", _("Written by"), "Tarzerk", "", 3.5),
+                ("role", _("Additional Writing"), "Cebolla", "", 3.5),
+                ("role", _("Additional Development"), "Cebolla", "", 3.5),
+                _CREDITS_CHAPTER_1_MUSIC,
+            ]
+            cards.extend(_CREDITS_CHAPTER_1_ASSETS)
+        elif from_chapter == 2:
+            cards = [
+                ("role", _("Developed by"), "Tarzerk", "", 3.5),
+                ("role", _("Written by"), "Tarzerk", "", 3.5),
+                _CREDITS_CHAPTER_2_MUSIC,
+            ]
+            cards.extend(_CREDITS_CHAPTER_2_ASSETS)
+        else:
+            cards = [
+                ("role", _("Developed by"), "Tarzerk", "", 3.5),
+                ("role", _("Chapter 1 — Written by"), "Tarzerk", "", 3.5),
+                ("role", _("Chapter 1 — Additional Writing"), "Cebolla", "", 3.5),
+                ("role", _("Chapter 1 — Additional Development"), "Cebolla", "", 3.5),
+                ("role", _("Chapter 2 — Written by"), "Tarzerk", "", 3.5),
+                _CREDITS_CHAPTER_1_MUSIC,
+                _CREDITS_CHAPTER_2_MUSIC,
+            ]
+            cards.extend(_CREDITS_CHAPTER_1_ASSETS)
+            cards.extend(_CREDITS_CHAPTER_2_ASSETS)
 
-        # ── Bee movie script ──
-        + renpy.translate_string(_("{size=28}ok idk what else to put here so bee movie script goes here{/size}\n"))
-        + "\n\n\n"
-        + _load_bee_movie_text()
-        + "\n\n\n\n\n"
-        )
+        cards.extend(_CREDITS_TECH_CARDS)
+        cards.extend(_CREDITS_END_CARDS)
+        return cards
 
 
-# Which chapter the credits were reached from (0 = none / opened from the
-# main menu), and the body text built from it before the screen shows.
+# Which chapter the credits were reached from (0 = combined menu credits).
 default credits_from_chapter = 0
-default credits_body = ""
+default credits_continue_to_chapter2 = False
+default credits_skip_available = False
 
 
-# Transform that scrolls the credits text from below the screen
-# up past the top over 240 seconds.
-transform _credits_scroll:
-    xanchor 0.5
-    xpos 0.5
-    yanchor 0.0
-    ypos 720
-    linear 240.0 ypos -38000
+transform _credits_card_enter:
+    alpha 0.0
+    yoffset 10
+    ease 0.35 alpha 1.0 yoffset 0
 
 
-# Chapter 2 cuts into the roll on a music cue, so its first title is already
-# on-screen when the beat lands instead of rising from below the frame.
-transform _credits_scroll_on_beat:
-    xanchor 0.5
-    xpos 0.5
-    yanchor 0.0
-    ypos 260
-    linear 240.0 ypos -38460
+screen credits_skip_overlay():
+    zorder 200
+
+    timer 8.0 action SetVariable("credits_skip_available", True)
+
+    if credits_skip_available:
+        textbutton _("[[ SKIP CREDITS ]]"):
+            action Return("skip")
+            xalign 0.96
+            yalign 0.94
+            text_size 21
+            text_color "#aaaaaa"
+            text_hover_color "#88ff88"
+            text_idle_color "#aaaaaa"
 
 
-# ─── Credits Screen ──────────────────────────────────────────
-# Click anywhere OR the SKIP CREDITS button OR Esc/Enter/Space
-# dismisses and returns to the caller (main menu or game).
-
-screen credits_screen():
+screen credits_card_screen(card):
     modal True
 
-    # Background + invisible "click anywhere to skip" catcher.
+    add Solid("#000000")
+
+    # Click anywhere to advance one card.
     button:
         xfill True
         yfill True
-        background Solid("#000000")
-        action Return()
+        background None
+        action Return("next")
 
-    # Scrolling text body
-    if credits_from_chapter == 2:
-        text credits_body at _credits_scroll_on_beat:
-            size 24
-            color "#ffffff"
-            text_align 0.5
-            xmaximum 1100
-            line_leading 2
-    else:
-        text credits_body at _credits_scroll:
-            size 24
-            color "#ffffff"
-            text_align 0.5
-            xmaximum 1100
-            line_leading 2
+    timer card[4] action Return("next")
 
-    # Always-visible SKIP CREDITS button (bottom-center, on top of everything)
-    frame:
-        xalign 0.5
-        yalign 0.93
-        background Solid("#1a1a2add")
-        padding (32, 14)
+    fixed at _credits_card_enter:
+        xfill True
+        yfill True
 
-        textbutton _("[[ SKIP CREDITS ]]"):
-            action Return()
-            text_size 26
-            text_color "#dddddd"
-            text_hover_color "#88ff88"
-            text_idle_color "#dddddd"
+        vbox:
+            xalign 0.5
+            yalign 0.48
+            xmaximum 1120
+            spacing 20
 
-    # Keyboard shortcuts
-    key "K_ESCAPE" action Return()
-    key "K_RETURN" action Return()
-    key "K_SPACE" action Return()
+            if card[0] == "title":
+                text card[2]:
+                    size 94
+                    bold True
+                    color "#ffffff"
+                    xalign 0.5
+                    text_align 0.5
+
+                if card[1]:
+                    text card[1]:
+                        size 34
+                        color "#aeb8b2"
+                        xalign 0.5
+                        text_align 0.5
+
+            elif card[0] == "role":
+                text card[1]:
+                    size 38
+                    color "#b8b8b8"
+                    xalign 0.5
+                    text_align 0.5
+
+                text card[2]:
+                    size 68
+                    bold True
+                    color "#ffffff"
+                    xalign 0.5
+                    text_align 0.5
+
+            elif card[0] == "ending":
+                text card[2]:
+                    size 52
+                    bold True
+                    color "#ffffff"
+                    xalign 0.5
+                    text_align 0.5
+
+                text card[3]:
+                    size 34
+                    color "#9aa8ff"
+                    xalign 0.5
+                    text_align 0.5
+
+            else:
+                text card[1]:
+                    size 40
+                    bold True
+                    color "#b8b8b8"
+                    xalign 0.5
+                    text_align 0.5
+
+                text card[3]:
+                    size 29
+                    color "#ffffff"
+                    xalign 0.5
+                    text_align 0.5
+                    line_spacing 8
+
+    if credits_skip_available:
+        key "K_ESCAPE" action Return("skip")
+    key "K_RETURN" action Return("next")
+    key "K_SPACE" action Return("next")
 
 
-# Label so in-game flows can `jump roll_credits` and end up at main menu
-# when the screen returns.
+# Called from chapter endings, the main menu, and developer navigation.
 label roll_credits:
     $ _credits_origin = credits_from_chapter
-    $ credits_body = build_credits_body(credits_from_chapter)
-    call screen credits_screen
+    $ _credits_continue = credits_continue_to_chapter2
+    $ _credits_cards = build_credits_cards(credits_from_chapter)
+    $ _credits_index = 0
+    $ credits_skip_available = False
+    show screen credits_skip_overlay
+
+    while _credits_index < len(_credits_cards):
+        call screen credits_card_screen(_credits_cards[_credits_index])
+        if _return == "skip":
+            $ _credits_index = len(_credits_cards)
+        else:
+            $ _credits_index += 1
+
+    hide screen credits_skip_overlay
+
     if _credits_origin == 2:
         stop music fadeout 1.0
-    # Reset so a later menu-triggered roll doesn't inherit a stale chapter.
+
+    # Reset shared state before either returning or continuing the story.
     $ credits_from_chapter = 0
+    $ credits_continue_to_chapter2 = False
+    $ credits_skip_available = False
+
+    if _credits_continue:
+        jump chapter2_start
+
     return

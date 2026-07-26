@@ -1,47 +1,68 @@
-
-
 translate spanish strings:
 
-    # game/credits.rpy:29
-    old "(bee_movie.txt missing: %s)"
-    new "(falta bee_movie.txt: %s)"
+    # game/credits.rpy
+    old "Engine & Interface"
+    new "Motor e interfaz"
 
-    # game/credits.rpy:34
-    old "Chapter 1 — Chopped"
-    new "Capítulo 1 — Chopped"
+    old "Ren'Py — Tom \"PyTom\" Rothamel\nKOMIC GUI Kit — One Level Studio"
+    new "Ren'Py — Tom \"PyTom\" Rothamel\nKit de interfaz KOMIC — One Level Studio"
 
-    # game/credits.rpy:45
-    old "{size=90}MOGMAX{/size}\n"
-    new "{size=90}MOGMAX{/size}\n"
+    old "Background Photography"
+    new "Fotografía de fondos"
 
-    # game/credits.rpy:45
-    old "{size=44}Developed by{/size}\n"
-    new "{size=44}Desarrollado por{/size}\n"
+    old "Classroom — Diana ✨ (Pexels)\nBullying photo series — Mikhail Nilov (Pexels)\nHope — Aidan Roof (Pexels)\nHallway — Enrique Silva (Pexels)"
+    new "Aula — Diana ✨ (Pexels)\nSerie de bullying — Mikhail Nilov (Pexels)\nEsperanza — Aidan Roof (Pexels)\nPasillo — Enrique Silva (Pexels)"
 
-    # game/credits.rpy:45
-    old "{size=72}{color=#9aa8ff}Tarzerk{/color}{/size}\n"
-    new "{size=72}{color=#9aa8ff}Tarzerk{/color}{/size}\n"
+    old "Background Images"
+    new "Imágenes de fondo"
 
-    # game/credits.rpy:45
-    old "{size=36}&{/size}\n"
-    new "{size=36}&{/size}\n"
+    old "Cafeteria — Archweb\nCity view — 晓春 胡 (Pexels)\nAdditional school and environment images — Pexels contributors"
+    new "Cafetería — Archweb\nVista de la ciudad — 晓春 胡 (Pexels)\nImágenes escolares y ambientales adicionales — colaboradores de Pexels"
 
-    # game/credits.rpy:45
-    old "{size=72}{color=#ffb3d1}Cebolla{/color}{/size}\n"
-    new "{size=72}{color=#ffb3d1}Cebolla{/color}{/size}\n"
+    old "Bedroom — Edgard Motta (Pexels)\nCorridor — Peter Edlefsen Holmboe\nArea 51 gate — Pete Woodhead (Flickr)\nArea 51 warning sign — X51 (CC BY-SA 3.0)"
+    new "Dormitorio — Edgard Motta (Pexels)\nCorredor — Peter Edlefsen Holmboe\nEntrada del Área 51 — Pete Woodhead (Flickr)\nSeñal de advertencia del Área 51 — X51 (CC BY-SA 3.0)"
 
-    # game/credits.rpy:45
-    old "{size=44}Thank you for playing.{/size}\n"
-    new "{size=44}Gracias por jugar.{/size}\n"
+    old "Whiteboard — Karolina Grabowska / Kaboompics\nFacility environments — Wikimedia Commons contributors\nDesert and facility images — Pexels contributors"
+    new "Pizarrón — Karolina Grabowska / Kaboompics\nInstalaciones — colaboradores de Wikimedia Commons\nDesierto e instalaciones — colaboradores de Pexels"
 
-    # game/credits.rpy:45
-    old "{size=30}{color=#9aa8ff}Stay sigma.{/color}{/size}\n"
-    new "{size=30}{color=#9aa8ff}Mantente sigma.{/color}{/size}\n"
+    old "Featured Music"
+    new "Música incluida"
 
-    # game/credits.rpy:45
-    old "{size=28}ok idk what else to put here so bee movie script goes here{/size}\n"
-    new "{size=28}ok no sé qué más poner aquí así que aquí va el guion de Bee Movie{/size}\n"
+    old "“Soviet Connection — The Theme from Grand Theft Auto IV” — Michael Hunter\n“Wii Sports Title Theme” — Kazumi Totaka"
+    new "“Soviet Connection — The Theme from Grand Theft Auto IV” — Michael Hunter\n“Wii Sports Title Theme” — Kazumi Totaka"
 
-    # game/credits.rpy:134
+    old "“Scarface (Push It to the Limit)” — Paul Engemann\n“POUND CAKE” — THOT SQUAD"
+    new "“Scarface (Push It to the Limit)” — Paul Engemann\n“POUND CAKE” — THOT SQUAD"
+
+    old "Developed by"
+    new "Desarrollado por"
+
+    old "Written by"
+    new "Escrito por"
+
+    old "Additional Writing"
+    new "Guion adicional"
+
+    old "Additional Development"
+    new "Desarrollo adicional"
+
+    old "Chapter 1 — Written by"
+    new "Capítulo 1 — Escrito por"
+
+    old "Chapter 1 — Additional Writing"
+    new "Capítulo 1 — Guion adicional"
+
+    old "Chapter 1 — Additional Development"
+    new "Capítulo 1 — Desarrollo adicional"
+
+    old "Chapter 2 — Written by"
+    new "Capítulo 2 — Escrito por"
+
+    old "Thank you for playing."
+    new "Gracias por jugar."
+
+    old "Stay sigma."
+    new "Mantente sigma."
+
     old "[[ SKIP CREDITS ]]"
     new "[[ SALTAR CRÉDITOS ]]"

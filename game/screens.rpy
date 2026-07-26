@@ -465,7 +465,11 @@ screen navigation(main_menu_layout=None):
             null height 14
 
             textbutton _("PREFERENCES") action ShowMenu("preferences")
-            textbutton _("CREDITS") action Function(renpy.call_in_new_context, "roll_credits")
+            textbutton _("CREDITS") action [
+                SetVariable("credits_from_chapter", 0),
+                SetVariable("credits_continue_to_chapter2", False),
+                Function(renpy.call_in_new_context, "roll_credits"),
+            ]
 
             if renpy.variant("pc"):
                 textbutton _("QUIT") action Quit(confirm=False)
@@ -594,12 +598,6 @@ screen main_menu():
             xpos 938
             ypos 174
             xysize (64, 3)
-
-    text _("TARZERK + CEBOLLA"):
-        xpos 938
-        ypos 658
-        size 13
-        color "#aeb8b2"
 
     text _("v[config.version]"):
         xalign 1.0
@@ -800,8 +798,28 @@ screen about():
 
             hbox:
                 spacing 15
-                text _("Development & Writing") style "about_small"
-                text _("Tarzerk & Cebolla")
+                text _("Developed by") style "about_small"
+                text _("Tarzerk")
+
+            hbox:
+                spacing 15
+                text _("Chapter 1 — Written by") style "about_small"
+                text _("Tarzerk")
+
+            hbox:
+                spacing 15
+                text _("Chapter 1 — Additional Writing") style "about_small"
+                text _("Cebolla")
+
+            hbox:
+                spacing 15
+                text _("Chapter 1 — Additional Development") style "about_small"
+                text _("Cebolla")
+
+            hbox:
+                spacing 15
+                text _("Chapter 2 — Written by") style "about_small"
+                text _("Tarzerk")
 
             null height 15
 
@@ -814,14 +832,6 @@ screen about():
                 spacing 15
                 text _("GUI Scaffolding") style "about_small"
                 text _("KOMIC by One Level Studio")
-
-            null height 15
-
-            hbox:
-                spacing 15
-                text _("Bonus Credits") style "about_small"
-                text _("the Bee Movie (Dreamworks, 2007)")
-
 
             text _("\nMade with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only]")
             null height 15
@@ -2216,8 +2226,13 @@ screen dev_skip_menu():
                         xalign 0.5
                         text_size 22
 
-                    textbutton _("Credits roll"):
-                        action [Hide("dev_skip_menu"), Jump("roll_credits")]
+                    textbutton _("Credits"):
+                        action [
+                            SetVariable("credits_from_chapter", 0),
+                            SetVariable("credits_continue_to_chapter2", False),
+                            Hide("dev_skip_menu"),
+                            Jump("roll_credits"),
+                        ]
                         xalign 0.5
                         text_size 20
 
@@ -2335,7 +2350,10 @@ screen dev_chapter1_skip_menu():
 
                     use dev_skip_jump_button(_("Chapter 2 handoff"), "chapter2_start", [SetVariable("brayden_threatened", True)])
 
-                    use dev_skip_jump_button(_("Credits roll"), "roll_credits", [SetVariable("credits_from_chapter", 1)])
+                    use dev_skip_jump_button(_("Credits"), "roll_credits", [
+                        SetVariable("credits_from_chapter", 1),
+                        SetVariable("credits_continue_to_chapter2", False),
+                    ])
 
             null height 8
 
@@ -2455,7 +2473,10 @@ screen dev_chapter2_skip_menu():
 
                     use dev_skip_jump_button(_("Text invite finale"), "dev_ch2_invite", ch2_setup)
 
-                    use dev_skip_jump_button(_("Credits roll"), "roll_credits", ch2_setup + [SetVariable("credits_from_chapter", 2)])
+                    use dev_skip_jump_button(_("Credits"), "roll_credits", ch2_setup + [
+                        SetVariable("credits_from_chapter", 2),
+                        SetVariable("credits_continue_to_chapter2", False),
+                    ])
 
             null height 6
 
