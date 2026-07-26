@@ -84,10 +84,6 @@ translate spanish strings:
     old "BASED ON A TRUE STORY"
     new "BASADO EN UNA HISTORIA REAL"
 
-    # game/screens.rpy:598
-    old "TARZERK + CEBOLLA"
-    new "TARZERK + CEBOLLA"
-
     # game/screens.rpy:604
     old "v[config.version]"
     new "v[config.version]"
@@ -100,14 +96,7 @@ translate spanish strings:
     old "[config.version!t]\n"
     new "[config.version!t]\n"
 
-    # game/screens.rpy:803
-    old "Development & Writing"
-    new "Desarrollo y guion"
-
     # game/screens.rpy:804
-    old "Tarzerk & Cebolla"
-    new "Tarzerk y Cebolla"
-
     # game/screens.rpy:810
     old "Engine"
     new "Motor"
@@ -123,14 +112,6 @@ translate spanish strings:
     # game/screens.rpy:816
     old "KOMIC by One Level Studio"
     new "KOMIC por One Level Studio"
-
-    # game/screens.rpy:822
-    old "Bonus Credits"
-    new "Créditos adicionales"
-
-    # game/screens.rpy:823
-    old "the Bee Movie (Dreamworks, 2007)"
-    new "Bee Movie (DreamWorks, 2007)"
 
     # game/screens.rpy:826
     old "\nMade with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only]"
@@ -505,7 +486,7 @@ translate spanish strings:
     new "Escenas del Capítulo 2"
 
     # game/screens.rpy:2219
-    old "Credits roll"
+    old "Credits"
     new "Créditos"
 
     # game/screens.rpy:2228

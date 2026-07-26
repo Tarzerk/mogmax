@@ -9,7 +9,7 @@ define config.version = "2.1"
 # after release, or existing players lose access to their saves.
 define config.save_directory = "MOGMAX"
 define gui.show_name = True
-define gui.about = _("MOGMAX — a satirical visual novel about the Mogging Epidemic of 2026.\n\nDeveloped by Tarzerk and Cebolla.")
+define gui.about = _("MOGMAX — a satirical visual novel about the Mogging Epidemic of 2026.\n\nDeveloped by Tarzerk.")
 define build.name = "MOGMAX"
 
 # Match KOMIC's runtime icon setup so macOS uses the MOGMAX artwork when the

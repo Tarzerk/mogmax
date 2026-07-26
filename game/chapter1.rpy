@@ -10,7 +10,7 @@ image bg cafeteria_clav = bg_image("images/backgrounds/bg_cafeteria.jpg")
 # ─── Case-file screen (blue-pill ending coda) ────────────────
 # Styled like a printed dossier sliding out of a printer. Click / Enter /
 # Space dismisses. Follows the modal full-screen idiom used by fail_screen
-# (chapter2.rpy) and credits_screen (credits.rpy).
+# (chapter2.rpy) and credits_card_screen (credits.rpy).
 screen case_file_screen():
     modal True
 
@@ -256,4 +256,5 @@ label ltn_pill_ending:
     scene bg black with fade
     pause 0.6
     $ credits_from_chapter = 1
+    $ credits_continue_to_chapter2 = False
     jump roll_credits

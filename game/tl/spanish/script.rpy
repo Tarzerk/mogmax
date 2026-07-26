@@ -43,8 +43,8 @@ translate spanish strings:
     new "Tú"
 
     # game/script.rpy:323
-    old "a Tarzerk & Cebolla production"
-    new "una producción de Tarzerk y Cebolla"
+    old "Tarzerk presents"
+    new "Tarzerk presenta"
 
     # game/script.rpy:327
     old "MOGMAX"

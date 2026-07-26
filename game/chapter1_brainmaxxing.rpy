@@ -630,22 +630,13 @@ label mirror_scene:
     scene bg black with fade
     pause 0.6
 
-    # Stacked end card — small caps "END OF CHAPTER 1" above, big green
-    # "BRAINMAXXED" below. Same family as the BRAINMOGGED reveal card.
-    show expression Text(_("END OF CHAPTER 1"), style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
-    pause 0.5
-    show expression Text(_("BRAINMAXXED"), style="story_card_text", size=130, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
-    pause 3.0
-    hide endline_top with dissolve
-    hide endline_bot with dissolve
-    pause 0.4
-
     $ persistent.chapter1_complete = True
 
-    # Keep the successful route continuous. The checkpoint is silent; Chapter 2
-    # begins as soon as the end card clears.
+    # End Chapter 1 at its own credits, then continue into Chapter 2.
     $ renpy.force_autosave(take_screenshot=True)
-    jump chapter2_start
+    $ credits_from_chapter = 1
+    $ credits_continue_to_chapter2 = True
+    jump roll_credits
 
 
 # ═════════════════════════════════════════════════════════════

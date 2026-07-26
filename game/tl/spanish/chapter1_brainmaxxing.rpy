@@ -852,13 +852,6 @@ translate spanish strings:
     old "{b}{size=48}{color=#79c98b}I will mog the world.{/color}{/size}{/b}"
     new "{b}{size=48}{color=#79c98b}Voy a moguear al mundo.{/color}{/size}{/b}"
 
-    # game/chapter1_brainmaxxing.rpy:635
-    old "END OF CHAPTER 1"
-    new "FIN DEL CAPÍTULO 1"
-
-    # game/chapter1_brainmaxxing.rpy:637
-    old "BRAINMAXXED"
-    new "BRAINMAXXED"
 translate spanish strings:
 
     # game/chapter1_brainmaxxing.rpy:685

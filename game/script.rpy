@@ -326,7 +326,7 @@ image captain = "images/characters/captain/captain.png"
 label splashscreen:
     scene black
     pause 0.3
-    show expression Text(_("a Tarzerk & Cebolla production"), style="story_card_subtitle") as text at truecenter with dissolve
+    show expression Text(_("Tarzerk presents"), style="story_card_subtitle") as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
     pause 0.5

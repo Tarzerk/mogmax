@@ -566,6 +566,7 @@ label chapter2_invite:
     # credits jump without changing Chapter 2's closing beat.
     $ persistent.chapter2_complete = True
     $ credits_from_chapter = 2
+    $ credits_continue_to_chapter2 = False
     jump roll_credits
 
 
