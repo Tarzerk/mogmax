@@ -74,7 +74,7 @@ label chapter2_start:
     stop music fadeout 2.0
     scene bg black with fade
     pause 0.4
-    show expression Text("CHAPTER 2 — GIGAMAXXING", style="story_card_text", size=46) as text at truecenter with dissolve
+    show expression Text(_("CHAPTER 2 — GIGAMAXXING"), style="story_card_text", size=46) as text at truecenter with dissolve
     pause 2.0
     hide text with dissolve
 
@@ -126,7 +126,7 @@ label chapter2_road:
     pause 0.5
     scene bg black with fade
     pause 0.35
-    show expression Text("MANY HOURS LATER", style="story_card_text") as text at truecenter with dissolve
+    show expression Text(_("MANY HOURS LATER"), style="story_card_text") as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
 
@@ -181,13 +181,13 @@ label chapter2_base:
     play sound "audio/scan.mp3" volume (persistent.vol_sfx * 0.85)
     pause 0.6
     scene bg scan_granted with dissolve
-    show text "{size=44}{color=#88ff88}🔵 JAWLINE SCAN CONFIRMED{/color}" at truecenter with dissolve
+    show text _("{size=44}{color=#88ff88}🔵 JAWLINE SCAN CONFIRMED{/color}") at truecenter with dissolve
     pause 1.4
     hide text
-    show text "{size=70}{color=#88ff88}{b}ACCESS GRANTED{/b}{/color}" at truecenter with dissolve
+    show text _("{size=70}{color=#88ff88}{b}ACCESS GRANTED{/b}{/color}") at truecenter with dissolve
     pause 1.4
     hide text
-    show text "{size=46}{color=#88ff88}👁  WELCOME TO GIGAMAXXING{/color}" at truecenter with dissolve
+    show text _("{size=46}{color=#88ff88}👁  WELCOME TO GIGAMAXXING{/color}") at truecenter with dissolve
     pause 1.8
     hide text with dissolve
 
@@ -539,7 +539,7 @@ label chapter2_invite:
     pause 0.6
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
     pause 0.25
-    show screen cinematic_caption("{i}FRIDAY @ MY PLACE - 9PM\nOPEN INVITE\nEVERYBODY PULL UP{/i}", "Class Group Chat")
+    show screen cinematic_caption(_("{i}FRIDAY @ MY PLACE - 9PM\nOPEN INVITE\nEVERYBODY PULL UP{/i}"), _("Class Group Chat"))
     pause 3.4
     hide screen cinematic_caption
     pause 0.7
@@ -549,12 +549,12 @@ label chapter2_invite:
     $ _wait_until_music_pos(1.20)
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
     $ _wait_until_music_pos(1.45)
-    show screen cinematic_caption("{i}jus so we clear{/i}", "Brayden")
+    show screen cinematic_caption(_("{i}jus so we clear{/i}"), _("Brayden"))
 
     $ _wait_until_music_pos(4.75)
     play sound "audio/text_notification.mp3" volume persistent.vol_sfx
     $ _wait_until_music_pos(5.0)
-    show screen cinematic_caption("{i}u aint invited{/i}", "Brayden")
+    show screen cinematic_caption(_("{i}u aint invited{/i}"), _("Brayden"))
 
     $ _wait_until_music_pos(11.0)
     hide screen cinematic_caption

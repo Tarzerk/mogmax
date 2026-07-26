@@ -40,14 +40,14 @@ init python:
             )
 
 define narrator = Character(None, what_italic=True, what_color="#e2dde0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define p = Character("[povname]", color="#88ff88", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define c = Character("Clav", color="#9aa8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define stranger = Character("???", color="#9aa8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define b = Character("Brayden", color="#7ab8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define h = Character("Mr. Harker", color="#c0c0c0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define eu = Character("Eugene", color="#b5d4a0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define sol = Character("Soldier", color="#9c8e6a", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
-define cap = Character("Captain", color="#c9a14a", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define p = Character(_("[povname]"), color="#88ff88", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define c = Character(_("Clav"), color="#9aa8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define stranger = Character(_("???"), color="#9aa8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define b = Character(_("Brayden"), color="#7ab8ff", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define h = Character(_("Mr. Harker"), color="#c0c0c0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define eu = Character(_("Eugene"), color="#b5d4a0", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define sol = Character(_("Soldier"), color="#9c8e6a", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
+define cap = Character(_("Captain"), color="#c9a14a", callback=komic_dialogue_sfx, ctc="komic_ctc", ctc_position="fixed")
 # Gigachad never speaks under his own name — his lines come from offscreen
 # as the existing "???" stranger Character above.
 
@@ -159,7 +159,7 @@ transform captain_enter:
     ease 0.6 xoffset 300
 
 # ─── Game state (per save) ───────────────────────────────────
-default povname = "You"
+default povname = _("You")
 default aura = 50
 default mogged_count = 0
 default took_chad_pill = False
@@ -326,11 +326,11 @@ image captain = "images/characters/captain/captain.png"
 label splashscreen:
     scene black
     pause 0.3
-    show expression Text("a Tarzerk & Cebolla production", style="story_card_subtitle") as text at truecenter with dissolve
+    show expression Text(_("a Tarzerk & Cebolla production"), style="story_card_subtitle") as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
     pause 0.5
-    show expression Text("MOGMAX", style="story_card_logo") as text at truecenter with dissolve
+    show expression Text(_("MOGMAX"), style="story_card_logo") as text at truecenter with dissolve
     pause 1.6
     hide text with dissolve
     pause 0.5
@@ -345,9 +345,9 @@ label splashscreen:
 # always works. Invoked via `call chapter_break("Chapter N complete")`.
 # ═════════════════════════════════════════════════════════════
 
-label chapter_break(done="Chapter complete"):
+label chapter_break(done=_("Chapter complete")):
     menu:
-        "[done]. Save your game?"
+        "[done!t]. Save your game?"
 
         "Save game":
             $ renpy.force_autosave(take_screenshot=True)

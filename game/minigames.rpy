@@ -8,7 +8,7 @@ default mew_holding = False
 default mew_hold_progress = 0.0
 default mew_visual_progress = 0.0
 default mew_misses = 0
-default mew_feedback = "WAIT FOR THE WINDOW"
+default mew_feedback = _("WAIT FOR THE WINDOW")
 default mew_complete = False
 
 default aura_training_score = 0
@@ -23,7 +23,7 @@ default aura_spawn_timer = 0.55
 default aura_wave_index = 0
 default aura_last_safe_lane = 2
 default aura_game_state = "playing"
-default aura_feedback = "HARVEST READY"
+default aura_feedback = _("HARVEST READY")
 default aura_feedback_good = True
 default aura_flash_time = 0.0
 default aura_intro_visible = True
@@ -51,7 +51,7 @@ default acne_best_combo = 0
 default acne_combo_flash = 0.0
 default acne_burst_cooldown = 0.0
 default acne_game_state = "intro"
-default acne_feedback = "DERMAL SCAN READY"
+default acne_feedback = _("DERMAL SCAN READY")
 default acne_feedback_good = True
 default acne_flash_time = 0.0
 default acne_allow_quit = False
@@ -60,23 +60,23 @@ default acne_allow_quit = False
 init python:
     MEW_STEPS = (
         {
-            "name": "SEAL",
-            "instruction": "CLOSE YOUR LIPS",
+            "name": _("SEAL"),
+            "instruction": _("CLOSE YOUR LIPS"),
             "target": (0.68, 0.82),
         },
         {
-            "name": "ALIGN",
-            "instruction": "LET YOUR TEETH TOUCH LIGHTLY",
+            "name": _("ALIGN"),
+            "instruction": _("LET YOUR TEETH TOUCH LIGHTLY"),
             "target": (0.30, 0.44),
         },
         {
-            "name": "ANCHOR",
-            "instruction": "PLACE THE TIP JUST BEHIND YOUR UPPER TEETH",
+            "name": _("ANCHOR"),
+            "instruction": _("PLACE THE TIP JUST BEHIND YOUR UPPER TEETH"),
             "target": (0.54, 0.68),
         },
         {
-            "name": "LOCK",
-            "instruction": "LIFT THE WHOLE TONGUE TO THE ROOF",
+            "name": _("LOCK"),
+            "instruction": _("LIFT THE WHOLE TONGUE TO THE ROOF"),
             "target": (0.40, 0.56),
         },
     )
@@ -91,7 +91,7 @@ init python:
         s.mew_hold_progress = 0.0
         s.mew_visual_progress = 0.0
         s.mew_misses = 0
-        s.mew_feedback = "WAIT FOR THE WINDOW"
+        s.mew_feedback = _("WAIT FOR THE WINDOW")
         s.mew_complete = False
 
     def _mew_play_sfx(path):
@@ -115,7 +115,7 @@ init python:
             s.mew_visual_progress += (visual_target - s.mew_visual_progress) * 0.22
             if s.mew_hold_progress >= 1.0:
                 s.mew_complete = True
-                s.mew_feedback = "PALATE LOCK CONFIRMED"
+                s.mew_feedback = _("PALATE LOCK CONFIRMED")
                 _mew_play_sfx("audio/mew_complete.mp3")
             return
 
@@ -140,21 +140,21 @@ init python:
 
         if not _mew_in_target():
             s.mew_misses += 1
-            s.mew_feedback = "MISALIGNED - RESET"
+            s.mew_feedback = _("MISALIGNED - RESET")
             _mew_play_sfx("audio/mew_reject.mp3")
             return
 
         if s.mew_step == len(MEW_STEPS) - 1:
             s.mew_holding = True
             s.mew_hold_progress = 0.0
-            s.mew_feedback = "HOLD. DO NOT BREAK FRAME."
+            s.mew_feedback = _("HOLD. DO NOT BREAK FRAME.")
             _mew_play_sfx("audio/mew_charge.mp3")
             return
 
         s.mew_step += 1
         s.mew_cursor = 0.0
         s.mew_direction = 1.0
-        s.mew_feedback = "LOCKED - NEXT POSITION"
+        s.mew_feedback = _("LOCKED - NEXT POSITION")
         _mew_play_sfx("audio/mew_step.mp3")
 
     def _mew_release():
@@ -166,30 +166,30 @@ init python:
         s.mew_holding = False
         s.mew_hold_progress = 0.0
         s.mew_misses += 1
-        s.mew_feedback = "FRAME BROKEN - HOLD LONGER"
+        s.mew_feedback = _("FRAME BROKEN - HOLD LONGER")
         _mew_play_sfx("audio/mew_reject.mp3")
 
     AURA_GOOD_ITEMS = (
-        {"label": "SHADES", "value": 5},
-        {"label": "PROTEIN", "value": 5},
-        {"label": "BLACK FIT", "value": 10},
-        {"label": "PHONE DOWN", "value": 10},
-        {"label": "GOLD DUMBBELL", "value": 15},
-        {"label": "CAPE", "value": 15},
-        {"label": "GIGA BUST", "value": 25},
+        {"label": _("SHADES"), "value": 5},
+        {"label": _("PROTEIN"), "value": 5},
+        {"label": _("BLACK FIT"), "value": 10},
+        {"label": _("PHONE DOWN"), "value": 10},
+        {"label": _("GOLD DUMBBELL"), "value": 15},
+        {"label": _("CAPE"), "value": 15},
+        {"label": _("GIGA BUST"), "value": 25},
     )
 
     AURA_BAD_ITEMS = (
-        {"label": "DOUBLE TEXT", "drain": 15},
-        {"label": "PODCAST SHIRT", "drain": 10},
-        {"label": "FAKE LUXURY", "drain": 10},
-        {"label": "ALPHA IN 7 DAYS", "drain": 20},
-        {"label": "RATE MY FIT", "drain": 15},
-        {"label": "SELFIE STICK", "drain": 10},
-        {"label": "FEDORA", "drain": 25},
-        {"label": "SEEN AT 2 AM", "drain": 10},
-        {"label": "RING LIGHT", "drain": 10},
-        {"label": "COMMENT SECTION", "drain": 20},
+        {"label": _("DOUBLE TEXT"), "drain": 15},
+        {"label": _("PODCAST SHIRT"), "drain": 10},
+        {"label": _("FAKE LUXURY"), "drain": 10},
+        {"label": _("ALPHA IN 7 DAYS"), "drain": 20},
+        {"label": _("RATE MY FIT"), "drain": 15},
+        {"label": _("SELFIE STICK"), "drain": 10},
+        {"label": _("FEDORA"), "drain": 25},
+        {"label": _("SEEN AT 2 AM"), "drain": 10},
+        {"label": _("RING LIGHT"), "drain": 10},
+        {"label": _("COMMENT SECTION"), "drain": 20},
     )
 
     AURA_ITEM_ASSETS = {
@@ -265,7 +265,7 @@ init python:
         s.aura_wave_index = 0
         s.aura_last_safe_lane = 2
         s.aura_game_state = "playing"
-        s.aura_feedback = "HARVEST READY"
+        s.aura_feedback = _("HARVEST READY")
         s.aura_feedback_good = True
         s.aura_flash_time = 0.0
         s.aura_intro_visible = True
@@ -389,7 +389,7 @@ init python:
                     items.append(_aura_make_item("GIGA BUST", 25, True, lane))
                 else:
                     items.append(_aura_make_bad(lane, label="FEDORA", drain=25))
-            s.aura_feedback = "FINAL WAVE // FEDORA RAIN"
+            s.aura_feedback = _("FINAL WAVE // FEDORA RAIN")
             s.aura_feedback_good = True
             interval = 2.20
 
@@ -401,7 +401,7 @@ init python:
         s = renpy.store
         s.aura_score = 100
         s.aura_game_state = "passed"
-        s.aura_feedback = "AURA STABILIZED"
+        s.aura_feedback = _("AURA STABILIZED")
         s.aura_feedback_good = True
         s.aura_flash_time = 0.8
         renpy.music.play("audio/mew_complete.mp3", channel="sound", loop=False)
@@ -410,7 +410,7 @@ init python:
         s = renpy.store
         s.aura_time_left = 0.0
         s.aura_game_state = "failed"
-        s.aura_feedback = "TIME EXPIRED // AURA UNSTABLE"
+        s.aura_feedback = _("TIME EXPIRED // AURA UNSTABLE")
         s.aura_feedback_good = False
         s.aura_flash_time = 0.8
         renpy.music.play("audio/mew_reject.mp3", channel="sound", loop=False)
@@ -419,7 +419,7 @@ init python:
         mode = renpy.store.aura_mode
         reset_aura_harvester(mode)
         renpy.store.aura_intro_visible = False
-        renpy.store.aura_feedback = "HARVEST ACTIVE"
+        renpy.store.aura_feedback = _("HARVEST ACTIVE")
 
     def _aura_tick():
         s = renpy.store
@@ -471,7 +471,7 @@ init python:
                         _aura_pass()
                         break
                     s.aura_score = min(90, s.aura_score + item["value"])
-                    s.aura_feedback = "%s  +%d AURA" % (item["label"], item["value"])
+                    s.aura_feedback = __("%s  +%d AURA") % (__(item["label"]), item["value"])
                     s.aura_feedback_good = True
                     s.aura_flash_time = 0.18
                     renpy.music.play("audio/mew_step.mp3", channel="sound", loop=False)
@@ -479,7 +479,7 @@ init python:
                     drain = abs(item["value"])
                     s.aura_score = max(0, s.aura_score - drain)
                     s.aura_combo = 0
-                    s.aura_feedback = "%s  -%d AURA" % (item["label"], drain)
+                    s.aura_feedback = __("%s  -%d AURA") % (__(item["label"]), drain)
                     s.aura_feedback_good = False
                     s.aura_flash_time = 0.28
                     renpy.music.play("audio/mew_reject.mp3", channel="sound", loop=False)
@@ -489,7 +489,7 @@ init python:
                 next_items.append(item)
             elif item["good"]:
                 if s.aura_combo > 0:
-                    s.aura_feedback = "GREEN MISSED // COMBO RESET"
+                    s.aura_feedback = _("GREEN MISSED // COMBO RESET")
                     s.aura_feedback_good = False
                 s.aura_combo = 0
 
@@ -511,9 +511,15 @@ init python:
     }
 
     ACNE_MARK_ASSETS = {
-        "MOLE": "images/minigames/acne_mole.png",
-        "FRECKLE": "images/minigames/acne_freckle.png",
-        "BEAUTY MARK": "images/minigames/acne_beauty.png",
+        _("MOLE"): "images/minigames/acne_mole.png",
+        _("FRECKLE"): "images/minigames/acne_freckle.png",
+        _("BEAUTY MARK"): "images/minigames/acne_beauty.png",
+    }
+
+    ACNE_STAGE_LABELS = {
+        "small": _("SMALL"),
+        "medium": _("MEDIUM"),
+        "cyst": _("CYST"),
     }
 
     ACNE_INITIAL_TIME = 6.0
@@ -587,14 +593,14 @@ init python:
         s.acne_combo_flash = 0.0
         s.acne_burst_cooldown = 0.0
         s.acne_game_state = "intro"
-        s.acne_feedback = "DERMAL SCAN READY"
+        s.acne_feedback = _("DERMAL SCAN READY")
         s.acne_feedback_good = True
         s.acne_flash_time = 0.0
 
     def _acne_start():
         s = renpy.store
         s.acne_game_state = "playing"
-        s.acne_feedback = "MOVE FAST // CORRECT CLICKS ADD TIME"
+        s.acne_feedback = _("MOVE FAST // CORRECT CLICKS ADD TIME")
         _acne_spawn(force_stage="small")
         _acne_spawn(force_stage="medium", life_bonus=0.40)
         _acne_spawn(force_stage="cyst", life_bonus=0.80)
@@ -690,7 +696,7 @@ init python:
 
         s.acne_pressure_used = True
         s.acne_spawn_timer = 1.25
-        s.acne_feedback = "PRESSURE WAVE // THREE MARKS, ONE PULSE"
+        s.acne_feedback = _("PRESSURE WAVE // THREE MARKS, ONE PULSE")
         s.acne_feedback_good = False
         s.acne_flash_time = 0.22
         renpy.music.play("audio/ui_click.ogg", channel="sound", loop=False)
@@ -700,10 +706,10 @@ init python:
         s.acne_game_state = "passed" if success else "failed"
         s.acne_feedback_good = success
         if success:
-            s.acne_feedback = "CLEAR SKIN // +100 AURA"
+            s.acne_feedback = _("CLEAR SKIN // +100 AURA")
             renpy.music.play("audio/mew_complete.mp3", channel="sound", loop=False)
         else:
-            s.acne_feedback = "TIME EXPIRED // WAVE %d // %d / %d TOTAL" % (s.acne_wave, s.acne_cleared, ACNE_CLEAR_GOAL)
+            s.acne_feedback = __("TIME EXPIRED // WAVE %d // %d / %d TOTAL") % (s.acne_wave, s.acne_cleared, ACNE_CLEAR_GOAL)
             renpy.music.play("audio/mew_reject.mp3", channel="sound", loop=False)
 
     def _acne_complete_wave():
@@ -711,7 +717,7 @@ init python:
         s.acne_game_state = "wave_clear"
         s.acne_targets = []
         s.acne_spawn_timer = 0.4
-        s.acne_feedback = "WAVE %d CLEARED" % s.acne_wave
+        s.acne_feedback = __("WAVE %d CLEARED") % s.acne_wave
         s.acne_feedback_good = True
         s.acne_flash_time = 0.35
         renpy.music.play("audio/mew_step.mp3", channel="sound", loop=False)
@@ -724,7 +730,7 @@ init python:
         s.acne_burst_cooldown = 0.0
         s.acne_time_left = max(_acne_rules()["wave_floor"], s.acne_time_left)
         s.acne_game_state = "playing"
-        s.acne_feedback = "WAVE %d ACTIVE // FIND THE PULSE" % s.acne_wave
+        s.acne_feedback = __("WAVE %d ACTIVE // FIND THE PULSE") % s.acne_wave
         s.acne_feedback_good = True
         _acne_spawn(force_stage="small")
         _acne_spawn(force_stage="medium", life_bonus=0.40)
@@ -753,7 +759,7 @@ init python:
             s.acne_mistakes += 1
             s.acne_combo = 0
             s.acne_combo_flash = 0.0
-            s.acne_feedback = "%s IS STRUCTURAL  -%.2f SEC" % (clicked["mark"], ACNE_WRONG_TIME)
+            s.acne_feedback = __("%s IS STRUCTURAL  -%.2f SEC") % (__(clicked["mark"]), ACNE_WRONG_TIME)
             s.acne_feedback_good = False
             s.acne_flash_time = 0.22
             renpy.music.play("audio/mew_reject.mp3", channel="sound", loop=False)
@@ -772,7 +778,7 @@ init python:
             if clicked["hits"] < required_hits:
                 clicked["life_left"] = min(clicked["life_max"], clicked["life_left"] + 1.10)
                 next_targets.append(clicked)
-                s.acne_feedback = "CYST PRESSURE  %d / %d  +%.2f SEC" % (clicked["hits"], required_hits, time_bonus)
+                s.acne_feedback = __("CYST PRESSURE  %d / %d  +%.2f SEC") % (clicked["hits"], required_hits, time_bonus)
                 s.acne_feedback_good = True
                 renpy.music.play("audio/ui_click.ogg", channel="sound", loop=False)
             else:
@@ -782,7 +788,7 @@ init python:
                 s.acne_score += points
                 s.acne_cleared += 1
                 s.acne_wave_cleared += 1
-                s.acne_feedback = "%s CLEARED  +%.2f SEC" % (stage.upper(), time_bonus + clear_recovery)
+                s.acne_feedback = __("%s CLEARED  +%.2f SEC") % (__(ACNE_STAGE_LABELS[stage]), time_bonus + clear_recovery)
                 s.acne_feedback_good = True
                 s.acne_flash_time = 0.14
                 renpy.music.play("audio/mew_step.mp3", channel="sound", loop=False)
@@ -843,7 +849,7 @@ init python:
             s.acne_combo = 0
             s.acne_combo_flash = 0.0
             s.acne_burst_cooldown = ACNE_BURST_LOCKOUT
-            s.acne_feedback = "TARGET BURST  -%.2f SEC // OTHERS PROTECTED" % ACNE_EXPIRE_TIME
+            s.acne_feedback = __("TARGET BURST  -%.2f SEC // OTHERS PROTECTED") % ACNE_EXPIRE_TIME
             s.acne_feedback_good = False
             s.acne_flash_time = 0.28
             renpy.music.play("audio/mew_reject.mp3", channel="sound", loop=False)
@@ -897,14 +903,14 @@ screen mewing_minigame():
         yalign 0.035
         spacing 4
 
-        text "MEWING GEOMETRY":
+        text _("MEWING GEOMETRY"):
             size 30
             color "#eeeeee"
             bold True
             xalign 0.5
             outlines [(2, "#000000", 0, 0)]
 
-        text "PALATE CALIBRATION // STAGE [mew_step + 1] OF 4":
+        text _("PALATE CALIBRATION // STAGE [mew_step + 1] OF 4"):
             size 14
             color "#789b8a"
             xalign 0.5
@@ -918,7 +924,7 @@ screen mewing_minigame():
             vbox:
                 spacing 3
 
-                text ("DONE" if index < mew_step else ("NOW" if index == mew_step else "--")):
+                text (_("DONE") if index < mew_step else (_("NOW") if index == mew_step else _("--"))):
                     size 15
                     color ("#88ff88" if index <= mew_step else "#555c58")
                     xalign 0.5
@@ -930,7 +936,7 @@ screen mewing_minigame():
                     xalign 0.5
 
     if mew_step == 0:
-        text "<":
+        text _("<"):
             xpos 817
             ypos 324
             size 42
@@ -938,7 +944,7 @@ screen mewing_minigame():
             bold True
             at mew_target_pulse
     elif mew_step == 1:
-        text "<":
+        text _("<"):
             xpos 770
             ypos 331
             size 42
@@ -946,7 +952,7 @@ screen mewing_minigame():
             bold True
             at mew_target_pulse
     elif mew_step == 2:
-        text "<":
+        text _("<"):
             xpos 737
             ypos 350
             size 42
@@ -954,7 +960,7 @@ screen mewing_minigame():
             bold True
             at mew_target_pulse
     else:
-        text "UP":
+        text _("UP"):
             xpos 630
             ypos 300
             size 30
@@ -1016,7 +1022,7 @@ screen mewing_minigame():
         else:
             null height 12
 
-        text ("PRESS AND HOLD IN THE GREEN" if mew_step == len(MEW_STEPS) - 1 else "CLICK WHEN THE MARKER ENTERS THE GREEN"):
+        text (_("PRESS AND HOLD IN THE GREEN") if mew_step == len(MEW_STEPS) - 1 else _("CLICK WHEN THE MARKER ENTERS THE GREEN")):
             size 15
             color "#aab5af"
             xalign 0.5
@@ -1034,14 +1040,14 @@ screen mewing_minigame():
             yalign 0.5
             spacing 8
 
-            text "PALATE LOCK CONFIRMED":
+            text _("PALATE LOCK CONFIRMED"):
                 size 44
                 color "#88ff88"
                 bold True
                 xalign 0.5
                 outlines [(2, "#000000", 0, 0)]
 
-            text "FRAME INTEGRITY: STABLE":
+            text _("FRAME INTEGRITY: STABLE"):
                 size 18
                 color "#d8e1dc"
                 xalign 0.5
@@ -1072,12 +1078,12 @@ screen aura_harvester():
         key "K_4" action Function(_aura_set_lane, 3)
         key "K_5" action Function(_aura_set_lane, 4)
 
-    $ aura_phase = ("CALIBRATION" if aura_score < 20 else "CHOICE PAIRS" if aura_score < 45 else "CROSSFIRE" if aura_score < 70 else "RED WALLS" if aura_score < 90 else "FEDORA RAIN")
+    $ aura_phase = (_("CALIBRATION") if aura_score < 20 else _("CHOICE PAIRS") if aura_score < 45 else _("CROSSFIRE") if aura_score < 70 else _("RED WALLS") if aura_score < 90 else _("FEDORA RAIN"))
 
     add Solid("#050908"):
         xysize (1280, 96)
 
-    text "AURA HARVESTER 6000":
+    text _("AURA HARVESTER 6000"):
         xpos 34
         ypos 30
         size 30
@@ -1102,7 +1108,7 @@ screen aura_harvester():
             ypos 5
             xysize (int(522 * aura_score / 100.0), 28)
 
-        text ("AURA  %d / 100" % aura_score):
+        text (__("AURA  %d / 100") % aura_score):
             xalign 0.5
             yalign 0.5
             size 17
@@ -1110,21 +1116,21 @@ screen aura_harvester():
             bold True
             outlines [(2, "#000000", 0, 0)]
 
-    text ("TIME  %04.1f" % aura_time_left):
+    text (__("TIME  %04.1f") % aura_time_left):
         xpos 950
         ypos 16
         size 22
         color ("#ff6969" if aura_time_left <= 8.0 else "#eeeeee")
         bold True
 
-    text ("%s // %s" % (aura_mode.upper(), aura_phase)):
+    text (__("%s // %s") % (__(aura_mode.upper()), __(aura_phase))):
         xpos 950
         ypos 49
         size 12
         color "#d5ddd9"
         bold True
 
-    text ("COMBO x%d" % aura_combo):
+    text (__("COMBO x%d") % aura_combo):
         xpos 1150
         ypos 49
         size 12
@@ -1203,7 +1209,7 @@ screen aura_harvester():
                     color "#f1f3f2"
                     bold True
 
-                text (("+%d" % item_value) if falling_item["good"] else ("%d" % item_value)):
+                text ((__("+%d") % item_value) if falling_item["good"] else (__("%d") % item_value)):
                     xalign 0.5
                     ypos 94
                     size 13
@@ -1225,7 +1231,7 @@ screen aura_harvester():
 
     if not aura_intro_visible:
         for lane_index in range(5):
-            textbutton ("LANE %d" % (lane_index + 1)):
+            textbutton (__("LANE %d") % (lane_index + 1)):
                 xpos int(AURA_LANE_CENTERS[lane_index] - 58)
                 ypos 646
                 xysize (116, 58)
@@ -1246,14 +1252,14 @@ screen aura_harvester():
             yalign 0.5
             spacing 9
 
-            text "AURA STABILIZED":
+            text _("AURA STABILIZED"):
                 size 52
                 color "#69ff9a"
                 bold True
                 xalign 0.5
                 outlines [(2, "#000000", 0, 0)]
 
-            text "HARVEST QUOTA: 100 / 100":
+            text _("HARVEST QUOTA: 100 / 100"):
                 size 18
                 color "#dbe5df"
                 xalign 0.5
@@ -1267,18 +1273,18 @@ screen aura_harvester():
             yalign 0.5
             spacing 18
 
-            text "AURA UNSTABLE":
+            text _("AURA UNSTABLE"):
                 size 50
                 color "#ff6969"
                 bold True
                 xalign 0.5
 
-            text ("HARVESTED %d / 100" % aura_score):
+            text (__("HARVESTED %d / 100") % aura_score):
                 size 19
                 color "#dbe5df"
                 xalign 0.5
 
-            textbutton "RETRY HARVEST":
+            textbutton _("RETRY HARVEST"):
                 xalign 0.5
                 xysize (300, 64)
                 background Solid("#8a2929")
@@ -1290,8 +1296,8 @@ screen aura_harvester():
 
     if aura_intro_visible:
         add Solid("#020504f2")
-        key "K_RETURN" action [SetVariable("aura_intro_visible", False), SetVariable("aura_feedback", "HARVEST ACTIVE")]
-        key "K_SPACE" action [SetVariable("aura_intro_visible", False), SetVariable("aura_feedback", "HARVEST ACTIVE")]
+        key "K_RETURN" action [SetVariable("aura_intro_visible", False), SetVariable("aura_feedback", _("HARVEST ACTIVE"))]
+        key "K_SPACE" action [SetVariable("aura_intro_visible", False), SetVariable("aura_feedback", _("HARVEST ACTIVE"))]
 
         fixed:
             xpos 210
@@ -1304,14 +1310,14 @@ screen aura_harvester():
                 ypos 4
                 xysize (852, 528)
 
-            text "AURA HARVESTER 6000":
+            text _("AURA HARVESTER 6000"):
                 xalign 0.5
                 ypos 30
                 size 38
                 color "#f1f3f2"
                 bold True
 
-            text ("%s PROTOCOL" % aura_mode.upper()):
+            text (__("%s PROTOCOL") % __(aura_mode.upper())):
                 xalign 0.5
                 ypos 78
                 size 15
@@ -1322,14 +1328,14 @@ screen aura_harvester():
                 xpos 105
                 ypos 128
 
-            text "CATCH GREEN OBJECTS":
+            text _("CATCH GREEN OBJECTS"):
                 xpos 245
                 ypos 132
                 size 22
                 color "#69ff9a"
                 bold True
 
-            text ("Wide catch window. High-value drops keep the tighter center catch." if aura_mode == "normal" else "They add Aura. Every catch uses the precision window."):
+            text (_("Wide catch window. High-value drops keep the tighter center catch.") if aura_mode == "normal" else _("They add Aura. Every catch uses the precision window.")):
                 xpos 245
                 ypos 165
                 size 14
@@ -1339,14 +1345,14 @@ screen aura_harvester():
                 xpos 105
                 ypos 226
 
-            text "AVOID RED OBJECTS":
+            text _("AVOID RED OBJECTS"):
                 xpos 245
                 ypos 230
                 size 22
                 color "#ff6969"
                 bold True
 
-            text ("Small Aura drain. They do not end the run." if aura_mode == "normal" else "Full Aura drain. They do not end the run."):
+            text (_("Small Aura drain. They do not end the run.") if aura_mode == "normal" else _("Full Aura drain. They do not end the run.")):
                 xpos 245
                 ypos 263
                 size 16
@@ -1356,20 +1362,20 @@ screen aura_harvester():
                 xpos 85
                 ypos 329
 
-            text "SELECT ANY LANE":
+            text _("SELECT ANY LANE"):
                 xpos 245
                 ypos 326
                 size 22
                 color "#f1f3f2"
                 bold True
 
-            text ("Click its lane button, or use arrows / A-D. Reach 100 Aura in %d seconds." % int(aura_time_limit)):
+            text (__("Click its lane button, or use arrows / A-D. Reach 100 Aura in %d seconds.") % int(aura_time_limit)):
                 xpos 245
                 ypos 359
                 size 15
                 color "#d6ded9"
 
-            textbutton "START HARVEST":
+            textbutton _("START HARVEST"):
                 xalign 0.5
                 ypos 432
                 xysize (310, 66)
@@ -1378,7 +1384,7 @@ screen aura_harvester():
                 text_size 22
                 text_color "#ffffff"
                 text_bold True
-                action [SetVariable("aura_intro_visible", False), SetVariable("aura_feedback", "HARVEST ACTIVE")]
+                action [SetVariable("aura_intro_visible", False), SetVariable("aura_feedback", _("HARVEST ACTIVE"))]
 
 
 screen acne_pop_minigame():
@@ -1400,21 +1406,21 @@ screen acne_pop_minigame():
     add Solid("#080c0beF"):
         xysize (1280, 86)
 
-    text ("DERMAL PURGE // WAVE %d/%d" % (acne_wave, ACNE_TOTAL_WAVES)):
+    text (__("DERMAL PURGE // WAVE %d/%d") % (acne_wave, ACNE_TOTAL_WAVES)):
         xpos 34
         ypos 24
         size 25
         color "#f0f2f1"
         bold True
 
-    text ("TIME  %04.1f" % acne_time_left):
+    text (__("TIME  %04.1f") % acne_time_left):
         xalign 0.5
         ypos 23
         size 27
         color ("#ff6262" if acne_time_left <= 2.0 else "#e3e7e5")
         bold True
 
-    text ("SCORE  %03d" % acne_score):
+    text (__("SCORE  %03d") % acne_score):
         xpos 1240
         xanchor 1.0
         ypos 20
@@ -1422,7 +1428,7 @@ screen acne_pop_minigame():
         color "#69e4ad"
         bold True
 
-    text ("WAVE %02d/%02d   TOTAL %02d/%02d   ERRORS %02d   MISSED %02d" % (acne_wave_cleared, ACNE_WAVE_GOAL, acne_cleared, ACNE_CLEAR_GOAL, acne_mistakes, acne_expired)):
+    text (__("WAVE %02d/%02d   TOTAL %02d/%02d   ERRORS %02d   MISSED %02d") % (acne_wave_cleared, ACNE_WAVE_GOAL, acne_cleared, ACNE_CLEAR_GOAL, acne_mistakes, acne_expired)):
         xpos 1240
         xanchor 1.0
         ypos 48
@@ -1431,7 +1437,7 @@ screen acne_pop_minigame():
         bold True
 
     if acne_allow_quit:
-        textbutton "QUIT":
+        textbutton _("QUIT"):
             xpos 1124
             ypos 96
             xysize (118, 42)
@@ -1444,14 +1450,14 @@ screen acne_pop_minigame():
             action Return("quit")
 
     if acne_combo > 0 and acne_game_state == "playing":
-        $ combo_rank = "CLEAN" if acne_combo < 4 else "SHARP" if acne_combo < 7 else "BRUTAL" if acne_combo < 10 else "FLAWLESS"
+        $ combo_rank = _("CLEAN") if acne_combo < 4 else _("SHARP") if acne_combo < 7 else _("BRUTAL") if acne_combo < 10 else _("FLAWLESS")
 
         fixed:
             xpos 1000
             ypos 112
             xysize (238, 112)
 
-            text ("%02d" % acne_combo):
+            text (__("%02d") % acne_combo):
                 xpos 0
                 ypos -8
                 size (62 if acne_combo_flash > 0.0 else 56)
@@ -1459,7 +1465,7 @@ screen acne_pop_minigame():
                 bold True
                 outlines [(3, "#210a05", 0, 0)]
 
-            text "HIT":
+            text _("HIT"):
                 xpos 78
                 ypos 5
                 size 25
@@ -1467,7 +1473,7 @@ screen acne_pop_minigame():
                 bold True
                 outlines [(2, "#210a05", 0, 0)]
 
-            text "KOMBO":
+            text _("KOMBO"):
                 xpos 78
                 ypos 34
                 size 22
@@ -1507,7 +1513,7 @@ screen acne_pop_minigame():
             $ acne_size = 34 if target["mark"] == "MOLE" else 24 if target["mark"] == "FRECKLE" else 40
 
         if target["kind"] == "pimple" and not acne_fresh:
-            text "○":
+            text _("○"):
                 xpos target["x"]
                 ypos target["y"]
                 xanchor 0.5
@@ -1525,7 +1531,7 @@ screen acne_pop_minigame():
             action Function(_acne_click, target["id"])
 
         if acne_stage == "cyst" and target["hits"]:
-            text ("%d/3" % target["hits"]):
+            text (__("%d/3") % target["hits"]):
                 xpos target["x"]
                 ypos target["y"] + 30
                 xanchor 0.5
@@ -1559,49 +1565,49 @@ screen acne_pop_minigame():
             yalign 0.48
             spacing 14
 
-            text "DERMAL PURGE":
+            text _("DERMAL PURGE"):
                 xalign 0.5
                 size 44
                 color "#f1f3f2"
                 bold True
 
-            text ("%s MODE" % acne_mode.upper()):
+            text (__("%s MODE") % __(acne_mode.upper())):
                 xalign 0.5
                 size 14
                 color ("#ffcf55" if acne_mode == "hard" else "#69e4ad")
                 bold True
 
-            text ("3 WAVES // CLEAR %d TARGETS PER WAVE" % ACNE_WAVE_GOAL):
+            text (__("3 WAVES // CLEAR %d TARGETS PER WAVE") % ACNE_WAVE_GOAL):
                 xalign 0.5
                 size 17
                 color "#8ca297"
                 bold True
 
-            text "PIMPLES BEGIN DARK LIKE MARKS // WAIT FOR THE PULSE":
+            text _("PIMPLES BEGIN DARK LIKE MARKS // WAIT FOR THE PULSE"):
                 xalign 0.5
                 size 14
                 color "#69e4ad"
                 bold True
 
-            text "ONE TARGET CAN BURST AT A TIME // OTHERS GET 1.35 SEC PROTECTION":
+            text _("ONE TARGET CAN BURST AT A TIME // OTHERS GET 1.35 SEC PROTECTION"):
                 xalign 0.5
                 size 13
                 color "#ffcf55"
                 bold True
 
-            text ("5+ KOMBO UNLOCKS FULL TIME RECOVERY // MARKS COST 1.75 SECONDS" if acne_mode == "hard" else "NORMAL: BIGGER CLOCK // COMBOS GIVE MORE RECOVERY"):
+            text (_("5+ KOMBO UNLOCKS FULL TIME RECOVERY // MARKS COST 1.75 SECONDS") if acne_mode == "hard" else _("NORMAL: BIGGER CLOCK // COMBOS GIVE MORE RECOVERY")):
                 xalign 0.5
                 size 13
                 color "#ffcf55"
                 bold True
 
-            text "PRESSURE WAVE: THREE MARKS, ONE PULSING TARGET":
+            text _("PRESSURE WAVE: THREE MARKS, ONE PULSING TARGET"):
                 xalign 0.5
                 size 13
                 color "#ff6969"
                 bold True
 
-            text ("FULL CLEAR ADDS +0.45 SEC RECOVERY" if acne_mode == "normal" else "HARD MODE: NO FULL-CLEAR RECOVERY"):
+            text (_("FULL CLEAR ADDS +0.45 SEC RECOVERY") if acne_mode == "normal" else _("HARD MODE: NO FULL-CLEAR RECOVERY")):
                 xalign 0.5
                 size 13
                 color ("#69e4ad" if acne_mode == "normal" else "#ffcf55")
@@ -1617,7 +1623,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_small.png":
                         xalign 0.5
-                    text ("SMALL  +0.85 MAX" if acne_mode == "normal" else "SMALL  +0.55 MAX"):
+                    text (_("SMALL  +0.85 MAX") if acne_mode == "normal" else _("SMALL  +0.55 MAX")):
                         xalign 0.5
                         size 15
                         color "#e7ebe9"
@@ -1627,7 +1633,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_medium.png":
                         xalign 0.5
-                    text ("MEDIUM  +1.00 MAX" if acne_mode == "normal" else "MEDIUM  +0.45 MAX"):
+                    text (_("MEDIUM  +1.00 MAX") if acne_mode == "normal" else _("MEDIUM  +0.45 MAX")):
                         xalign 0.5
                         size 15
                         color "#e7ebe9"
@@ -1637,7 +1643,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_cyst.png":
                         xalign 0.5
-                    text ("CYST  +0.65 / HIT" if acne_mode == "normal" else "CYST  +0.30 / HIT"):
+                    text (_("CYST  +0.65 / HIT") if acne_mode == "normal" else _("CYST  +0.30 / HIT")):
                         xalign 0.5
                         size 15
                         color "#e7ebe9"
@@ -1647,7 +1653,7 @@ screen acne_pop_minigame():
                     spacing 8
                     add "images/minigames/acne_mole.png":
                         xalign 0.5
-                    text "MARK  -1.75 SEC":
+                    text _("MARK  -1.75 SEC"):
                         xalign 0.5
                         size 15
                         color "#ff6969"
@@ -1655,7 +1661,7 @@ screen acne_pop_minigame():
 
             null height 12
 
-            textbutton "BEGIN SCAN":
+            textbutton _("BEGIN SCAN"):
                 xalign 0.5
                 xysize (290, 62)
                 background Solid("#19754f")
@@ -1672,20 +1678,20 @@ screen acne_pop_minigame():
             yalign 0.5
             spacing 10
 
-            text ("WAVE %d CLEARED" % acne_wave):
+            text (__("WAVE %d CLEARED") % acne_wave):
                 xalign 0.5
                 size 50
                 color "#69e4ad"
                 bold True
                 outlines [(2, "#000000", 0, 0)]
 
-            text ("%d / %d TOTAL TARGETS PURGED" % (acne_cleared, ACNE_CLEAR_GOAL)):
+            text (__("%d / %d TOTAL TARGETS PURGED") % (acne_cleared, ACNE_CLEAR_GOAL)):
                 xalign 0.5
                 size 19
                 color "#e2e7e4"
                 bold True
 
-            text "NEXT WAVE INCOMING":
+            text _("NEXT WAVE INCOMING"):
                 xalign 0.5
                 size 16
                 color "#ffcf55"
@@ -1700,7 +1706,7 @@ screen acne_pop_minigame():
             yalign 0.5
             spacing 13
 
-            text "SCAN INCOMPLETE":
+            text _("SCAN INCOMPLETE"):
                 xalign 0.5
                 size 42
                 color "#ff6969"
@@ -1711,7 +1717,7 @@ screen acne_pop_minigame():
                 size 18
                 color "#cbd0cd"
 
-            textbutton "RETRY":
+            textbutton _("RETRY"):
                 xalign 0.5
                 xysize (250, 56)
                 background Solid("#8d3636")
@@ -1728,20 +1734,20 @@ screen acne_pop_minigame():
             yalign 0.5
             spacing 8
 
-            text "CLEAR SKIN":
+            text _("CLEAR SKIN"):
                 xalign 0.5
                 size 58
                 color "#69e4ad"
                 bold True
                 outlines [(2, "#000000", 0, 0)]
 
-            text "+100 AURA":
+            text _("+100 AURA"):
                 xalign 0.5
                 size 26
                 color "#ffffff"
                 bold True
 
-            text ("PURGE SCORE  %03d" % acne_score):
+            text (__("PURGE SCORE  %03d") % acne_score):
                 xalign 0.5
                 size 16
                 color "#93a19a"

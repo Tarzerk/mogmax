@@ -42,19 +42,19 @@ screen fail_screen():
         yalign 0.5
         spacing 22
 
-        text "BRAINMAXXING FAILED":
+        text _("BRAINMAXXING FAILED"):
             size 70
             color "#ff4444"
             xalign 0.5
 
-        text "Score: [final_score] / 100":
+        text _("Score: [final_score] / 100"):
             size 34
             color "#cccccc"
             xalign 0.5
 
         null height 50
 
-        textbutton "RETRY TRAINING":
+        textbutton _("RETRY TRAINING"):
             action Return("restart")
             xalign 0.5
             text_size 36
@@ -62,7 +62,7 @@ screen fail_screen():
             text_hover_color "#ffffff"
             text_idle_color "#88ff88"
 
-        textbutton "QUIT TO MAIN MENU":
+        textbutton _("QUIT TO MAIN MENU"):
             action Return("quit")
             xalign 0.5
             text_size 36
@@ -102,72 +102,72 @@ init python:
     # a Clav-voiced mogging-themed example sentence.
     VOCAB = [
         # Easier SAT
-        {"word": "gregarious", "correct": "sociable, fond of company",
-         "wrong_a": "scholarly, fond of books", "wrong_b": "easily irritated",
-         "joke": "rizz-coded",
-         "example": "Brayden is {b}gregarious{/b}. He has friends. You have... aspirations. — Clav"},
+        {"word": _("gregarious"), "correct": _("sociable, fond of company"),
+         "wrong_a": _("scholarly, fond of books"), "wrong_b": _("easily irritated"),
+         "joke": _("rizz-coded"),
+         "example": _("Brayden is {b}gregarious{/b}. He has friends. You have... aspirations. — Clav")},
 
-        {"word": "tenacious", "correct": "persistent, holding firmly",
-         "wrong_a": "loud and aggressive", "wrong_b": "having teeth",
-         "joke": "L-resistant",
-         "example": "Your mewing routine is {b}tenacious{/b}. Your jaw, however, remains stubbornly average. — Clav"},
+        {"word": _("tenacious"), "correct": _("persistent, holding firmly"),
+         "wrong_a": _("loud and aggressive"), "wrong_b": _("having teeth"),
+         "joke": _("L-resistant"),
+         "example": _("Your mewing routine is {b}tenacious{/b}. Your jaw, however, remains stubbornly average. — Clav")},
 
-        {"word": "candor", "correct": "honest, frank expression",
-         "wrong_a": "a kind of sweet pastry", "wrong_b": "fear of enclosed spaces",
-         "joke": "no-cap energy",
-         "example": "I appreciate your {b}candor{/b} when you admit you are chopped. It saves us both time. — Clav"},
+        {"word": _("candor"), "correct": _("honest, frank expression"),
+         "wrong_a": _("a kind of sweet pastry"), "wrong_b": _("fear of enclosed spaces"),
+         "joke": _("no-cap energy"),
+         "example": _("I appreciate your {b}candor{/b} when you admit you are chopped. It saves us both time. — Clav")},
 
-        {"word": "jovial", "correct": "cheerful and good-humored",
-         "wrong_a": "youthful and inexperienced", "wrong_b": "related to jewelry",
-         "joke": "drip-coded",
-         "example": "Mr. Harker is not {b}jovial{/b}. Do not attempt to make him laugh. You will lose. — Clav"},
+        {"word": _("jovial"), "correct": _("cheerful and good-humored"),
+         "wrong_a": _("youthful and inexperienced"), "wrong_b": _("related to jewelry"),
+         "joke": _("drip-coded"),
+         "example": _("Mr. Harker is not {b}jovial{/b}. Do not attempt to make him laugh. You will lose. — Clav")},
 
         # Mid SAT
-        {"word": "obsequious", "correct": "excessively eager to please",
-         "wrong_a": "loud and easily provoked", "wrong_b": "elderly or aged",
-         "joke": "skibidi-adjacent",
-         "example": "The waiter was so {b}obsequious{/b} to Brayden that he comped his croissant. You paid full price. — Clav"},
+        {"word": _("obsequious"), "correct": _("excessively eager to please"),
+         "wrong_a": _("loud and easily provoked"), "wrong_b": _("elderly or aged"),
+         "joke": _("skibidi-adjacent"),
+         "example": _("The waiter was so {b}obsequious{/b} to Brayden that he comped his croissant. You paid full price. — Clav")},
 
-        {"word": "ephemeral", "correct": "lasting only briefly",
-         "wrong_a": "eternal and unchanging", "wrong_b": "made of metal",
-         "joke": "fanum-tax energy",
-         "example": "Your high school aura is {b}ephemeral{/b}. Use it now. Or do not. It is already fading. — Clav"},
+        {"word": _("ephemeral"), "correct": _("lasting only briefly"),
+         "wrong_a": _("eternal and unchanging"), "wrong_b": _("made of metal"),
+         "joke": _("fanum-tax energy"),
+         "example": _("Your high school aura is {b}ephemeral{/b}. Use it now. Or do not. It is already fading. — Clav")},
 
-        {"word": "supercilious", "correct": "arrogantly superior",
-         "wrong_a": "extremely silly", "wrong_b": "ceiling-related",
-         "joke": "Chad behavior",
-         "example": "Brayden's {b}supercilious{/b} smirk has been studied by anthropologists. Do not try to mirror it. — Clav"},
+        {"word": _("supercilious"), "correct": _("arrogantly superior"),
+         "wrong_a": _("extremely silly"), "wrong_b": _("ceiling-related"),
+         "joke": _("Chad behavior"),
+         "example": _("Brayden's {b}supercilious{/b} smirk has been studied by anthropologists. Do not try to mirror it. — Clav")},
 
-        {"word": "mellifluous", "correct": "sweet and smooth-sounding",
-         "wrong_a": "yellow in color", "wrong_b": "sticky to the touch",
-         "joke": "bussin frfr",
-         "example": "His voice was {b}mellifluous{/b}. Yours sounds like a printer with a paper jam. — Clav"},
+        {"word": _("mellifluous"), "correct": _("sweet and smooth-sounding"),
+         "wrong_a": _("yellow in color"), "wrong_b": _("sticky to the touch"),
+         "joke": _("bussin frfr"),
+         "example": _("His voice was {b}mellifluous{/b}. Yours sounds like a printer with a paper jam. — Clav")},
 
         # Hard SAT / GRE (kept for flavor)
-        {"word": "magnanimous", "correct": "generous, especially in victory",
-         "wrong_a": "physically large", "wrong_b": "secretly cruel",
-         "joke": "sigma-coded",
-         "example": "I will not destroy you today. Consider it {b}magnanimous{/b}. Take notes. — Clav"},
+        {"word": _("magnanimous"), "correct": _("generous, especially in victory"),
+         "wrong_a": _("physically large"), "wrong_b": _("secretly cruel"),
+         "joke": _("sigma-coded"),
+         "example": _("I will not destroy you today. Consider it {b}magnanimous{/b}. Take notes. — Clav")},
 
-        {"word": "pulchritudinous", "correct": "physically beautiful",
-         "wrong_a": "extremely angry", "wrong_b": "containing pulp",
-         "joke": "gyatt",
-         "example": "Brayden's maxilla growth was so {b}pulchritudinous{/b} the yearbook added a new category. — Clav"},
+        {"word": _("pulchritudinous"), "correct": _("physically beautiful"),
+         "wrong_a": _("extremely angry"), "wrong_b": _("containing pulp"),
+         "joke": _("gyatt"),
+         "example": _("Brayden's maxilla growth was so {b}pulchritudinous{/b} the yearbook added a new category. — Clav")},
     ]
 
     # Clav cut-in quips. One is picked at random when the study screen opens
     # and shown as a subtitle under the header — keeps Clav's voice present
     # in the flashcard phase even though the dialogue loop is gone.
     CLAV_STUDY_QUIPS = [
-        "Don't cheat with the back of the notebook.",
-        "I can see you stalling.",
-        "Flip them all. I'll know if you skipped one.",
-        "Stop staring at the joke options. There's a reason they're called that.",
-        "Pulchritudinous is on the test. Memorize it.",
-        "You have ninety minutes. You've used eight.",
-        "If you can't read it, sound it out. Then weep.",
-        "Read every example. Yes, every one. I wrote them.",
-        "You blinked. I noticed.",
+        _("Don't cheat with the back of the notebook."),
+        _("I can see you stalling."),
+        _("Flip them all. I'll know if you skipped one."),
+        _("Stop staring at the joke options. There's a reason they're called that."),
+        _("Pulchritudinous is on the test. Memorize it."),
+        _("You have ninety minutes. You've used eight."),
+        _("If you can't read it, sound it out. Then weep."),
+        _("Read every example. Yes, every one. I wrote them."),
+        _("You blinked. I noticed."),
     ]
 
 
@@ -247,7 +247,7 @@ label study_done:
     stop ambient fadeout 1.5
     scene bg black with fade
     pause 0.6
-    show expression Text("THE NEXT MORNING", style="story_card_text") as text at truecenter with dissolve
+    show expression Text(_("THE NEXT MORNING"), style="story_card_text") as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
     jump class_quiz
@@ -431,23 +431,23 @@ label pass_class_scene:
     scene bg black
     play sound "audio/mogging_sfx.mp3" volume persistent.vol_sfx
     pause 1.0
-    show text "{size=110}{color=#88ff88}{b}YOU{/b}{/color}" at truecenter with dissolve
+    show text _("{size=110}{color=#88ff88}{b}YOU{/b}{/color}") at truecenter with dissolve
     pause 1.5
     hide text
-    show text "{size=110}{color=#88ff88}{b}JUST{/b}{/color}" at truecenter with dissolve
+    show text _("{size=110}{color=#88ff88}{b}JUST{/b}{/color}") at truecenter with dissolve
     pause 2.25
     hide text
-    show text "{size=130}{color=#88ff88}{b}BRAINMOGGED{/b}{/color}" at truecenter with vpunch
+    show text _("{size=130}{color=#88ff88}{b}BRAINMOGGED{/b}{/color}") at truecenter with vpunch
     pause 3.2
     hide text with dissolve
     pause 0.5
 
     # ── STAT REVEAL ── RPG-style level-up after the mog lands.
-    show text "{size=44}{color=#88ff88}{b}INTELLIGENCE  ++{/b}{/color}" at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
+    show text _("{size=44}{color=#88ff88}{b}INTELLIGENCE  ++{/b}{/color}") at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
     pause 0.75
-    show text "{size=44}{color=#88ff88}{b}INTELLIGENCE  ++\nCOMMUNICATION  ++{/b}{/color}" at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
+    show text _("{size=44}{color=#88ff88}{b}INTELLIGENCE  ++\nCOMMUNICATION  ++{/b}{/color}") at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
     pause 0.75
-    show text "{size=44}{color=#88ff88}{b}INTELLIGENCE  ++\nCOMMUNICATION  ++\nCONFIDENCE  ++{/b}{/color}" at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
+    show text _("{size=44}{color=#88ff88}{b}INTELLIGENCE  ++\nCOMMUNICATION  ++\nCONFIDENCE  ++{/b}{/color}") at Transform(xalign=0.5, ypos=0.38, yanchor=0.0) with dissolve
     pause 2.2
     hide text with dissolve
     pause 0.6
@@ -460,37 +460,37 @@ label pass_class_scene:
     play music "audio/mirror_scene.mp3" noloop fadein 1.5 volume persistent.vol_music
 
     $ _wait_until_music_pos(2.0)
-    show screen cinematic_caption("One quiz.", "Clav")
+    show screen cinematic_caption(_("One quiz."), _("Clav"))
 
     $ _wait_until_music_pos(5.5)
-    show screen cinematic_caption("And now you're waiting for me to say you've changed.", "Clav")
+    show screen cinematic_caption(_("And now you're waiting for me to say you've changed."), _("Clav"))
 
     $ _wait_until_music_pos(10.0)
-    show screen cinematic_caption("Was kind of hoping for a \"good job.\"", "[povname]")
+    show screen cinematic_caption(_("Was kind of hoping for a \"good job.\""), _("[povname]"))
 
     $ _wait_until_music_pos(13.0)
     show clav stern at clav_cinematic
-    show screen cinematic_caption("You haven't changed.", "Clav")
+    show screen cinematic_caption(_("You haven't changed."), _("Clav"))
 
     $ _wait_until_music_pos(16.5)
-    show screen cinematic_caption("You proved you can.", "Clav")
+    show screen cinematic_caption(_("You proved you can."), _("Clav"))
 
     $ _wait_until_music_pos(20.0)
-    show screen cinematic_caption("For once, you weren't trying to look smart.", "Clav")
+    show screen cinematic_caption(_("For once, you weren't trying to look smart."), _("Clav"))
 
     $ _wait_until_music_pos(24.0)
-    show screen cinematic_caption("You were trying to get smarter.", "Clav")
+    show screen cinematic_caption(_("You were trying to get smarter."), _("Clav"))
 
     $ _wait_until_music_pos(28.0)
     show clav smirk at clav_cinematic
-    show screen cinematic_caption("That's progress.", "Clav")
+    show screen cinematic_caption(_("That's progress."), _("Clav"))
 
     $ _wait_until_music_pos(31.0)
-    show screen cinematic_caption("Try not to make passing a personality.", "Clav")
+    show screen cinematic_caption(_("Try not to make passing a personality."), _("Clav"))
 
     $ _wait_until_music_pos(34.5)
     show clav stern at clav_cinematic
-    show screen cinematic_caption("Don't confuse a step for the summit.", "Clav")
+    show screen cinematic_caption(_("Don't confuse a step for the summit."), _("Clav"))
 
     $ _wait_until_music_pos(38.0)
     hide screen cinematic_caption
@@ -498,7 +498,7 @@ label pass_class_scene:
 
     $ _wait_until_music_pos(39.0)
     scene bg black with fade
-    show expression Text("THE NEXT MORNING", style="story_card_text") as text at truecenter with dissolve
+    show expression Text(_("THE NEXT MORNING"), style="story_card_text") as text at truecenter with dissolve
 
     $ _wait_until_music_pos(42.0)
     hide text with dissolve
@@ -555,61 +555,61 @@ label mirror_scene:
 
     # ══ SAD (~0:44–1:03) — the honest inventory. Full lines, no fade on text. ══
     $ _wait_until_music_pos(44.0)
-    show screen cinematic_caption("{i}I'm nothing special.{/i}")
+    show screen cinematic_caption(_("{i}I'm nothing special.{/i}"))
 
     $ _wait_until_music_pos(48.0)
-    show screen cinematic_caption("{i}Average face. Average build. Average everything.{/i}")
+    show screen cinematic_caption(_("{i}Average face. Average build. Average everything.{/i}"))
 
     $ _wait_until_music_pos(52.0)
-    show screen cinematic_caption("{i}As a kid, I was sure I'd grow into someone.{/i}")
+    show screen cinematic_caption(_("{i}As a kid, I was sure I'd grow into someone.{/i}"))
 
     $ _wait_until_music_pos(56.0)
-    show screen cinematic_caption("{i}Middle school. Freshman year. Still sure.{/i}")
+    show screen cinematic_caption(_("{i}Middle school. Freshman year. Still sure.{/i}"))
 
     $ _wait_until_music_pos(60.0)
-    show screen cinematic_caption("{i}...Some nights, I'm still sure.{/i}")
+    show screen cinematic_caption(_("{i}...Some nights, I'm still sure.{/i}"))
 
     $ _wait_until_music_pos(63.0)
-    show screen cinematic_caption("{i}And there's no room I walk into where I'm the best at anything.{/i}")
+    show screen cinematic_caption(_("{i}And there's no room I walk into where I'm the best at anything.{/i}"))
 
     # ══ Flashbacks (~1:07–1:12) — the images speak; just the quotes. ══
     $ _wait_until_music_pos(66.0)
     hide screen cinematic_caption
     show bg bully1 at kb_pan_left with Dissolve(0.3)
-    show screen cinematic_caption("{size=34}\"Move, NPC.\"{/size}\n{size=20}— eighth grade{/size}")
+    show screen cinematic_caption(_("{size=34}\"Move, NPC.\"{/size}\n{size=20}— eighth grade{/size}"))
 
     $ _wait_until_music_pos(68.0)
     show bg bully2 at kb_pan_right with Dissolve(0.3)
-    show screen cinematic_caption("{size=34}\"Look at this LTN.\"{/size}\n{size=20}— ninth grade{/size}")
+    show screen cinematic_caption(_("{size=34}\"Look at this LTN.\"{/size}\n{size=20}— ninth grade{/size}"))
 
     $ _wait_until_music_pos(70.0)
     show bg bully3 at kb_zoom with Dissolve(0.3)
-    show screen cinematic_caption("{size=38}\"Chopped.\"{/size}\n{size=20}— tenth grade{/size}")
+    show screen cinematic_caption(_("{size=38}\"Chopped.\"{/size}\n{size=20}— tenth grade{/size}"))
 
     # ══ DROP @1:13 — the verdict shatters (hard cut, on the beat). ══
     $ _wait_until_music_pos(73.0)
     hide screen cinematic_caption
     show bg shattered_mirror at kb_zoom
     $ _wait_until_music_pos(73.6)
-    show screen cinematic_caption("{i}{size=34}So. Average me...{/size}{/i}")
+    show screen cinematic_caption(_("{i}{size=34}So. Average me...{/size}{/i}"))
 
     $ _wait_until_music_pos(77.0)
-    show screen cinematic_caption("{i}{size=34}Do I have time to feel sorry for myself?{/size}{/i}")
+    show screen cinematic_caption(_("{i}{size=34}Do I have time to feel sorry for myself?{/size}{/i}"))
 
     # ══ The lift — turn to hope (1:13–1:35) ══
     $ _wait_until_music_pos(81.0)
     hide screen cinematic_caption
     show bg hope at kb_pan_up with Dissolve(0.6)
-    show screen cinematic_caption("{b}{size=38}I can change.{/size}{/b}")
+    show screen cinematic_caption(_("{b}{size=38}I can change.{/size}{/b}"))
 
     $ _wait_until_music_pos(85.0)
-    show screen cinematic_caption("{b}{size=34}I'm done being someone everyone forgets.{/size}{/b}")
+    show screen cinematic_caption(_("{b}{size=34}I'm done being someone everyone forgets.{/size}{/b}"))
 
     $ _wait_until_music_pos(89.0)
-    show screen cinematic_caption("{b}{size=38}I'll keep trying until I succeed.{/size}{/b}")
+    show screen cinematic_caption(_("{b}{size=38}I'll keep trying until I succeed.{/size}{/b}"))
 
     $ _wait_until_music_pos(92.0)
-    show screen cinematic_caption("{b}{size=38}No more looking down.{/size}{/b}")
+    show screen cinematic_caption(_("{b}{size=38}No more looking down.{/size}{/b}"))
 
     # ══ PEAK — heaven shows and the line fades out, a beat of heaven-only, then
     # the real drop @~1:35. ("I will mog the world" fires +1.7s to hit the beat;
@@ -620,7 +620,7 @@ label mirror_scene:
     with dissolve
 
     $ _wait_until_music_pos(96.7)
-    show screen cinematic_caption("{b}{size=48}{color=#79c98b}I will mog the world.{/color}{/size}{/b}")
+    show screen cinematic_caption(_("{b}{size=48}{color=#79c98b}I will mog the world.{/color}{/size}{/b}"))
 
     $ _wait_until_music_pos(101.0)
     hide screen cinematic_caption
@@ -632,9 +632,9 @@ label mirror_scene:
 
     # Stacked end card — small caps "END OF CHAPTER 1" above, big green
     # "BRAINMAXXED" below. Same family as the BRAINMOGGED reveal card.
-    show expression Text("END OF CHAPTER 1", style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
+    show expression Text(_("END OF CHAPTER 1"), style="story_card_text", size=42, color="#aeb8b2") as endline_top at Transform(xalign=0.5, yalign=0.38) with dissolve
     pause 0.5
-    show expression Text("BRAINMAXXED", style="story_card_text", size=130, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
+    show expression Text(_("BRAINMAXXED"), style="story_card_text", size=130, color="#79c98b") as endline_bot at Transform(xalign=0.5, yalign=0.52) with dissolve
     pause 3.0
     hide endline_top with dissolve
     hide endline_bot with dissolve
@@ -683,13 +683,13 @@ label fail_class_scene:
 
     python:
         clav_texts = [
-            "sighhh you are such a normie....",
-            "yawn. booth. don't be late.",
-            "i thought you were different. clearly not. library.",
-            "mid effort. mid result. we go again.",
-            "embarrassing. for me. booth in ten.",
-            "this is the part where you cope. i'll wait.",
-            "truly the most normie thing i've ever seen. library. now.",
+            _("sighhh you are such a normie...."),
+            _("yawn. booth. don't be late."),
+            _("i thought you were different. clearly not. library."),
+            _("mid effort. mid result. we go again."),
+            _("embarrassing. for me. booth in ten."),
+            _("this is the part where you cope. i'll wait."),
+            _("truly the most normie thing i've ever seen. library. now."),
         ]
         clav_msg = clav_texts[(brainmaxxing_attempt - 1) % len(clav_texts)]
 

@@ -26,12 +26,12 @@ screen case_file_screen():
         vbox:
             spacing 12
 
-            text "GIGAMAXXING RESEARCH DIVISION":
+            text _("GIGAMAXXING RESEARCH DIVISION"):
                 size 30
                 color "#1a1a1a"
                 bold True
                 xalign 0.5
-            text "— CASE FILE —":
+            text _("— CASE FILE —"):
                 size 22
                 color "#444444"
                 xalign 0.5
@@ -40,19 +40,19 @@ screen case_file_screen():
             add Solid("#1a1a1a", xysize=(712, 2))
             null height 10
 
-            text "SUBJECT: [povname]":
+            text _("SUBJECT: [povname]"):
                 size 24
                 color "#1a1a1a"
-            text "POTENTIAL ASSESSED: Present":
+            text _("POTENTIAL ASSESSED: Present"):
                 size 24
                 color "#1a1a1a"
-            text "PILL SELECTED: Blue":
+            text _("PILL SELECTED: Blue"):
                 size 24
                 color "#1a1a1a"
-            text "SANDWICH: Wet. Subject was aware. Proceeded anyway.":
+            text _("SANDWICH: Wet. Subject was aware. Proceeded anyway."):
                 size 24
                 color "#1a1a1a"
-            text "RECOMMENDATION: Do not follow up.":
+            text _("RECOMMENDATION: Do not follow up."):
                 size 24
                 color "#1a1a1a"
 
@@ -60,7 +60,7 @@ screen case_file_screen():
             add Solid("#1a1a1a", xysize=(712, 2))
             null height 10
 
-            text "CASE STATUS:  {color=#aa1111}{b}CLOSED{/b}{/color}":
+            text _("CASE STATUS:  {color=#aa1111}{b}CLOSED{/b}{/color}"):
                 size 34
                 color "#1a1a1a"
                 xalign 0.5
@@ -83,14 +83,14 @@ label start:
 
     scene bg black with fade
     pause 0.4
-    show expression Text("CHAPTER 1 — CHOPPED", style="story_card_text", size=46) as text at truecenter with dissolve
+    show expression Text(_("CHAPTER 1 — CHOPPED"), style="story_card_text", size=46) as text at truecenter with dissolve
     pause 1.8
     hide text with dissolve
 
     # Name input — player types their own name. Blank input falls back to "You".
     python:
-        _typed_name = renpy.input("What's your name?", default="", length=20).strip()
-        povname = _typed_name if _typed_name else "You"
+        _typed_name = renpy.input(_("What's your name?"), default="", length=20).strip()
+        povname = _typed_name if _typed_name else _("You")
 
     scene bg cafeteria with fade
     # Cross-fade menu theme into cafeteria ambient, ducked as a background
@@ -114,7 +114,7 @@ label start:
         "Take a bite of the soggy middle.":
             narrator "Cold moisture spreads across your tongue. You try very hard not to think about what it is."
 
-    $ renpy.notify("The sandwich will remember that.")
+    $ renpy.notify(_("The sandwich will remember that."))
 
     pause 0.5
     narrator "Across the room, the popular kids are laughing."
