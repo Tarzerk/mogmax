@@ -77,6 +77,11 @@ screen case_file_screen():
 # ═════════════════════════════════════════════════════════════
 
 label start:
+    # GTA-style loading stills before the chapter is laid. Runs with the menu
+    # theme still playing underneath (loading_screens never touches music), so
+    # the background bed is heard right up until the chapter begins below.
+    call loading_screens
+
     # Stop the menu theme as Chapter 1 begins — silence through the title
     # card and name prompt, until the cafeteria ambient fades in below.
     stop music fadeout 1.0

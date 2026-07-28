@@ -19,6 +19,12 @@ dist/
 *.zip
 *.7z
 
+# Loading-screen "stills" mode placeholders — local-only throwaway art
+# (e.g. copyrighted GTA screenshots used for the POC). Real loading-screen
+# art should be original; see the loading-screens ticket. Parallax mode uses
+# in-repo sprites/bgs and needs nothing here.
+game/images/loadscreens/
+
 # OS junk
 .DS_Store
 Thumbs.db
