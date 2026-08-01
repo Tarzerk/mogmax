@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Entitlements for the hardened runtime, which notarization requires.
+
+	  Ren'Py ships a bundled CPython plus a pile of pre-built .so/.dylib
+	  extension modules (pygame_sdl2, renpy.display, librenpython, ...). Those
+	  are signed by us, not by Apple, and CPython loads several of them at
+	  runtime by path. Under a bare hardened runtime that combination fails at
+	  launch with "code signature invalid" / "library load disallowed", so the
+	  three exceptions below are load-bearing — do not trim them without
+	  re-testing a notarized build on a clean Mac.
+	-->
+
+	<!-- CPython allocates writable+executable pages for its interpreter loop
+	     and for ctypes trampolines. Without this the app dies on startup. -->
+	<key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+	<true/>
+
+	<!-- Ren'Py dlopen()s its own bundled .so files. Library validation would
+	     otherwise reject anything not signed by the same Team ID as the main
+	     binary in the way it expects. -->
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
+
+	<!-- SDL/pygame and CPython both JIT small stubs. -->
+	<key>com.apple.security.cs.allow-jit</key>
+	<true/>
+</dict>
+</plist>

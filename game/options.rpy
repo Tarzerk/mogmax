@@ -1,5 +1,5 @@
 define config.name = _("MOGMAX")
-define config.version = "2.1"
+define config.version = "2.2"
 
 # Per-user save location. REQUIRED for saves + persistent (progress, chapter
 # unlocks, Preferences/volume) to survive across launches in a packaged build —
