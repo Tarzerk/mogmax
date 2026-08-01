@@ -196,12 +196,70 @@ echo "$SIG_INFO" | grep -q 'flags=.*runtime' \
 $(echo "$SIG_INFO" | sed 's/^/       /')"
 echo "Hardened runtime: present"
 
-# ---------------------------------------------------------------------------
-# DMG
-# ---------------------------------------------------------------------------
-step "Build .dmg"
 DMG="${MAC_ZIP%.zip}.dmg"
 
+if [ "$NOTARIZE" -eq 0 ]; then
+  step "Rebuild mac .zip from the signed app"
+  # Even on a signing-only run, replace Ren'Py's zip: the one the distributor
+  # emits holds an ad-hoc "linker-signed" app that Gatekeeper reports as
+  # "no usable signature".
+  ditto -c -k --sequesterRsrc --keepParent "$APP" "$MAC_ZIP"
+
+  step "Build .dmg"
+  DMG_SRC="$(mktemp -d)"
+  trap 'rm -rf "$STAGE" "$DMG_SRC"' EXIT
+  ditto "$APP" "$DMG_SRC/$(basename "$APP")"
+  ln -s /Applications "$DMG_SRC/Applications"
+  hdiutil create -volname "MOGMAX $VERSION" -srcfolder "$DMG_SRC" \
+    -ov -format UDZO "$DMG" >/dev/null
+  codesign --force --timestamp --sign "$IDENTITY" "$DMG"
+
+  step "Done (signing only — NOT notarized)"
+  echo "These builds will STILL warn on other Macs. Re-run without --no-notarize."
+  ls -lh "$DMG" "$MAC_ZIP"
+  exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Notarize the .app, then the .dmg
+#
+# These are two separate submissions on purpose. A notarization ticket is
+# issued per submitted artifact, and stapling only works where a ticket exists.
+# Notarizing just the .dmg leaves the .app inside it with no ticket of its own
+# (stapling it fails with "Error 73"), which matters twice over:
+#
+#   * the .zip we ship as the Mac fallback contains a bare .app, so with no
+#     ticket it is only validated by an online Gatekeeper check, and
+#   * once a player drags the app out of the .dmg to /Applications, that copy
+#     carries no ticket either — so a first launch while offline can be
+#     blocked even though the .dmg itself was notarized.
+#
+# Notarizing the app first, stapling it, and only then building the .dmg means
+# every artifact we hand out validates entirely offline.
+# ---------------------------------------------------------------------------
+step "Notarize the .app (submission 1 of 2)"
+APP_ZIP="$(mktemp -d)/MOGMAX-app.zip"
+# notarytool only accepts .zip/.dmg/.pkg, so the bundle rides inside a zip.
+# --keepParent preserves the .app directory itself rather than its contents.
+ditto -c -k --sequesterRsrc --keepParent "$APP" "$APP_ZIP"
+xcrun notarytool submit "$APP_ZIP" \
+  --keychain-profile "$NOTARY_PROFILE" \
+  --wait
+rm -f "$APP_ZIP"
+
+step "Staple ticket to the .app"
+xcrun stapler staple "$APP"
+xcrun stapler validate "$APP"
+
+step "Rebuild mac .zip from the stapled app"
+# Overwrite Ren'Py's distributor zip. Its copy of the app is ad-hoc signed and
+# Gatekeeper rejects it outright ("no usable signature"), so shipping it beside
+# a good .dmg would hand some players the exact problem this script exists to
+# remove.
+ditto -c -k --sequesterRsrc --keepParent "$APP" "$MAC_ZIP"
+echo "Rewrote $MAC_ZIP"
+
+step "Build .dmg from the stapled app"
 # Lay out a drag-to-install window: the .app next to an /Applications alias.
 DMG_SRC="$(mktemp -d)"
 trap 'rm -rf "$STAGE" "$DMG_SRC"' EXIT
@@ -215,38 +273,37 @@ hdiutil create \
   "$DMG" >/dev/null
 echo "Created $DMG"
 
-# The disk image itself is signed too, so the download carries a valid
-# signature even before the ticket is stapled.
+# The disk image is signed too, so the download carries a valid signature in
+# its own right and not merely by virtue of its contents.
 codesign --force --timestamp --sign "$IDENTITY" "$DMG"
 
-if [ "$NOTARIZE" -eq 0 ]; then
-  step "Done (signing only — NOT notarized)"
-  echo "This build will STILL warn on other Macs. Re-run without --no-notarize."
-  ls -lh "$DMG"
-  exit 0
-fi
-
-# ---------------------------------------------------------------------------
-# Notarize + staple
-# ---------------------------------------------------------------------------
-step "Notarize (uploads to Apple; usually 1-5 min)"
+step "Notarize the .dmg (submission 2 of 2)"
 xcrun notarytool submit "$DMG" \
   --keychain-profile "$NOTARY_PROFILE" \
   --wait
 
-step "Staple ticket"
-# Stapling embeds the notarization ticket in the .dmg so Gatekeeper can
-# validate it with no network connection. Without this a first launch on a
-# machine that is offline (or behind a filtering proxy) still gets blocked.
+step "Staple ticket to the .dmg"
 xcrun stapler staple "$DMG"
 xcrun stapler validate "$DMG"
 
-step "Final Gatekeeper check"
-# This is the actual assertion that matters: it evaluates the .dmg exactly the
-# way Gatekeeper will on a player's Mac.
+# ---------------------------------------------------------------------------
+# Verify every artifact the way Gatekeeper will
+# ---------------------------------------------------------------------------
+step "Final Gatekeeper checks"
+
+echo "--- .dmg ---"
 spctl -a -t open --context context:primary-signature -v "$DMG"
 
+echo "--- .app inside the .zip ---"
+ZIP_CHECK="$(mktemp -d)"
+ditto -x -k "$MAC_ZIP" "$ZIP_CHECK"
+ZIP_APP="$(find "$ZIP_CHECK" -maxdepth 2 -name '*.app' -type d | head -n1)"
+spctl -a -t exec -vv "$ZIP_APP"
+xcrun stapler validate "$ZIP_APP"
+rm -rf "$ZIP_CHECK"
+
 step "Done"
-ls -lh "$DMG"
+ls -lh "$DMG" "$MAC_ZIP"
 echo
-echo "Upload this .dmg. It should open with no security warning on any Mac."
+echo "Both artifacts are signed, notarized and stapled — they validate offline"
+echo "and open with no security warning on any Mac."
