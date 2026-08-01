@@ -123,41 +123,56 @@ xattr -cr "$APP"
 find "$APP" -name '.DS_Store' -delete
 
 step "Sign nested binaries (inside-out)"
-# Nested code must be signed before its container, deepest first — signing the
+
+# Nested code must be signed before its container, deepest first: signing the
 # outer bundle seals a hash of everything inside it, so anything signed
-# afterwards invalidates that seal. `codesign --deep` exists but Apple
-# explicitly recommends against it for distribution signing because it applies
-# the *same* entitlements everywhere and quietly skips some nested formats.
+# afterwards invalidates that seal. codesign --deep exists but Apple explicitly
+# recommends against it for distribution signing, because it applies the same
+# entitlements to everything and quietly skips some nested formats.
 #
-# -r reverses the depth-sorted list so children precede parents.
+# IMPORTANT: the list is built into a temp file and the loop reads from that
+# file, rather than the more idiomatic "done < <(...)" process substitution.
+# macOS ships bash 3.2.57, whose parser scans for the closing paren of a
+# process substitution without honouring comments inside it -- so a comment
+# containing a backtick or a dollar-paren gets parsed as live syntax and the
+# block silently mis-parses. Keep this as a temp file.
+BIN_LIST="$(mktemp)"
+{
+  # Loadable code that is not itself a bundle: dylibs, Python extension
+  # modules, and any helper executables Ren'Py ships inside the app.
+  find "$APP" -type f \( -name '*.dylib' -o -name '*.so' \) -print
+
+  # Mach-O helper executables. Testing with `file` is the only reliable way to
+  # tell one from a shell script that merely has the execute bit set.
+  find "$APP" -type f -perm +111 -print | while read -r f; do
+    # Captured into a variable rather than piped into grep -q, for the same
+    # pipefail/SIGPIPE reason documented at the verification step below. A
+    # false negative here would silently leave a binary unsigned.
+    ftype="$(file -b "$f")"
+    case "$ftype" in
+      *Mach-O*) echo "$f" ;;
+    esac
+  done
+
+  # Nested bundles (frameworks, plugins, helper apps) sign as single units.
+  find "$APP" -depth -type d \( -name '*.framework' -o -name '*.bundle' \) -print
+} | awk '{ print gsub(/\//,"/") "\t" $0 }' | sort -rn | cut -f2- | awk '!seen[$0]++' > "$BIN_LIST"
+
+NESTED_TOTAL="$(wc -l < "$BIN_LIST" | tr -d ' ')"
+[ "$NESTED_TOTAL" -gt 0 ] || die "found no nested binaries to sign inside $APP — the
+     discovery step is broken; refusing to ship an app whose interior is unsigned."
+
 NESTED_COUNT=0
 while IFS= read -r bin; do
   codesign --force --timestamp --options runtime \
     --entitlements "$ENTITLEMENTS" \
-    --sign "$IDENTITY" "$bin" 2>/dev/null
+    --sign "$IDENTITY" "$bin"
   NESTED_COUNT=$((NESTED_COUNT + 1))
-done < <(
-  {
-    # Loadable code that is not itself a bundle: dylibs, Python extension
-    # modules, and any helper executables Ren'Py ships in the bundle.
-    find "$APP" -type f \( -name '*.dylib' -o -name '*.so' \) -print
-    find "$APP" -type f -perm +111 -print | while read -r f; do
-      # `file` is the only reliable way to tell a Mach-O helper binary from a
-      # shell script that merely happens to have the execute bit set.
-      #
-      # Deliberately `if ... grep -q` rather than the more natural `case`:
-      # macOS ships bash 3.2.57, whose parser mis-handles a case statement
-      # nested inside $(...) inside <(...) and dies with "syntax error near
-      # unexpected token". Do not "clean this up" into a case.
-      if file -b "$f" | grep -q 'Mach-O'; then
-        echo "$f"
-      fi
-    done
-    # Nested bundles (frameworks, plugins, helper .apps) sign as units.
-    find "$APP" -depth -type d \( -name '*.framework' -o -name '*.bundle' \) -print
-  } | awk '{ print gsub(/\//,"/") "\t" $0 }' | sort -rn | cut -f2- | awk '!seen[$0]++'
-)
-echo "Signed $NESTED_COUNT nested binaries."
+done < "$BIN_LIST"
+rm -f "$BIN_LIST"
+
+echo "Signed $NESTED_COUNT of $NESTED_TOTAL nested binaries."
+[ "$NESTED_COUNT" -eq "$NESTED_TOTAL" ] || die "only signed $NESTED_COUNT of $NESTED_TOTAL"
 
 step "Sign app bundle"
 codesign --force --timestamp --options runtime \
@@ -166,10 +181,19 @@ codesign --force --timestamp --options runtime \
 
 step "Verify signature"
 codesign --verify --deep --strict --verbose=2 "$APP"
+
 # Confirm the hardened runtime actually stuck. Notarization rejects the upload
 # without it, and the failure message from Apple is famously unhelpful.
-codesign --display --verbose=2 "$APP" 2>&1 | grep -q 'flags=.*runtime' \
-  || die "hardened runtime flag missing after signing"
+#
+# The output is captured into a variable rather than piped straight into grep.
+# Under `set -o pipefail`, `codesign ... | grep -q` fails spuriously: grep -q
+# exits at the first match, codesign then takes a SIGPIPE writing the rest of
+# its output, and pipefail surfaces that as a failed pipeline even though the
+# flag was present. Capture first, match second.
+SIG_INFO="$(codesign --display --verbose=2 "$APP" 2>&1)"
+echo "$SIG_INFO" | grep -q 'flags=.*runtime' \
+  || die "hardened runtime flag missing after signing. codesign reported:
+$(echo "$SIG_INFO" | sed 's/^/       /')"
 echo "Hardened runtime: present"
 
 # ---------------------------------------------------------------------------
